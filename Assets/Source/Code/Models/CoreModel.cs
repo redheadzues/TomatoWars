@@ -3,13 +3,13 @@
     public class CoreModel
     {
         public GridModel Grid;
-        public int Gold;
-        public int Gem;
-        public int Stage;
+        public PlayerModel Player;
+
 
         public CoreModel()
         {
             Grid = new GridModel();
+            Player = new PlayerModel();
         }
 
     }
