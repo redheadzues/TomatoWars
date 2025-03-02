@@ -1,13 +1,21 @@
-using System;
+using System.Collections.Generic;
 using Source.Code.Models;
 using UnityEngine;
 
 public class GameBootstraper : MonoBehaviour
 {
-    private readonly CoreModel _coreModel = new ();
-
+    [SerializeField] private List<GameWindow> _windows;
+    
+    private readonly CoreModel _model = new();
+    private ServiceProvider _serviceProvider;
+     
     private void Awake()
     {
+        _serviceProvider = new ServiceProvider(_model);
         
+        _serviceProvider.Get<SaveLoadService>().Load();
+        _serviceProvider.Get<StaticDataService>().LoadData();
+        
+        _windows.ForEach(window => window.SetProvider(_serviceProvider));
     }
 }
