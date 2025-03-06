@@ -14,7 +14,7 @@ namespace Source.Code.StaticData
     { 
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public int Health { get; private set; }
-        [field: SerializeField] public int Damage { get; private set; }
+        [field: SerializeField] public int DamagePerSecond { get; private set; }
         [field: SerializeField] public int Speed { get; private set; }
         [field: SerializeField] public WarriorType Type { get; private set; }
     }

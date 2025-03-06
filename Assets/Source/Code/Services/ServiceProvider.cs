@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Source.Code.Models;
+using Source.Code.Services;
 
 public class ServiceProvider
 {
-    private readonly Dictionary<Type, IService> _services = new ();
+    private readonly Dictionary<Type, ICoreModelService> _services = new ();
     private readonly CoreModel _model;
     
     public ServiceProvider(CoreModel model)
@@ -12,7 +13,7 @@ public class ServiceProvider
         _model = model;
     }
 
-    public T Get<T>() where T : class, IService, new()
+    public T Get<T>() where T : class, ICoreModelService, new()
     {
         
         if (_services.TryGetValue(typeof(T), out var data))
@@ -25,4 +26,5 @@ public class ServiceProvider
         
         return newService;
     }
+
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Source.Code.Models;
 
-public class ShopService : IService
+public class ShopService : ICoreModelService
 {
     public void Init(CoreModel model)
     {

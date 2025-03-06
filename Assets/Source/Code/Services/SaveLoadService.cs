@@ -1,6 +1,6 @@
 ﻿using Source.Code.Models;
 
-public class SaveLoadService : IService
+public class SaveLoadService : ICoreModelService
 {
     private CoreModel _model;
     

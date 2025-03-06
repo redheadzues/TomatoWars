@@ -1,6 +1,7 @@
-﻿using Source.Code.Models;
-
-public interface IService
+﻿namespace Source.Code.Services
 {
-    void Init(CoreModel model);
+    public interface IService
+    {
+        
+    }
 }

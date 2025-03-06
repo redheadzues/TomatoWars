@@ -4,7 +4,7 @@ using Source.Code.Models;
 using Source.Code.StaticData;
 using UnityEngine;
 
-public class StaticDataService : IService
+public class StaticDataService : ICoreModelService
 {
     private readonly Dictionary<WarriorType, WarriorConfig> _warriors = new();
     
