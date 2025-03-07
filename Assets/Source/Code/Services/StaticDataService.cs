@@ -1,17 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Source.Code.Models;
+using Source.Code.Services;
 using Source.Code.StaticData;
 using UnityEngine;
 
-public class StaticDataService : ICoreModelService
+public class StaticDataService : Service
 {
     private readonly Dictionary<WarriorType, WarriorConfig> _warriors = new();
     
-    public void Init(CoreModel model)
-    {
-    }
-
     public void LoadData()
     {
         var warriors = Resources.Load<WarriorsList>("StaticData");

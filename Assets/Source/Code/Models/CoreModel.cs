@@ -1,16 +1,16 @@
-﻿namespace Source.Code.Models
+﻿using Source.Code.BattleField;
+
+namespace Source.Code.Models
 {
-    public class CoreModel
+    public interface IReadOnlyCoreModel
     {
-        public GridModel Grid;
-        public PlayerModel Player;
-
-
-        public CoreModel()
-        {
-            Grid = new GridModel();
-            Player = new PlayerModel();
-        }
-
+        PlayerModel Player { get;  }
     }
+    
+
+    public class CoreModel : IReadOnlyCoreModel
+    {
+        public PlayerModel Player { get; set; }
+    }
+    
 }

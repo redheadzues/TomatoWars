@@ -5,26 +5,37 @@ using Source.Code.Services;
 
 public class ServiceProvider
 {
-    private readonly Dictionary<Type, ICoreModelService> _services = new ();
+    private readonly Dictionary<Type, Service> _services = new ();
+    private readonly Dictionary<Type, Func<Service>> _factories = new();
     private readonly CoreModel _model;
     
-    public ServiceProvider(CoreModel model)
-    {
+    public ServiceProvider(CoreModel model) => 
         _model = model;
-    }
 
-    public T Get<T>() where T : class, ICoreModelService, new()
+    public void RegisterLazy<T>(Func<T> factory) where T : Service => 
+        _factories[typeof(T)] = factory;
+
+
+    public T Get<T>() where T : Service
     {
         
         if (_services.TryGetValue(typeof(T), out var data))
             return data as T;
 
-        var newService = new T();
-        newService.Init(_model);
-
-        _services[typeof(T)] = newService;
+        if (!_factories.TryGetValue(typeof(T), out var factory))
+            throw new Exception($"Service {typeof(T)} not registered!");
         
-        return newService;
+        var newService = factory();
+        _services[typeof(T)] = newService;
+
+        return newService as T;
     }
 
+    public void RegisterInstance<T>(Service service) where T : Service
+    {
+        if (!_services.ContainsKey(typeof(T)))
+            throw new Exception($"Service is already added");
+
+        _services[typeof(T)] = service;
+    }
 }

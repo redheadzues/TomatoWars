@@ -1,16 +1,11 @@
 ﻿using Source.Code.Models;
 
-public class SaveLoadService : ICoreModelService
+namespace Source.Code.Services
 {
-    private CoreModel _model;
-    
-    public void Init(CoreModel model)
+    public class SaveLoadService : Service
     {
-        _model = model;
+        public void Load(){}
+        public void Save(){}
+
     }
-    
-    public void Load(){}
-    
-    public void Save(){}
-    
 }
