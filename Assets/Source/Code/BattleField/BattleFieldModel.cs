@@ -5,7 +5,7 @@ namespace Source.Code.BattleField
 {
     public interface IReadOnlyBattleFieldModel
     {
-        IReadOnlyList<WarriorType> SelectedWarriors { get; }
+        IReadOnlyList<WarriorTypeId> SelectedWarriors { get; }
         public int BossHp  { get; }
         public int BossCurrentHp { get; }
     }
@@ -13,13 +13,14 @@ namespace Source.Code.BattleField
     
     public class BattleFieldModel : IReadOnlyBattleFieldModel
     {
-        public List<WarriorType> SelectedWarriors { get; set; }
-        IReadOnlyList<WarriorType> IReadOnlyBattleFieldModel.SelectedWarriors => SelectedWarriors;
+        public List<WarriorTypeId> SelectedWarriors { get; set; }
+        IReadOnlyList<WarriorTypeId> IReadOnlyBattleFieldModel.SelectedWarriors => SelectedWarriors;
 
         public List<Warrior> Warriors;
         
         public int BossHp { get; set; }
         public int BossCurrentHp { get; set; }
+        public int BossDamagePerSecond { get; set; }
         
         
         

@@ -6,16 +6,20 @@ using UnityEngine;
 
 public class StaticDataService : Service
 {
-    private readonly Dictionary<WarriorType, WarriorConfig> _warriors = new();
+    private readonly Dictionary<WarriorTypeId, WarriorConfig> _warriors = new();
+    private readonly Dictionary<int, BossConfig> _bosses = new();
     
     public void LoadData()
     {
-        var warriors = Resources.Load<WarriorsList>("StaticData");
-        warriors.Configs.ToDictionary(x => x.Type, x => x);
+        Resources.Load<WarriorsList>("StaticData").Configs.ToDictionary(x => x.TypeId, x => x);
+        Resources.Load<BossList>("StaticData").Configs.ToDictionary(x => x.Stage, x => x);
     }
 
-    public WarriorConfig GetWarrior(WarriorType type) =>
-        _warriors.TryGetValue(type, out WarriorConfig config)
-            ? 
-            config : null;
+    public WarriorConfig GetWarrior(WarriorTypeId typeId) =>
+        _warriors.TryGetValue(typeId, out WarriorConfig config)
+            ? config : null;
+
+    public BossConfig GetBoss(int stage) =>
+        _bosses.TryGetValue(stage, out BossConfig config)
+            ? config : null;
 }

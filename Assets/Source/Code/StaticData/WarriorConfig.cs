@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Source.Code.StaticData
 {
-    public enum WarriorType
+    public enum WarriorTypeId
     {
         Tomato,
         Potato
@@ -13,7 +13,7 @@ namespace Source.Code.StaticData
     {
         Walk,
         Fight, 
-        Die
+        Died
     }
     
     [Serializable]
@@ -22,19 +22,41 @@ namespace Source.Code.StaticData
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public int Health { get; private set; }
         [field: SerializeField] public int DamagePerSecond { get; private set; }
-        [field: SerializeField] public float Speed { get; private set; }
-        [field: SerializeField] public WarriorType Type { get; private set; }
+        [field: SerializeField] public float NormalizedSpeed { get; private set; }
+        [field: SerializeField] public WarriorTypeId TypeId { get; private set; }
     }
 
-    public class Warrior
+    public class Warrior : IWarrior
     {
-        public WarriorType Type;
-        public WarriorState State;
-        public int Health;
-        public int DamagePerSecond;
-        public float Speed;
-        public int LineIndex;
-        public float NormalizePosition;
+        private static int _nextId;
+        public int Id { get; }
+        public Sprite Sprite { get; set; }
+        public WarriorTypeId TypeId {get; set;}    
+        public WarriorState State {get; set;}
+        public int Health {get; set;}
+        public int MaxHealth { get; set; }
+        public int DamagePerSecond {get; set;}
+        public float NormalizedSpeed {get; set;}
+        public int LineIndex {get; set;}
+        public float NormalizePosition {get; set;}
 
+        public Warrior()
+        {
+            Id = _nextId++;
+        }
+    }
+
+    public interface IWarrior
+    {
+        public int Id { get; } 
+        public Sprite Sprite { get;}
+        public WarriorTypeId TypeId {get;}    
+        public WarriorState State {get;}
+        public int Health {get;}
+        public int MaxHealth { get;}
+        public int DamagePerSecond {get;}
+        public float NormalizedSpeed {get;}
+        public int LineIndex {get;}
+        public float NormalizePosition {get;}
     }
 }

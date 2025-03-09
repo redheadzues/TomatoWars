@@ -1,20 +1,28 @@
 ﻿using Source.Code.Models;
 using Source.Code.Services;
 using System;
+using System.Collections;
 using System.Linq;
 using Source.Code.StaticData;
-using Unity.VisualScripting;
-
+using UnityEngine;
+using Random = System.Random;
 
 namespace Source.Code.BattleField
 {
     public class BattleFieldService : Service
     {
+        private const float TICK_INTERVAL = 0.5f;
+        private const float SPAWN_TIME = 2f;
+        
         private readonly CoreModel _coreModel;
         private readonly BattleFieldModel _battleModel;
         private readonly StaticDataService _dataService;
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
+
+        private int _tikDamage;
+        private Coroutine _updateCoroutine;
+        private float _timeBeforeSpawn;
 
         public IReadOnlyBattleFieldModel BattleFieldModel => _battleModel;
         
@@ -28,42 +36,113 @@ namespace Source.Code.BattleField
             InitializeBattleModel();
         }
 
+        public void Start() => 
+            _updateCoroutine = _coroutineRunner.StartCoroutine(UpdatePerTick());
+
+        public void Stop() =>
+            _coroutineRunner.StopCoroutine(_updateCoroutine);
+
         private void InitializeBattleModel()
         {
             _battleModel.SelectedWarriors = _coreModel.Player.SelectedWarrior;
+
+            var boss = _dataService.GetBoss(_coreModel.Player.Stage);
+
+            _battleModel.BossHp = boss.Hp;
+            _battleModel.BossCurrentHp = boss.Hp;
         }
 
-        private Warrior GetFreeWarrior(WarriorType type)
+        private IEnumerator UpdatePerTick()
         {
-            var warrior = _battleModel.Warriors
-                .FirstOrDefault(x => x.State == WarriorState.Die && x.Type == type);
-
-            if (warrior != null)
+            while (true)
             {
-                warrior.State = WarriorState.Walk;
-                warrior.Health = _dataService.GetWarrior(type).Health;
-                return warrior;
+                Update();
+                yield return new WaitForSeconds(TICK_INTERVAL);
+            }
+        }
+
+        private void Update()
+        {
+            _tikDamage = 0;
+            
+            SpawnWarrior();
+            BossAttack();
+            
+            foreach (var warrior in _battleModel.Warriors)
+            {
+                if (warrior.NormalizePosition == 1f)
+                    warrior.State = WarriorState.Fight;
+                
+                switch (warrior.State)
+                {
+                    case WarriorState.Walk:
+                        Move(warrior);
+                        break;
+                    case WarriorState.Fight:
+                        AddTickDamage(warrior);
+                        break;
+                }
             }
 
-            return CreateNewWarrior(type);
+            _battleModel.BossCurrentHp -= _tikDamage;
         }
 
-        private Warrior CreateNewWarrior(WarriorType type)
+        private void AddTickDamage(Warrior warrior) => 
+            _tikDamage += warrior.DamagePerSecond;
+
+        private void Move(Warrior warrior) => 
+            warrior.NormalizePosition = Math.Clamp(warrior.NormalizePosition + warrior.NormalizedSpeed, 0f, 1f);
+
+        private void BossAttack()
         {
-            var config = _dataService.GetWarrior(type);
+            var lineIndexToAttack = _random.Next(0, 2);
+
+            var warriorForAttack = _battleModel.Warriors
+                .Where(x => x.LineIndex == lineIndexToAttack).ToList();
+
+            foreach (var warrior in warriorForAttack)
+            {
+                warrior.Health -= (int)(_battleModel.BossDamagePerSecond * TICK_INTERVAL);
+
+                if (warrior.Health <= 0)
+                    warrior.State = WarriorState.Died;
+            }
+        }
+
+        private void SpawnWarrior()
+        {
+            var selectedWarriorIndex = _random.Next(0, 4);
+            var warriorType = _battleModel.SelectedWarriors[selectedWarriorIndex];
+
+            var warrior = GetFreeWarrior(warriorType);
+            
+            warrior.State = WarriorState.Walk;
+            warrior.Health = warrior.MaxHealth;
+            warrior.NormalizePosition = 0;
+            warrior.LineIndex = _random.Next(0, 2);
+        }
+
+        
+        private Warrior GetFreeWarrior(WarriorTypeId typeId) => 
+            _battleModel.Warriors.FirstOrDefault(x => x.TypeId == typeId) 
+            ?? CreateNewWarrior(typeId);
+
+        private Warrior CreateNewWarrior(WarriorTypeId typeId)
+        {
+            var config = _dataService.GetWarrior(typeId);
             var warrior = new Warrior
             {
-                Type = type,
+                TypeId = typeId,
                 State = WarriorState.Walk,
                 Health = config.Health,
+                MaxHealth = config.Health,
                 DamagePerSecond = config.DamagePerSecond,
-                Speed = config.Speed
+                NormalizedSpeed = config.NormalizedSpeed
             };
             
             _battleModel.Warriors.Add(warrior);
 
             return warrior;
         }
-        
     }
 }
