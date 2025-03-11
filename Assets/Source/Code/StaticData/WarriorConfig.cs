@@ -11,6 +11,7 @@ namespace Source.Code.StaticData
 
     public enum WarriorState
     {
+        None,
         Walk,
         Fight, 
         Died
@@ -19,7 +20,7 @@ namespace Source.Code.StaticData
     [Serializable]
     public class WarriorConfig
     { 
-        [field: SerializeField] public Sprite Icon { get; private set; }
+        [field: SerializeField] public Sprite Sprite { get; private set; }
         [field: SerializeField] public int Health { get; private set; }
         [field: SerializeField] public int DamagePerSecond { get; private set; }
         [field: SerializeField] public float NormalizedSpeed { get; private set; }

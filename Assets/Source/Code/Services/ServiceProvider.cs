@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Source.Code.Models;
 using Source.Code.Services;
+using UnityEngine;
 
 public class ServiceProvider
 {
@@ -18,7 +19,6 @@ public class ServiceProvider
 
     public T Get<T>() where T : Service
     {
-        
         if (_services.TryGetValue(typeof(T), out var data))
             return data as T;
 
@@ -33,8 +33,8 @@ public class ServiceProvider
 
     public void RegisterInstance<T>(Service service) where T : Service
     {
-        if (!_services.ContainsKey(typeof(T)))
-            throw new Exception($"Service is already added");
+        if (_services.ContainsKey(typeof(T)))
+            return;
 
         _services[typeof(T)] = service;
     }

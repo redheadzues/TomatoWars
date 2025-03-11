@@ -1,102 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using Source.Code.StaticData;
 using UnityEngine;
+
 
 namespace Source.Code.BattleField.View
 {
     public class BattleFieldView : MonoBehaviour
     {
         [SerializeField] private WarriorView _prefab;
-        [SerializeField] private List<Transform> _lines;
+        [SerializeField] private List<SpriteRenderer> _lines;
+        [SerializeField] private BossView _bossView;
+        
+        private readonly List<WarriorView> _warriors = new();
 
-        private List<WarriorView> _warriors;
-
-        public void UpdateWarriors(List<IWarrior> warriors)
+        private void Awake()
         {
-            if (warriors.Count > _warriors.Count)
-            {
-                var difference = warriors.Count - _warriors.Count;
-
-                for (int i = warriors.Count - difference - 1; i > warriors.Count; i++)
-                {
-                    CreateNewWarrior(warriors[i]);
-                }
-            }
-            
-            _warriors.ForEach(warrior => warrior.UpdateWarrior());
+            ClearLines();
         }
-
-        private void CreateNewWarrior(IWarrior warrior)
+        
+        public void CreateNewWarrior(IWarrior warrior)
         {
-            var newWarrior = Instantiate(_prefab, _lines[warrior.LineIndex]);
+            var newWarrior = Instantiate(_prefab);
+            
             newWarrior.Init(warrior);
             _warriors.Add(newWarrior);
         }
-    }
 
-    public class WarriorView : MonoBehaviour
-    {
-        [SerializeField] private SpriteRenderer _sprite;
-
-        private IWarrior _warrior;
-        private float _lastPositionY;
-        private WarriorState _lastState;
-        
-        public int Id { get; private set; }
-
-        public void Init(IWarrior warrior)
+        public void UpdateWarriors(IReadOnlyList<IWarrior> warriors)
         {
-            Id = warrior.Id;
-            _sprite.sprite = warrior.Sprite;
+            _warriors.ForEach(warrior => warrior.UpdateWarrior());
         }
 
-        public void UpdateWarrior()
+        public void HitLine(int index)
         {
-            if(_warrior.State == _lastState && _warrior.State != WarriorState.Walk)
-                return;
-            
-            switch (_warrior.State)
+            _lines[index].DOColor(Color.red, 0.2f).SetLoops(2, LoopType.Yoyo);
+        }
+        
+        public void SpawnWarrior(IWarrior warrior)
+        {
+            var view = _warriors.FirstOrDefault(x => x.Id == warrior.Id);
+
+            if (view == null)
             {
-                case WarriorState.Walk:
-                    Move();
-                    break;
-                case WarriorState.Fight:
-                    Attack();
-                    break;
-                case WarriorState.Died:
-                    Die();
-                    break;
-                
-                default: 
-                    Move();
-                    break;
+                Debug.LogWarning("view for spawn not found");
+                return;
+            }
+            
+            SetWarriorOnLine(view, warrior.LineIndex);
+            view.gameObject.SetActive(true);
+        }
+
+        public void UpdateBossHp(int currentHp, int maxHp)
+        {
+            _bossView.UpdateBossHp(currentHp, maxHp);
+        }
+
+        private void SetWarriorOnLine(WarriorView warrior, int lineIndex)
+        {
+            warrior.transform.SetParent(_lines[lineIndex].transform);
+            var randomPositionY = Random.Range(-0.5f, 0.5f);
+            warrior.transform.localPosition = new Vector2(randomPositionY, -0.5f);
+        }
+        
+        private void ClearLines()
+        {
+            foreach (var line in _lines)
+            {
+                foreach (Transform child in line.transform)
+                {
+                    DestroyImmediate(child.gameObject);
+                }
             }
         }
-
-        private void Move()
-        {
-            var parrent = transform.parent;
-
-            if (parrent == null)
-                Debug.LogError("Transform has no parent, cannot calculate normalized position.");
-
-            var lineLength = parrent.transform.localScale.y;
-
-            transform.localPosition = new Vector2(transform.localPosition.x, lineLength * _warrior.NormalizePosition);
-
-
-        }
-
-        private void Attack()
-        {
-            
-        }
-
-        private void Die()
-        {
-            
-        }
-        
     }
 }

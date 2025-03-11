@@ -48,8 +48,14 @@ namespace Source.Code.BattleField
 
             var boss = _dataService.GetBoss(_coreModel.Player.Stage);
 
-            _battleModel.BossHp = boss.Hp;
+            if (boss == null)
+            {
+                throw new NullReferenceException("Missing boss config");
+            }
+            
+            _battleModel.BossMaxHp = boss.Hp;
             _battleModel.BossCurrentHp = boss.Hp;
+            _battleModel.BossDamagePerSecond = boss.DamagePerSecond;
         }
 
         private IEnumerator UpdatePerTick()
@@ -95,8 +101,8 @@ namespace Source.Code.BattleField
 
         private void BossAttack()
         {
-            var lineIndexToAttack = _random.Next(0, 2);
-
+            var lineIndexToAttack = _random.Next(0, 3);
+            
             var warriorForAttack = _battleModel.Warriors
                 .Where(x => x.LineIndex == lineIndexToAttack).ToList();
 
@@ -107,11 +113,13 @@ namespace Source.Code.BattleField
                 if (warrior.Health <= 0)
                     warrior.State = WarriorState.Died;
             }
+            
+            _battleModel.BossHitLine(lineIndexToAttack);
         }
 
         private void SpawnWarrior()
         {
-            var selectedWarriorIndex = _random.Next(0, 4);
+            var selectedWarriorIndex = _random.Next(0, 5);
             var warriorType = _battleModel.SelectedWarriors[selectedWarriorIndex];
 
             var warrior = GetFreeWarrior(warriorType);
@@ -119,12 +127,13 @@ namespace Source.Code.BattleField
             warrior.State = WarriorState.Walk;
             warrior.Health = warrior.MaxHealth;
             warrior.NormalizePosition = 0;
-            warrior.LineIndex = _random.Next(0, 2);
+            warrior.LineIndex = _random.Next(0, 3);
+            _battleModel.WarriorSpawn(warrior);
         }
 
         
         private Warrior GetFreeWarrior(WarriorTypeId typeId) => 
-            _battleModel.Warriors.FirstOrDefault(x => x.TypeId == typeId) 
+            _battleModel.Warriors.FirstOrDefault(x => x.TypeId == typeId && x.State == WarriorState.Died) 
             ?? CreateNewWarrior(typeId);
 
         private Warrior CreateNewWarrior(WarriorTypeId typeId)
@@ -133,14 +142,14 @@ namespace Source.Code.BattleField
             var warrior = new Warrior
             {
                 TypeId = typeId,
-                State = WarriorState.Walk,
+                Sprite = config.Sprite,
                 Health = config.Health,
                 MaxHealth = config.Health,
                 DamagePerSecond = config.DamagePerSecond,
                 NormalizedSpeed = config.NormalizedSpeed
             };
             
-            _battleModel.Warriors.Add(warrior);
+            _battleModel.AddWarrior(warrior);
 
             return warrior;
         }

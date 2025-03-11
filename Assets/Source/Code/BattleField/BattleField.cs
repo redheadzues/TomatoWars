@@ -1,4 +1,5 @@
-﻿using Source.Code.BattleField.View;
+﻿using System;
+using Source.Code.BattleField.View;
 using UnityEngine;
 
 namespace Source.Code.BattleField
@@ -8,24 +9,19 @@ namespace Source.Code.BattleField
         [SerializeField] private BattleFieldView _view;
         
         private BattleFieldPresenter _presenter;
+        private BattleFieldService _battleService;
 
-        private void Awake() 
+        private void Start() 
         {
-            var battleService = Provider.Get<BattleFieldService>();
-            _presenter = new BattleFieldPresenter(battleService.BattleFieldModel, _view);
+            _battleService = Provider.Get<BattleFieldService>();
+            _presenter = new BattleFieldPresenter(_battleService.BattleFieldModel, _view);
+            _battleService.Start();
+            
         }
-    }
 
-    public class BattleFieldPresenter
-    {
-        private readonly IReadOnlyBattleFieldModel _model;
-        private readonly BattleFieldView _view;
-
-
-        public BattleFieldPresenter(IReadOnlyBattleFieldModel model, BattleFieldView view)
+        private void Update()
         {
-            _model = model;
-            _view = view;
+            _view.UpdateWarriors(_battleService.BattleFieldModel.ReadOnlyWarriors);
         }
     }
 }

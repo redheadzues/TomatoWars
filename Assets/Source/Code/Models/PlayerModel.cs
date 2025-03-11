@@ -14,7 +14,22 @@ namespace Source.Code.Models
     {
         public int Gold { get; set; }
         public int Gem { get; set; }
-        public int Stage { get; set; }
-        public List<WarriorTypeId> SelectedWarrior;
+        public int Stage  { get; set; }
+
+        public List<WarriorTypeId> SelectedWarrior = new List<WarriorTypeId>()
+        {
+            WarriorTypeId.Tomato,
+            WarriorTypeId.Tomato,
+            WarriorTypeId.Tomato,
+            WarriorTypeId.Tomato,
+            WarriorTypeId.Potato
+        };
+
+        public PlayerModel()
+        {
+            Gold = 0;
+            Gem = 0;
+            Stage = 1;
+        }
     }
 }

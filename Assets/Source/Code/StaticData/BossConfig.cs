@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Source.Code.StaticData
 {
+    [Serializable]
     public class BossConfig
     {
         [field: SerializeField] public int Stage { get; private set; }

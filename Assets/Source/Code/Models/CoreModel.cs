@@ -11,6 +11,11 @@ namespace Source.Code.Models
     public class CoreModel : IReadOnlyCoreModel
     {
         public PlayerModel Player { get; set; }
+
+        public CoreModel()
+        {
+            Player = new();
+        }
     }
     
 }
