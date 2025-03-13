@@ -15,25 +15,28 @@ namespace Source.Code.BattleField
         private const float SPAWN_TIME = 2f;
         
         private readonly CoreModel _coreModel;
-        private readonly BattleFieldModel _battleModel;
         private readonly StaticDataService _dataService;
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
-
+        
+        private BattleFieldModel _battleModel;
         private int _tikDamage;
         private Coroutine _updateCoroutine;
         private float _timeBeforeSpawn;
 
         public IReadOnlyBattleFieldModel BattleFieldModel => _battleModel;
+        public event Action ReadyToStart;
+        public event Action StageCompleted;
+        public event Action TickCalculated;
+        public event Action<int> BossHitLine;
+        public event Action<IWarrior> WarriorSpawned;
+        public event Action<IWarrior> WarriorAdded;
         
         public BattleFieldService(CoreModel model, StaticDataService dataService, ICoroutineRunner runner)
         {
             _coreModel = model;
             _coroutineRunner = runner;
             _dataService = dataService;
-            _battleModel = new BattleFieldModel();
-            
-            InitializeBattleModel();
         }
 
         public void Start() => 
@@ -41,26 +44,35 @@ namespace Source.Code.BattleField
 
         public void Stop() =>
             _coroutineRunner.StopCoroutine(_updateCoroutine);
+        
+        public void PrepareNewStage()
+        {
+            _battleModel = new();
+            InitializeBattleModel();
+        }
 
         private void InitializeBattleModel()
         {
             _battleModel.SelectedWarriors = _coreModel.Player.SelectedWarrior;
 
-            var boss = _dataService.GetBoss(_coreModel.Player.Stage);
+            var bossConfig = _dataService.GetBoss(_coreModel.Player.Stage);
 
-            if (boss == null)
+            if (bossConfig == null)
             {
                 throw new NullReferenceException("Missing boss config");
             }
-            
-            _battleModel.BossMaxHp = boss.Hp;
-            _battleModel.BossCurrentHp = boss.Hp;
-            _battleModel.BossDamagePerSecond = boss.DamagePerSecond;
+
+            _battleModel.BossSprite = bossConfig.Sprite;
+            _battleModel.BossMaxHp = bossConfig.Hp;
+            _battleModel.BossCurrentHp = bossConfig.Hp;
+            _battleModel.BossDamagePerSecond = bossConfig.DamagePerSecond;
+
+            ReadyToStart?.Invoke();
         }
 
         private IEnumerator UpdatePerTick()
         {
-            while (true)
+            while(true)
             {
                 Update();
                 yield return new WaitForSeconds(TICK_INTERVAL);
@@ -91,6 +103,15 @@ namespace Source.Code.BattleField
             }
 
             _battleModel.BossCurrentHp -= _tikDamage;
+
+            TickCalculated?.Invoke();
+            
+            if (_battleModel.BossCurrentHp <= 0)
+            {
+                Stop();
+                _coreModel.Player.Stage++;
+                StageCompleted?.Invoke();
+            }
         }
 
         private void AddTickDamage(Warrior warrior) => 
@@ -114,7 +135,7 @@ namespace Source.Code.BattleField
                     warrior.State = WarriorState.Died;
             }
             
-            _battleModel.BossHitLine(lineIndexToAttack);
+            BossHitLine?.Invoke(lineIndexToAttack);
         }
 
         private void SpawnWarrior()
@@ -128,7 +149,10 @@ namespace Source.Code.BattleField
             warrior.Health = warrior.MaxHealth;
             warrior.NormalizePosition = 0;
             warrior.LineIndex = _random.Next(0, 3);
-            _battleModel.WarriorSpawn(warrior);
+            
+            _battleModel.Warriors.Add(warrior);
+            
+            WarriorSpawned?.Invoke(warrior);
         }
 
         
@@ -149,7 +173,7 @@ namespace Source.Code.BattleField
                 NormalizedSpeed = config.NormalizedSpeed
             };
             
-            _battleModel.AddWarrior(warrior);
+            WarriorAdded?.Invoke(warrior);
 
             return warrior;
         }

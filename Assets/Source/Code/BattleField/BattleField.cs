@@ -1,5 +1,4 @@
-﻿using System;
-using Source.Code.BattleField.View;
+﻿using Source.Code.BattleField.View;
 using UnityEngine;
 
 namespace Source.Code.BattleField
@@ -14,14 +13,12 @@ namespace Source.Code.BattleField
         private void Start() 
         {
             _battleService = Provider.Get<BattleFieldService>();
-            _presenter = new BattleFieldPresenter(_battleService.BattleFieldModel, _view);
-            _battleService.Start();
-            
+            _presenter = new BattleFieldPresenter(_battleService, _view);
         }
 
-        private void Update()
+        private void OnDestroy()
         {
-            _view.UpdateWarriors(_battleService.BattleFieldModel.ReadOnlyWarriors);
+            _presenter.CleanUp();
         }
     }
 }

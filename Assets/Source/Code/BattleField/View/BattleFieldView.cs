@@ -4,7 +4,6 @@ using DG.Tweening;
 using Source.Code.StaticData;
 using UnityEngine;
 
-
 namespace Source.Code.BattleField.View
 {
     public class BattleFieldView : MonoBehaviour
@@ -17,7 +16,26 @@ namespace Source.Code.BattleField.View
 
         private void Awake()
         {
-            ClearLines();
+            Clear();
+        }
+        
+        public void Init(Sprite bossSprite, int bossMaxHp)
+        {
+            _bossView.Init(bossSprite, bossMaxHp);
+        }
+        
+        public void Clear()
+        {
+            _warriors.ForEach(x => Destroy(x.gameObject));
+            _warriors.Clear();
+            
+            foreach (var line in _lines)
+            {
+                foreach (Transform child in line.transform)
+                {
+                    DestroyImmediate(child.gameObject);
+                }
+            }
         }
         
         public void CreateNewWarrior(IWarrior warrior)
@@ -62,17 +80,6 @@ namespace Source.Code.BattleField.View
             warrior.transform.SetParent(_lines[lineIndex].transform);
             var randomPositionY = Random.Range(-0.5f, 0.5f);
             warrior.transform.localPosition = new Vector2(randomPositionY, -0.5f);
-        }
-        
-        private void ClearLines()
-        {
-            foreach (var line in _lines)
-            {
-                foreach (Transform child in line.transform)
-                {
-                    DestroyImmediate(child.gameObject);
-                }
-            }
         }
     }
 }

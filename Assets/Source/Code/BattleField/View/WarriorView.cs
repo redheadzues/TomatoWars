@@ -16,7 +16,12 @@ namespace Source.Code.BattleField.View
         private Tween _attackTween;
         
         public int Id { get; private set; }
-        
+
+        private void OnDisable()
+        {
+            ResetAllAction();
+        }
+
         public void Init(IWarrior warrior)
         {
             Id = warrior.Id;
