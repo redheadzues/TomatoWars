@@ -3,14 +3,7 @@ using Source.Code.StaticData;
 
 namespace Source.Code.Models
 {
-    public interface IReadOnlyPlayerModel
-    {
-        int Gold { get;}
-        int Gem { get;}
-        int Stage { get;}
-    }
-    
-    public class PlayerModel : IReadOnlyPlayerModel
+    public class PlayerModel 
     {
         public int Gold { get; set; }
         public int Gem { get; set; }

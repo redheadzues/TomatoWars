@@ -2,19 +2,15 @@
 
 namespace Source.Code.Models
 {
-    public interface IReadOnlyCoreModel
-    {
-        PlayerModel Player { get;  }
-    }
-    
-
     public class CoreModel : IReadOnlyCoreModel
     {
         public PlayerModel Player { get; set; }
+        public GridModel Grid { get; set; }
 
         public CoreModel()
         {
             Player = new();
+            Grid = new();
         }
     }
     

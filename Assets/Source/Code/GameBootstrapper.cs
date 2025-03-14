@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Source.Code.BattleField;
+using Source.Code.Grid;
 using Source.Code.Models;
 using Source.Code.Services;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace Source.Code
             var staticData = new StaticDataService();
             _serviceProvider.RegisterInstance<StaticDataService>(staticData);
             
+            _serviceProvider.RegisterLazy(() => new MergeGridService(_model, staticData));
             _serviceProvider.RegisterLazy(() => new SaveLoadService());
             _serviceProvider.RegisterLazy(() => new BattleFieldService(_model, staticData, this));
         }
