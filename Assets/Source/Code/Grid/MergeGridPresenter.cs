@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Source.Code.Grid.View;
 using Source.Code.Models;
-using UnityEngine;
 
 namespace Source.Code.Grid
 {
@@ -57,12 +55,7 @@ namespace Source.Code.Grid
         
         private void OnDragStarted(int index)
         {
-            var booster = _model.GridBoosters.FirstOrDefault(x => x.Index == index);
-
-            if (booster == null)
-            {
-                throw new NullReferenceException($"booster is null index is {index}");
-            }
+            var booster = _model.GridBoosters[index];
 
             var boostersIndex = _model.GridBoosters.Where(x =>
                 x != null &&

@@ -80,10 +80,10 @@ namespace Source.Code.Grid.View
             _cellViews[booster.Index].SetBooster(booster);
         }
 
-        public void RejectMerge(int firstIndex, int secondIndex)
+        public void RejectMerge(int hostIndex, int inputIndex)
         {
-            _cellViews[firstIndex].AnimateFail();
-            _cellViews[secondIndex].ReturnPosition();
+            _cellViews[hostIndex].AnimateFail();
+            _cellViews[inputIndex].ReturnPosition();
         }
 
         public void HighlightMergeTarget(List<int> targetIndexes)
@@ -93,9 +93,9 @@ namespace Source.Code.Grid.View
             _mergeTargetIndexes.ForEach(i => _cellViews[i].HighlightAsTarget(true));
         }
 
-        public void MergeAttempt(int firstCell, int secondCell)
+        public void MergeAttempt(int hostIndex, int inputIndex)
         {
-            CellsMergeAttempt?.Invoke(firstCell, secondCell);
+            CellsMergeAttempt?.Invoke(hostIndex, inputIndex);
         }
 
         private void OnDragEnded(BoosterIconDraggable draggable) => 
