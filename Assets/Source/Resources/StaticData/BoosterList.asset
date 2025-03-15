@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _boosters:
   - <Icon>k__BackingField: {fileID: 21300000, guid: c188ba62ce2b5c74d919c17201e21c9e, type: 3}
-    <TypeId>k__BackingField: 0
-  - <Icon>k__BackingField: {fileID: 21300000, guid: b5b3ab21291423d48a264d8e1b4972e0, type: 3}
     <TypeId>k__BackingField: 1
-  - <Icon>k__BackingField: {fileID: 21300000, guid: 1235ff69119e47a41ad67648cafc8e4f, type: 3}
+  - <Icon>k__BackingField: {fileID: 21300000, guid: b5b3ab21291423d48a264d8e1b4972e0, type: 3}
     <TypeId>k__BackingField: 2
-  - <Icon>k__BackingField: {fileID: 21300000, guid: 94ee8b38e2bc81442a18c647e30ec44a, type: 3}
+  - <Icon>k__BackingField: {fileID: 21300000, guid: 1235ff69119e47a41ad67648cafc8e4f, type: 3}
     <TypeId>k__BackingField: 3
+  - <Icon>k__BackingField: {fileID: 21300000, guid: 94ee8b38e2bc81442a18c647e30ec44a, type: 3}
+    <TypeId>k__BackingField: 4
