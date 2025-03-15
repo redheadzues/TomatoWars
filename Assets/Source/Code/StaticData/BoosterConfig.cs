@@ -12,6 +12,7 @@ namespace Source.Code.StaticData
 
     public enum GridBoosterTypeId
     {
+        None, //None typeId should always be first
         Sword,
         Axe,
         Shield,

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,11 +11,13 @@ namespace Source.Code.Grid.View
         [SerializeField] private CellView _cellPrefab;
         [SerializeField] private GridLayoutGroup _grid;
         
+        private List<int> _mergeTargetIndexes;
         private List<CellView> _cellViews;
         private MergeCollisionHandler _mergeCollisionHandler;
 
-        public event Action<int, int> DragCompleted;
         public event Action CreateButtonClicked;
+        public event Action<int, int> CellsMergeAttempt;
+        public event Action<int> DragStarted;
 
         private void Awake()
         {
@@ -29,11 +30,20 @@ namespace Source.Code.Grid.View
         private void OnEnable()
         {
             _createNewBoosterButton.onClick.AddListener(OnCreateButtonClicked);
+            _cellViews?.ForEach(x => x.Draggable.DragStarted += OnDragStarted);
+            _cellViews?.ForEach(x => x.Draggable.DragEnded += OnDragEnded);
         }
 
         private void OnDisable()
         {
             _createNewBoosterButton.onClick.RemoveListener(OnCreateButtonClicked);
+            _cellViews?.ForEach(x => x.Draggable.DragStarted -= OnDragStarted);
+            _cellViews?.ForEach(x => x.Draggable.DragEnded -= OnDragEnded);
+        }
+
+        private void OnDestroy()
+        {
+            _mergeCollisionHandler?.CleanUp();
         }
 
         public void Init(IReadOnlyList<GridBooster> boosters)
@@ -45,9 +55,11 @@ namespace Source.Code.Grid.View
             for (var i = 0; i < boosters.Count; i++)
             {
                 var cell = Instantiate(_cellPrefab, _grid.transform);
-                cell.SetBooster(boosters[i]);
                 cell.Init(i);
+                cell.SetBooster(boosters[i]);
                 _cellViews.Add(cell);
+                cell.Draggable.DragStarted += OnDragStarted;
+                cell.Draggable.DragEnded += OnDragEnded;
                 _mergeCollisionHandler.AddCellView(cell);
             }
         }
@@ -60,7 +72,7 @@ namespace Source.Code.Grid.View
         public void UpdateGrid(GridBooster booster, int emptyIndex)
         {
             UpdateGrid(booster);
-            _cellViews[emptyIndex].SetBooster(null);
+            _cellViews[emptyIndex].SetBooster(new GridBooster(emptyIndex));
         }
 
         public void UpdateGrid(GridBooster booster)
@@ -68,18 +80,31 @@ namespace Source.Code.Grid.View
             _cellViews[booster.Index].SetBooster(booster);
         }
 
-        public void FailDrag(int firstIndex, int secondIndex)
+        public void RejectMerge(int firstIndex, int secondIndex)
         {
             _cellViews[firstIndex].AnimateFail();
             _cellViews[secondIndex].ReturnPosition();
         }
-        
-        private void OnCreateButtonClicked()
-        {
-            CreateButtonClicked?.Invoke();
-        }
-        
-        
 
+        public void HighlightMergeTarget(List<int> targetIndexes)
+        {
+            _mergeTargetIndexes = targetIndexes;
+            
+            _mergeTargetIndexes.ForEach(i => _cellViews[i].HighlightAsTarget(true));
+        }
+
+        public void MergeAttempt(int firstCell, int secondCell)
+        {
+            CellsMergeAttempt?.Invoke(firstCell, secondCell);
+        }
+
+        private void OnDragEnded(BoosterIconDraggable draggable) => 
+            _mergeTargetIndexes?.ForEach(i => _cellViews[i].HighlightAsTarget(false));
+
+        private void OnCreateButtonClicked() => 
+            CreateButtonClicked?.Invoke();
+
+        private void OnDragStarted(BoosterIconDraggable draggable) => 
+            DragStarted?.Invoke(draggable.Parent.Index);
     }
 }

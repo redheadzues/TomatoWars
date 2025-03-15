@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Source.Code.Models;
 using Source.Code.Services;
 using Source.Code.StaticData;
+using UnityEngine;
+using Random = System.Random;
 
 namespace Source.Code.Grid
 {
@@ -22,23 +26,36 @@ namespace Source.Code.Grid
             _gridModel = model.Grid;
             _playerModel = model.Player;
             _staticData = staticData;
+
+            if (_gridModel.GridBoosters == null)
+                _gridModel.GridBoosters = Enumerable.Range(0, BOOSTER_LIMIT)
+                    .Select(i => new GridBooster(i)).ToList();
         }
 
-        public bool TryMerge(int firstIndex, int secondIndex, out GridBooster booster, out int emptyIndex)
+        public bool TryMerge(int hostIndex, int inputIndex, out GridBooster newHostBooster, out int emptyIndex)
         {
-            booster = null;
-            emptyIndex = -1;
+            newHostBooster = null;
+            emptyIndex = inputIndex;
             
-            if (_gridModel.GridBoosters[firstIndex].TypeId == _gridModel.GridBoosters[secondIndex].TypeId
-                && _gridModel.GridBoosters[firstIndex].Level == _gridModel.GridBoosters[secondIndex].Level)
+            if (_gridModel.GridBoosters[hostIndex].TypeId == _gridModel.GridBoosters[inputIndex].TypeId
+                && _gridModel.GridBoosters[hostIndex].Level == _gridModel.GridBoosters[inputIndex].Level)
             {
-                _gridModel.GridBoosters[secondIndex] = null;
-                var newLevel = _gridModel.GridBoosters[firstIndex].Level + 1;
-                _gridModel.GridBoosters[firstIndex] = CreateNewBooster(firstIndex, newLevel);
+                _gridModel.GridBoosters[inputIndex] = CreateEmptyBooster(inputIndex);
+                var newLevel = _gridModel.GridBoosters[hostIndex].Level + 1;
+                _gridModel.GridBoosters[hostIndex] = CreateNewBooster(hostIndex, newLevel);
 
-                booster = _gridModel.GridBoosters[firstIndex];
-                emptyIndex = secondIndex;
+                newHostBooster = _gridModel.GridBoosters[hostIndex];
                 
+                return true;
+            }
+
+            if (_gridModel.GridBoosters[hostIndex].TypeId == GridBoosterTypeId.None)
+            {
+                _gridModel.GridBoosters[hostIndex] = CopyBoosterWithNewIndex(_gridModel.GridBoosters[inputIndex], hostIndex);
+                _gridModel.GridBoosters[inputIndex] = CreateEmptyBooster(inputIndex);
+
+                newHostBooster = _gridModel.GridBoosters[hostIndex];
+
                 return true;
             }
 
@@ -60,7 +77,7 @@ namespace Source.Code.Grid
             
             foreach (var gridBooster in _gridModel.GridBoosters)
             {
-                if (gridBooster != null)
+                if (gridBooster.TypeId != GridBoosterTypeId.None)
                 {
                     count++;
                     lvlSum += gridBooster.Level;
@@ -76,7 +93,7 @@ namespace Source.Code.Grid
         private GridBooster CreateNewBooster(int index, int level)
         {
             var values = Enum.GetValues(typeof(GridBoosterTypeId));
-            var typeId = (GridBoosterTypeId)values.GetValue(_random.Next(values.Length));
+            var typeId = (GridBoosterTypeId)values.GetValue(_random.Next(1, values.Length));
 
             var config = _staticData.GetBooster(typeId);
 
@@ -90,7 +107,14 @@ namespace Source.Code.Grid
             return newBooster;
         }
 
+        private GridBooster CopyBoosterWithNewIndex(GridBooster booster, int newIndex) => 
+            new(newIndex, booster.TypeId, booster.Level, booster.Icon);
+
+
+        private GridBooster CreateEmptyBooster(int index) => 
+            new GridBooster(index);
+
         private int GetFreeCellIndex() => 
-            _gridModel.GridBoosters.FindIndex(booster => booster == null);
+            _gridModel.GridBoosters.FindIndex(booster => booster.TypeId == GridBoosterTypeId.None);
     }
 }

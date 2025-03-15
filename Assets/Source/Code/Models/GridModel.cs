@@ -10,7 +10,7 @@ namespace Source.Code.Models
 
     public class GridModel : IMergeGridModel
     {
-        public List<GridBooster> GridBoosters { get; } = new List<GridBooster>(new GridBooster[30]);
+        public List<GridBooster> GridBoosters { get; set; }
         public int MergeCount;
         IReadOnlyList<GridBooster> IMergeGridModel.GridBoosters => GridBoosters;
         

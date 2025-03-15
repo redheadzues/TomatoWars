@@ -1,4 +1,6 @@
 ﻿using System;
+using DG.Tweening;
+using Source.Code.StaticData;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,18 +10,21 @@ namespace Source.Code.Grid.View
     public class CellView : MonoBehaviour
     {
         [SerializeField] private Image _icon;
-        [SerializeField] private Image _frame;
+        [SerializeField] private Image _selectHighlighter;
+        [SerializeField] private Image _targetHighlighter;
         [SerializeField] private TMP_Text _levelText;
         [SerializeField] private Collider2D _collider;
         [SerializeField] private BoosterIconDraggable _draggable;
-        
+
+        private GridBooster _booster;
         public int Index { get; private set; }
         public Collider2D Collider => _collider;
         public BoosterIconDraggable Draggable => _draggable;
 
         private void Awake()
         {
-            HighlightSetActive(false);
+            _selectHighlighter.gameObject.SetActive(false);
+            HighlightAsTarget(false);
         }
 
         public void Init(int index)
@@ -30,13 +35,20 @@ namespace Source.Code.Grid.View
         
         public void SetBooster(GridBooster booster)
         {
-            if (booster == null)
+            if(booster.Index != Index)
+                throw new InvalidOperationException($"Booster index {booster.Index} does not match expected index {Index}.");
+
+            
+            _booster = booster;
+            _draggable.ReturnPosition();
+            
+            if (booster.TypeId == GridBoosterTypeId.None)
             {
                 _icon.gameObject.SetActive(false);
                 _levelText.gameObject.SetActive(false);
                 return;
             }
-            
+
             _icon.sprite = booster.Icon;
             _levelText.text = booster.Level.ToString();
             
@@ -44,20 +56,38 @@ namespace Source.Code.Grid.View
             _levelText.gameObject.SetActive(true);
         }
 
+        public void HighlightAsTarget(bool isHighlight)
+        {
+            _targetHighlighter.gameObject.SetActive(isHighlight);
+        }
+
         public void AnimateFail()
         {
-            throw new NotImplementedException();
+            var baseColor = _targetHighlighter.color;
+            HighlightAsTarget(true);
+            
+            DOTween.Sequence()
+                .Append(_targetHighlighter.DOColor(Color.red, 0.5f))
+                .Join(transform.DOShakeScale(0.5f, 0.2f, 0, 0))
+                .OnComplete(() =>
+                {
+                    _targetHighlighter.color = baseColor;    
+                    HighlightAsTarget(false);
+                });
         }
 
         public void ReturnPosition()
         {
-            throw new NotImplementedException();
+            _draggable.ReturnPosition();
         }
 
 
-        public void HighlightSetActive(bool isActive)
+        public void HighlightAsSelect(bool isActive)
         {
-            _frame.gameObject.SetActive(isActive);
+            if (_booster == null)
+                return;
+            
+            _selectHighlighter.gameObject.SetActive(isActive);
         }
     }
 }

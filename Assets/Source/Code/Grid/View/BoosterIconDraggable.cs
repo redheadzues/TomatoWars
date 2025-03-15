@@ -13,13 +13,14 @@ namespace Source.Code.Grid.View
         private Transform _parentTransform;
         private CellView _parentView;
 
-        public event Action<BoosterIconDraggable, CellView> DragStarted;
+        public event Action<BoosterIconDraggable> DragStarted;
         public event Action<BoosterIconDraggable> DragEnded;
 
         public event Action<Collider2D> TriggerEnter;
         public event Action<Collider2D> TriggerExit;
 
         public Collider2D Collider => _selfCollider;
+        public CellView Parent => _parentView;
 
         public void Init(CellView cellView)
         {
@@ -30,7 +31,7 @@ namespace Source.Code.Grid.View
         public void OnBeginDrag(PointerEventData eventData)
         {
             transform.SetParent(_parentTransform.root); 
-            DragStarted?.Invoke(this, _parentView);
+            DragStarted?.Invoke(this);
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -40,9 +41,13 @@ namespace Source.Code.Grid.View
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            DragEnded?.Invoke(this);
+        }
+
+        public void ReturnPosition()
+        {
             transform.SetParent(_parentTransform);
             transform.localPosition = Vector2.zero;
-            DragEnded?.Invoke(this);
         }
         
         private void OnTriggerEnter2D(Collider2D other)
