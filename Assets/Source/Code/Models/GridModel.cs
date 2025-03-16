@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Source.Code.Grid;
 
 namespace Source.Code.Models
@@ -8,6 +9,7 @@ namespace Source.Code.Models
         IReadOnlyList<GridBooster> GridBoosters { get; }
     }
 
+    [Serializable]
     public class GridModel : IMergeGridModel
     {
         public List<GridBooster> GridBoosters { get; set; }

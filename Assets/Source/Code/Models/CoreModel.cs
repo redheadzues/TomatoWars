@@ -1,5 +1,9 @@
-﻿namespace Source.Code.Models
+﻿using System;
+using Source.Code.Models.Player;
+
+namespace Source.Code.Models
 {
+    [Serializable]
     public class CoreModel : IReadOnlyCoreModel
     {
         public PlayerModel Player { get; set; }

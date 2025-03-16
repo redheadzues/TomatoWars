@@ -9,7 +9,7 @@ namespace Source.Code.Services
     {
         private Dictionary<WarriorTypeId, WarriorConfig> _warriors;
         private Dictionary<int, BossConfig> _bosses;
-        private Dictionary<GridBoosterTypeId, BoosterConfig> _boosters;
+        private Dictionary<BoosterTypeId, BoosterConfig> _boosters;
     
         public void LoadData()
         {
@@ -24,7 +24,7 @@ namespace Source.Code.Services
         public BossConfig GetBoss(int stage) =>
             _bosses.GetValueOrDefault(stage);
 
-        public BoosterConfig GetBooster(GridBoosterTypeId typeId) =>
+        public BoosterConfig GetBooster(BoosterTypeId typeId) =>
             _boosters.GetValueOrDefault(typeId);
     }
 }

@@ -20,7 +20,7 @@ namespace Source.Code.StaticData
     [Serializable]
     public class WarriorConfig
     { 
-        [field: SerializeField] public Sprite Sprite { get; private set; }
+        [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public int Health { get; private set; }
         [field: SerializeField] public int DamagePerSecond { get; private set; }
         [field: SerializeField] public float NormalizedSpeed { get; private set; }
@@ -29,34 +29,51 @@ namespace Source.Code.StaticData
 
     public class Warrior : IWarrior
     {
-        private static int _nextId;
-        public int Id { get; }
-        public Sprite Icon { get; set; }
-        public WarriorTypeId TypeId {get; set;}    
-        public WarriorState State {get; set;}
-        public int Health {get; set;}
-        public int DamagePerSecond {get; set; }
-        public int MaxHealth { get; set; }
-        public float NormalizedSpeed {get; set;}
-        public int LineIndex {get; set;}
-        public float NormalizePosition {get; set;}
+        private int _health;
+        
+        public Sprite Icon { get; }
+        public WarriorTypeId TypeId {get;}
+        public WarriorState State { get; set; }
+        public int Health => _health;
+        public int MaxHealth { get; }
+        public int BaseDamagePerSecond {get; }
+        public float NormalizedSpeed {get;}
+        public int LineIndex {get; set; }
+        public float NormalizePosition {get; set; }
 
-       
-        public Warrior()
+        public virtual int DamagePerSecond => BaseDamagePerSecond;
+        
+        public Warrior(WarriorConfig config)
         {
-            Id = _nextId++;
+            Icon = config.Icon;
+            TypeId = config.TypeId;
+            _health = config.Health;
+            MaxHealth = config.Health;
+            BaseDamagePerSecond = config.DamagePerSecond;
+            NormalizedSpeed = config.NormalizedSpeed;
+        }
+
+        public void ResetWarrior()
+        {
+            _health = MaxHealth;
+            State = WarriorState.Walk;
+            NormalizePosition = 0;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            _health -= damage;
         }
     }
 
     public interface IWarrior
     {
-        public int Id { get; } 
         public Sprite Icon { get;}
         public WarriorTypeId TypeId {get;}    
         public WarriorState State {get;}
         public int Health {get;}
         public int MaxHealth { get;}
-        public int DamagePerSecond {get;}
+        public int BaseDamagePerSecond {get;}
         public float NormalizedSpeed {get;}
         public int LineIndex {get;}
         public float NormalizePosition {get;}

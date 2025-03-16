@@ -58,7 +58,7 @@ namespace Source.Code.BattleField.View
         
         public void SpawnWarrior(IWarrior warrior)
         {
-            var view = _warriors.FirstOrDefault(x => x.Id == warrior.Id);
+            var view = _warriors.FirstOrDefault(x => x.Warrior == warrior);
 
             if (view == null)
             {

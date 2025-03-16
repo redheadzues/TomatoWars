@@ -15,7 +15,7 @@ namespace Source.Code.BattleField.View
         private Tween _moveTween;
         private Tween _attackTween;
         
-        public int Id { get; private set; }
+        public IWarrior Warrior { get; private set; }
 
         private void OnDisable()
         {
@@ -24,7 +24,7 @@ namespace Source.Code.BattleField.View
 
         public void Init(IWarrior warrior)
         {
-            Id = warrior.Id;
+            Warrior = warrior;
             _sprite.sprite = warrior.Icon;
             _warrior = warrior;
         }

@@ -1,4 +1,6 @@
-﻿namespace Source.Code.Models
+﻿using Source.Code.Models.Player;
+
+namespace Source.Code.Models
 {
     public interface IReadOnlyCoreModel
     {

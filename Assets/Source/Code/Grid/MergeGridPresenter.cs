@@ -39,16 +39,8 @@ namespace Source.Code.Grid
                 
                 if(warriorConfig == null)
                     throw new NullReferenceException($"Missing warrior config by {warriorTypeId} type");
-                
-                var warrior = new Warrior
-                {
-                    TypeId = warriorConfig.TypeId,
-                    Icon = warriorConfig.Sprite,
-                    Health = warriorConfig.Health,
-                    MaxHealth = warriorConfig.Health,
-                    DamagePerSecond = warriorConfig.DamagePerSecond,
-                    NormalizedSpeed = warriorConfig.NormalizedSpeed
-                };
+
+                var warrior = new Warrior(warriorConfig);
                 
                 selectedWarriors.Add(warrior);
             }

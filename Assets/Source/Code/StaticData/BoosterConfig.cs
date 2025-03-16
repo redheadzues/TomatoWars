@@ -7,10 +7,11 @@ namespace Source.Code.StaticData
     public class BoosterConfig
     {
         [field: SerializeField] public Sprite Icon { get; private set; }
-        [field: SerializeField] public GridBoosterTypeId TypeId { get; private set; }
+        [field: SerializeField] public BoosterTypeId TypeId { get; private set; }
+        
     }
 
-    public enum GridBoosterTypeId
+    public enum BoosterTypeId
     {
         None, //None typeId should always be first
         Sword,

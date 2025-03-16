@@ -115,7 +115,7 @@ namespace Source.Code.BattleField
         }
 
         private void AddTickDamage(Warrior warrior) => 
-            _tikDamage += warrior.DamagePerSecond;
+            _tikDamage += warrior.BaseDamagePerSecond;
 
         private void Move(Warrior warrior) => 
             warrior.NormalizePosition = Math.Clamp(warrior.NormalizePosition + warrior.NormalizedSpeed, 0f, 1f);
@@ -129,7 +129,7 @@ namespace Source.Code.BattleField
 
             foreach (var warrior in warriorForAttack)
             {
-                warrior.Health -= (int)(_battleModel.BossDamagePerSecond * TICK_INTERVAL);
+                warrior.TakeDamage((int)(_battleModel.BossDamagePerSecond * TICK_INTERVAL));
 
                 if (warrior.Health <= 0)
                     warrior.State = WarriorState.Died;
@@ -145,9 +145,7 @@ namespace Source.Code.BattleField
 
             var warrior = GetFreeWarrior(warriorType);
             
-            warrior.State = WarriorState.Walk;
-            warrior.Health = warrior.MaxHealth;
-            warrior.NormalizePosition = 0;
+            warrior.ResetWarrior();
             warrior.LineIndex = _random.Next(0, 3);
             
             _battleModel.Warriors.Add(warrior);
@@ -163,15 +161,7 @@ namespace Source.Code.BattleField
         private Warrior CreateNewWarrior(WarriorTypeId typeId)
         {
             var config = _dataService.GetWarrior(typeId);
-            var warrior = new Warrior
-            {
-                TypeId = typeId,
-                Icon = config.Sprite,
-                Health = config.Health,
-                MaxHealth = config.Health,
-                DamagePerSecond = config.DamagePerSecond,
-                NormalizedSpeed = config.NormalizedSpeed
-            };
+            var warrior = new Warrior(config);
             
             WarriorAdded?.Invoke(warrior);
 

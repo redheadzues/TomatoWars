@@ -9,10 +9,12 @@ namespace Source.Code.Grid
     {
         public int Index { get; }
         public int Level { get; }
-        public GridBoosterTypeId TypeId { get;}
-        public Sprite Icon { get; } 
+        public BoosterTypeId TypeId { get;}
+        public Rarity Rarity { get; }
+        public Sprite Icon { get; }
         
-        public GridBooster(int index, GridBoosterTypeId typeId, int level, Sprite icon)
+        
+        public GridBooster(int index, BoosterTypeId typeId, int level, Sprite icon)
         {
             Index = index;
             TypeId = typeId;
@@ -23,7 +25,7 @@ namespace Source.Code.Grid
         public GridBooster(int index)
         {
             Index = index;
-            TypeId = GridBoosterTypeId.None;
+            TypeId = BoosterTypeId.None;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Source.Code.StaticData;
 
-namespace Source.Code.Models
+namespace Source.Code.Models.Player
 {
     public class PlayerModel 
     {
@@ -18,6 +18,8 @@ namespace Source.Code.Models
             WarriorTypeId.Potato
         };
 
+        public List<OwnedWarriors> OwnedWarriors;
+        
         public PlayerModel()
         {
             Gold = 0;

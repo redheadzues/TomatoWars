@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Source.Code.Models;
+using Source.Code.Models.Player;
 using Source.Code.Services;
 using Source.Code.StaticData;
 using Random = System.Random;
@@ -49,7 +50,7 @@ namespace Source.Code.Grid
                 return true;
             }
 
-            if (_gridModel.GridBoosters[hostIndex].TypeId == GridBoosterTypeId.None)
+            if (_gridModel.GridBoosters[hostIndex].TypeId == BoosterTypeId.None)
             {
                 _gridModel.GridBoosters[hostIndex] = CopyBoosterWithNewIndex(_gridModel.GridBoosters[inputIndex], hostIndex);
                 _gridModel.GridBoosters[inputIndex] = CreateEmptyBooster(inputIndex);
@@ -77,7 +78,7 @@ namespace Source.Code.Grid
             
             foreach (var gridBooster in _gridModel.GridBoosters)
             {
-                if (gridBooster.TypeId != GridBoosterTypeId.None)
+                if (gridBooster.TypeId != BoosterTypeId.None)
                 {
                     count++;
                     lvlSum += gridBooster.Level;
@@ -92,8 +93,8 @@ namespace Source.Code.Grid
 
         private GridBooster CreateNewBooster(int index, int level)
         {
-            var values = Enum.GetValues(typeof(GridBoosterTypeId));
-            var typeId = (GridBoosterTypeId)values.GetValue(_random.Next(1, values.Length));
+            var values = Enum.GetValues(typeof(BoosterTypeId));
+            var typeId = (BoosterTypeId)values.GetValue(_random.Next(1, values.Length));
 
             var config = _staticData.GetBooster(typeId);
 
@@ -115,6 +116,6 @@ namespace Source.Code.Grid
             new GridBooster(index);
 
         private int GetFreeCellIndex() => 
-            _gridModel.GridBoosters.FindIndex(booster => booster.TypeId == GridBoosterTypeId.None);
+            _gridModel.GridBoosters.FindIndex(booster => booster.TypeId == BoosterTypeId.None);
     }
 }

@@ -42,7 +42,7 @@ namespace Source.Code.Grid.View
             _booster = booster;
             _draggable.ReturnPosition();
             
-            if (booster.TypeId == GridBoosterTypeId.None)
+            if (booster.TypeId == BoosterTypeId.None)
             {
                 _icon.gameObject.SetActive(false);
                 _levelText.gameObject.SetActive(false);
