@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 using Source.Code.Grid;
 using Source.Code.Services;
 using Source.Code.StaticData;
@@ -14,11 +14,12 @@ namespace Source.Code.ModelsAndServices.Player
         public PlayerService(PlayerModel model)
         {
             _model = model;
+            SyncOwnedWarriorByType();
         }
 
         public bool TryAddBoosterToWarrior(GridBooster booster, WarriorTypeId warriorTypeId)
         {
-            var warrior = _model.OwnedWarriors.FirstOrDefault(x => x.TypeId == warriorTypeId);
+            var warrior = _model.OwnedWarriors[warriorTypeId];
 
             if (warrior == null || !warrior.IsOwned || booster.TypeId == BoosterTypeId.None)
                 return false;
@@ -33,16 +34,27 @@ namespace Source.Code.ModelsAndServices.Player
             return true;
         }
 
-        public bool TrySpendGold(int value)
+        public bool TrySpendGold(Currency currency, int value)
         {
-            if (_model.Gold - value >= 0)
+            if (_model.Wallet.Balances.TryGetValue(currency, out var currentValue) && currentValue - value >= 0)
             {
-                _model.Gold -= value;
+                _model.Wallet.Balances[currency] -= value;
                 return true;
             }
 
             return false;
         }
 
+        private void SyncOwnedWarriorByType()
+        {
+            foreach (WarriorTypeId typeId in Enum.GetValues(typeof(WarriorTypeId)))
+            {
+                _model.OwnedWarriors.TryAdd(typeId, new OwnedWarrior
+                {
+                    TypeId = typeId,
+                    IsOwned = true,
+                });
+            }
+        }
     }
 }

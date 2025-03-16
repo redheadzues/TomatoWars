@@ -67,7 +67,7 @@ namespace Source.Code.Grid
         {
             booster = null;
 
-            if (!_playerService.TrySpendGold(0))
+            if (!_playerService.TrySpendGold(Currency.Gold, 0))
                 return false;
 
             int freeIndex = GetFreeCellIndex();

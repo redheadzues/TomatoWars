@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Source.Code.StaticData;
 
 namespace Source.Code.ModelsAndServices.Player
 {
-    public class PlayerModel 
+    [Serializable]
+    public class PlayerModel
     {
-        public int Gold { get; set; }
-        public int Gem { get; set; }
-        public int Stage  { get; set; }
+        public Wallet Wallet = new();
+        public int Stage { get; set; } = 1;
 
         public List<WarriorTypeId> SelectedWarrior = new ()
         {
@@ -15,13 +16,7 @@ namespace Source.Code.ModelsAndServices.Player
             WarriorTypeId.Potato
         };
 
-        public List<OwnedWarriors> OwnedWarriors = new();
-        
-        public PlayerModel()
-        {
-            Gold = 0;
-            Gem = 0;
-            Stage = 1;
-        }
+        public Dictionary<WarriorTypeId, OwnedWarrior> OwnedWarriors = new();
+
     }
 }

@@ -4,7 +4,7 @@ using Source.Code.StaticData;
 namespace Source.Code.ModelsAndServices.Player
 {
     [Serializable]
-    public class OwnedWarriors
+    public class OwnedWarrior
     {
         public WarriorTypeId TypeId;
         public bool IsOwned;
