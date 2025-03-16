@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using Source.Code.Grid;
-using Source.Code.Models.Player;
+using Source.Code.Services;
 using Source.Code.StaticData;
 
-namespace Source.Code.Services
+namespace Source.Code.ModelsAndServices.Player
 {
     public class PlayerService : Service
     {

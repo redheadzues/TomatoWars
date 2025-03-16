@@ -1,6 +1,6 @@
 ﻿using Source.Code.StaticData;
 
-namespace Source.Code.Models.Player
+namespace Source.Code.ModelsAndServices.Player
 {
     public class WarriorBooster
     {

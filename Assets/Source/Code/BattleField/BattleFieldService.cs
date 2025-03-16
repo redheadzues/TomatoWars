@@ -140,7 +140,7 @@ namespace Source.Code.BattleField
 
         private void SpawnWarrior()
         {
-            var selectedWarriorIndex = _random.Next(0, 5);
+            var selectedWarriorIndex = _random.Next(0, 2);
             var warriorType = _battleModel.SelectedWarriors[selectedWarriorIndex];
 
             var warrior = GetFreeWarrior(warriorType);

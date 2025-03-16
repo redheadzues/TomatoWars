@@ -37,7 +37,6 @@ namespace Source.Code.Grid.View
         {
             if(booster.Index != Index)
                 throw new InvalidOperationException($"Booster index {booster.Index} does not match expected index {Index}.");
-
             
             _booster = booster;
             _draggable.ReturnPosition();

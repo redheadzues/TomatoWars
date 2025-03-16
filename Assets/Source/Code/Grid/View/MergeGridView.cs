@@ -22,14 +22,6 @@ namespace Source.Code.Grid.View
         public event Action<int, int> CellsMergeAttempt;
         public event Action<int> DragStarted;
 
-        private void Awake()
-        {
-            foreach (Transform child in _grid.transform)
-            {
-                Destroy(child.gameObject);
-            }
-        }
-
         private void OnEnable()
         {
             _createNewBoosterButton.onClick.AddListener(OnCreateButtonClicked);
@@ -51,6 +43,8 @@ namespace Source.Code.Grid.View
 
         public void Init(IReadOnlyList<GridBooster> boosters, List<IWarrior> selectedWarriors)
         {
+            ClearGrid();
+            
             _mergeCollisionHandler = new MergeCollisionHandler(this, this);
             
             _cellViews = new(30);
@@ -101,6 +95,14 @@ namespace Source.Code.Grid.View
         public void MergeAttempt(int hostIndex, int inputIndex)
         {
             CellsMergeAttempt?.Invoke(hostIndex, inputIndex);
+        }
+        
+        private void ClearGrid()
+        {
+            foreach (Transform child in _grid.transform)
+            {
+                Destroy(child.gameObject);
+            }
         }
 
         private void OnDragEnded(BoosterIconDraggable draggable) => 

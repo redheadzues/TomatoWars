@@ -1,4 +1,4 @@
-﻿using Source.Code.Models.Player;
+﻿using Source.Code.ModelsAndServices.Player;
 
 namespace Source.Code.Models
 {

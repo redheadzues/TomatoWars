@@ -10,12 +10,12 @@ namespace Source.Code.BattleField
         private BattleFieldPresenter _presenter;
         private BattleFieldService _battleService;
 
-        private void Start() 
+        protected override void OnProviderInitialized()
         {
             _battleService = Provider.Get<BattleFieldService>();
             _presenter = new BattleFieldPresenter(_battleService, _view);
         }
-
+        
         private void OnDestroy()
         {
             _presenter.CleanUp();

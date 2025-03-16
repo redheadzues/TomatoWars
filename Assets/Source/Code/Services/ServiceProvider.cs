@@ -31,11 +31,13 @@ public class ServiceProvider
         return newService as T;
     }
 
-    public void RegisterInstance<T>(Service service) where T : Service
+    public T RegisterInstance<T>(Service service) where T : Service
     {
         if (_services.ContainsKey(typeof(T)))
-            return;
+            return null;
 
         _services[typeof(T)] = service;
+
+        return _services[typeof(T)] as T;
     }
 }

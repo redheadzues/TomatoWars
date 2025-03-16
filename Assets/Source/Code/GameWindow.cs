@@ -1,17 +1,24 @@
 ﻿using UnityEngine;
 
-public abstract class GameWindow : MonoBehaviour
+namespace Source.Code
 {
-    protected ServiceProvider Provider;
-
-    private bool _isProviderSet;
-
-    public void SetProvider(ServiceProvider provider)
+    public abstract class GameWindow : MonoBehaviour
     {
-        if (!_isProviderSet)
+        protected ServiceProvider Provider;
+
+        private bool _isProviderSet;
+
+        public void SetProvider(ServiceProvider provider)
         {
-            Provider = provider;
-            _isProviderSet = true;
+            if (!_isProviderSet)
+            {
+                Provider = provider;
+                _isProviderSet = true;
+            
+                OnProviderInitialized();
+            }
         }
+
+        protected abstract void OnProviderInitialized();
     }
 }

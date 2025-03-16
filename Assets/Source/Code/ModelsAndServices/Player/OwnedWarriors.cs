@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using Source.Code.StaticData;
 
-namespace Source.Code.Models.Player
+namespace Source.Code.ModelsAndServices.Player
 {
     [Serializable]
     public class OwnedWarriors
