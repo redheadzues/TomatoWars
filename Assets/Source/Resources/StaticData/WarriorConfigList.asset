@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec82cd4c55f4175b8271a3f9ec3b83b, type: 3}
+  m_Name: WarriorConfigList
+  m_EditorClassIdentifier: 
+  _warriors:
+  - <Sprite>k__BackingField: {fileID: 21300000, guid: 3ea5dcfdd30382b4aaec8371651dacd0, type: 3}
+    <Health>k__BackingField: 50
+    <DamagePerSecond>k__BackingField: 10
+    <NormalizedSpeed>k__BackingField: 0.12
+    <TypeId>k__BackingField: 0
+  - <Sprite>k__BackingField: {fileID: 21300000, guid: 13f45d91dacd760458545f276b2d3cfd, type: 3}
+    <Health>k__BackingField: 100
+    <DamagePerSecond>k__BackingField: 8
+    <NormalizedSpeed>k__BackingField: 0.1
+    <TypeId>k__BackingField: 1

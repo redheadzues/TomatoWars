@@ -1,16 +1,19 @@
-﻿namespace Source.Code.Models
+﻿using System;
+using Source.Code.ModelsAndServices.Player;
+
+namespace Source.Code.Models
 {
-    public class CoreModel
+    [Serializable]
+    public class CoreModel : IReadOnlyCoreModel
     {
-        public GridModel Grid;
-        public int Gold;
-        public int Gem;
-        public int Stage;
+        public PlayerModel Player { get; set; }
+        public GridModel Grid { get; set; }
 
         public CoreModel()
         {
-            Grid = new GridModel();
+            Player = new();
+            Grid = new();
         }
-
     }
+    
 }
