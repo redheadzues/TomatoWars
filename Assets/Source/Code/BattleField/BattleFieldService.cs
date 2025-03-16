@@ -166,7 +166,7 @@ namespace Source.Code.BattleField
             var warrior = new Warrior
             {
                 TypeId = typeId,
-                Sprite = config.Sprite,
+                Icon = config.Sprite,
                 Health = config.Health,
                 MaxHealth = config.Health,
                 DamagePerSecond = config.DamagePerSecond,

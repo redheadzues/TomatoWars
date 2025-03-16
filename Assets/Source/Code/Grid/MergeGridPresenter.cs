@@ -1,6 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Source.Code.Grid.View;
 using Source.Code.Models;
+using Source.Code.Services;
+using Source.Code.StaticData;
 
 namespace Source.Code.Grid
 {
@@ -8,19 +12,48 @@ namespace Source.Code.Grid
     {
         private readonly MergeGridView _view;
         private readonly MergeGridService _gridService;
+        private readonly StaticDataService _staticData;
         private readonly IMergeGridModel _model;
 
-        public MergeGridPresenter(MergeGridService service, MergeGridView view)
+        public MergeGridPresenter(MergeGridService service, StaticDataService staticData, MergeGridView view)
         {
             _gridService = service;
+            _staticData = staticData;
             _model = _gridService.GridModel;
             _view = view;
 
-            _view.Init(_model.GridBoosters);
-            
+            InitView();
+
             _view.CellsMergeAttempt += HandleMergeAttempt;
             _view.CreateButtonClicked += OnCreateButtonClicked;
             _view.DragStarted += OnDragStarted;
+        }
+
+        private void InitView()
+        {
+            var selectedWarriors = new List<IWarrior>();
+            
+            foreach (var warriorTypeId in _gridService.SelectedWarriors)
+            {
+                var warriorConfig = _staticData.GetWarrior(warriorTypeId);
+                
+                if(warriorConfig == null)
+                    throw new NullReferenceException($"Missing warrior config by {warriorTypeId} type");
+                
+                var warrior = new Warrior
+                {
+                    TypeId = warriorConfig.TypeId,
+                    Icon = warriorConfig.Sprite,
+                    Health = warriorConfig.Health,
+                    MaxHealth = warriorConfig.Health,
+                    DamagePerSecond = warriorConfig.DamagePerSecond,
+                    NormalizedSpeed = warriorConfig.NormalizedSpeed
+                };
+                
+                selectedWarriors.Add(warrior);
+            }
+            
+            _view.Init(_model.GridBoosters, selectedWarriors);
         }
 
         public void CleanUp()

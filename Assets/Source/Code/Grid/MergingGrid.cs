@@ -1,4 +1,5 @@
 ﻿using Source.Code.Grid.View;
+using Source.Code.Services;
 using UnityEngine;
 
 namespace Source.Code.Grid
@@ -12,7 +13,8 @@ namespace Source.Code.Grid
         private void Start()
         {
             var service = Provider.Get<MergeGridService>();
-            _presenter = new MergeGridPresenter(service, _view);
+            var staticData = Provider.Get<StaticDataService>();
+            _presenter = new MergeGridPresenter(service, staticData, _view);
         }
 
         private void OnDestroy()

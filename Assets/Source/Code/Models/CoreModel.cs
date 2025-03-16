@@ -1,6 +1,4 @@
-﻿using Source.Code.BattleField;
-
-namespace Source.Code.Models
+﻿namespace Source.Code.Models
 {
     public class CoreModel : IReadOnlyCoreModel
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Source.Code.StaticData;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,8 @@ namespace Source.Code.Grid.View
         [SerializeField] private Button _createNewBoosterButton;
         [SerializeField] private CellView _cellPrefab;
         [SerializeField] private GridLayoutGroup _grid;
+        [SerializeField] private Transform _warriorContainer;
+        [SerializeField] private WarriorView _warriorPrefab;
         
         private List<int> _mergeTargetIndexes;
         private List<CellView> _cellViews;
@@ -46,7 +49,7 @@ namespace Source.Code.Grid.View
             _mergeCollisionHandler?.CleanUp();
         }
 
-        public void Init(IReadOnlyList<GridBooster> boosters)
+        public void Init(IReadOnlyList<GridBooster> boosters, List<IWarrior> selectedWarriors)
         {
             _mergeCollisionHandler = new MergeCollisionHandler(this, this);
             
@@ -62,6 +65,8 @@ namespace Source.Code.Grid.View
                 cell.Draggable.DragEnded += OnDragEnded;
                 _mergeCollisionHandler.AddCellView(cell);
             }
+            
+            selectedWarriors.ForEach(x => Instantiate(_warriorPrefab, _warriorContainer).Init(x));
         }
 
         public void SetActiveBuyButton(bool isActive)

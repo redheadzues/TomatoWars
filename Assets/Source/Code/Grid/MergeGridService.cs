@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Source.Code.Models;
 using Source.Code.Services;
@@ -17,6 +18,7 @@ namespace Source.Code.Grid
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
 
         public IMergeGridModel GridModel => _gridModel;
+        public IReadOnlyList<WarriorTypeId> SelectedWarriors => _playerModel.SelectedWarrior;
         public bool IsEnableAddNewItem => GetFreeCellIndex() > -1;
 
         public MergeGridService(CoreModel model, StaticDataService staticData)

@@ -25,7 +25,7 @@ namespace Source.Code.BattleField.View
         public void Init(IWarrior warrior)
         {
             Id = warrior.Id;
-            _sprite.sprite = warrior.Sprite;
+            _sprite.sprite = warrior.Icon;
             _warrior = warrior;
         }
 

@@ -31,16 +31,17 @@ namespace Source.Code.StaticData
     {
         private static int _nextId;
         public int Id { get; }
-        public Sprite Sprite { get; set; }
+        public Sprite Icon { get; set; }
         public WarriorTypeId TypeId {get; set;}    
         public WarriorState State {get; set;}
         public int Health {get; set;}
+        public int DamagePerSecond {get; set; }
         public int MaxHealth { get; set; }
-        public int DamagePerSecond {get; set;}
         public float NormalizedSpeed {get; set;}
         public int LineIndex {get; set;}
         public float NormalizePosition {get; set;}
 
+       
         public Warrior()
         {
             Id = _nextId++;
@@ -50,7 +51,7 @@ namespace Source.Code.StaticData
     public interface IWarrior
     {
         public int Id { get; } 
-        public Sprite Sprite { get;}
+        public Sprite Icon { get;}
         public WarriorTypeId TypeId {get;}    
         public WarriorState State {get;}
         public int Health {get;}
