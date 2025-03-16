@@ -5,9 +5,11 @@ using Source.Code.StaticData;
 
 namespace Source.Code.Services
 {
-    public class PlayerService
+    public class PlayerService : Service
     {
         private readonly PlayerModel _model;
+
+        public PlayerModel Model => _model; 
 
         public PlayerService(PlayerModel model)
         {
@@ -29,6 +31,17 @@ namespace Source.Code.Services
             };
 
             return true;
+        }
+
+        public bool TrySpendGold(int value)
+        {
+            if (_model.Gold - value >= 0)
+            {
+                _model.Gold -= value;
+                return true;
+            }
+
+            return false;
         }
 
     }

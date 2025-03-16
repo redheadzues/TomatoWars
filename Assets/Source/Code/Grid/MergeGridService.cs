@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Source.Code.Models;
-using Source.Code.Models.Player;
 using Source.Code.Services;
 using Source.Code.StaticData;
 using Random = System.Random;
@@ -14,18 +13,18 @@ namespace Source.Code.Grid
         private const int BOOSTER_LIMIT = 30;
         
         private readonly GridModel _gridModel;
-        private readonly PlayerModel _playerModel;
         private readonly StaticDataService _staticData;
+        private readonly PlayerService _playerService;
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
 
         public IMergeGridModel GridModel => _gridModel;
-        public IReadOnlyList<WarriorTypeId> SelectedWarriors => _playerModel.SelectedWarrior;
+        public IReadOnlyList<WarriorTypeId> SelectedWarriors => _playerService.Model.SelectedWarrior;
         public bool IsEnableAddNewItem => GetFreeCellIndex() > -1;
 
-        public MergeGridService(CoreModel model, StaticDataService staticData)
+        public MergeGridService(CoreModel model, StaticDataService staticData, PlayerService playerService)
         {
             _gridModel = model.Grid;
-            _playerModel = model.Player;
+            _playerService = playerService;
             _staticData = staticData;
 
             if (_gridModel.GridBoosters == null)
@@ -66,7 +65,9 @@ namespace Source.Code.Grid
         public bool TryCreateNewBooster(out GridBooster booster)
         {
             booster = null;
-            //to do check money
+
+            if (!_playerService.TrySpendGold(0))
+                return false;
 
             int freeIndex = GetFreeCellIndex();
 

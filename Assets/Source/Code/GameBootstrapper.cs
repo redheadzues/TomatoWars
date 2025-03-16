@@ -30,8 +30,11 @@ namespace Source.Code
         {
             var staticData = new StaticDataService();
             _serviceProvider.RegisterInstance<StaticDataService>(staticData);
+
+            var playerService = new PlayerService(_model.Player);
+            _serviceProvider.RegisterInstance<PlayerService>(playerService);
             
-            _serviceProvider.RegisterLazy(() => new MergeGridService(_model, staticData));
+            _serviceProvider.RegisterLazy(() => new MergeGridService(_model, staticData, playerService));
             _serviceProvider.RegisterLazy(() => new SaveLoadService());
             _serviceProvider.RegisterLazy(() => new BattleFieldService(_model, staticData, this));
         }

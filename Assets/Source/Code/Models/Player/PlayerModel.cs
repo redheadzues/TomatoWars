@@ -9,16 +9,13 @@ namespace Source.Code.Models.Player
         public int Gem { get; set; }
         public int Stage  { get; set; }
 
-        public List<WarriorTypeId> SelectedWarrior = new List<WarriorTypeId>()
+        public List<WarriorTypeId> SelectedWarrior = new ()
         {
-            WarriorTypeId.Tomato,
-            WarriorTypeId.Tomato,
-            WarriorTypeId.Tomato,
             WarriorTypeId.Tomato,
             WarriorTypeId.Potato
         };
 
-        public List<OwnedWarriors> OwnedWarriors;
+        public List<OwnedWarriors> OwnedWarriors = new();
         
         public PlayerModel()
         {
