@@ -14,12 +14,13 @@ namespace Source.Code.Grid
         public Sprite Icon { get; }
         
         
-        public GridBooster(int index, BoosterTypeId typeId, int level, Sprite icon)
+        public GridBooster(int index, BoosterTypeId typeId, int level, Sprite icon, Rarity rarity = Rarity.Common)
         {
             Index = index;
             TypeId = typeId;
             Level = level;
             Icon = icon;
+            Rarity = rarity;
         }
 
         public GridBooster(int index)

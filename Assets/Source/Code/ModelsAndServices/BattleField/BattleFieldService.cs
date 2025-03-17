@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using Source.Code.ModelsAndServices;
 using Source.Code.StaticData;
 using UnityEngine;
 using Random = System.Random;
 
-namespace Source.Code.BattleField
+namespace Source.Code.ModelsAndServices.BattleField
 {
     public interface IBattleFieldService : IService
     {
@@ -24,9 +23,6 @@ namespace Source.Code.BattleField
     
     public class BattleFieldService : IBattleFieldService
     {
-        private const float TICK_INTERVAL = 0.5f;
-        private const float SPAWN_TIME = 2f;
-        
         private readonly CoreModel _coreModel;
         private readonly IStaticDataService _dataService;
         private readonly ICoroutineRunner _coroutineRunner;
@@ -88,7 +84,7 @@ namespace Source.Code.BattleField
             while(true)
             {
                 Update();
-                yield return new WaitForSeconds(TICK_INTERVAL);
+                yield return new WaitForSeconds(StaticConfig.TICK_INTERVAL);
             }
         }
 
@@ -142,7 +138,7 @@ namespace Source.Code.BattleField
 
             foreach (var warrior in warriorForAttack)
             {
-                warrior.TakeDamage((int)(_battleModel.BossDamagePerSecond * TICK_INTERVAL));
+                warrior.TakeDamage((int)(_battleModel.BossDamagePerSecond * StaticConfig.TICK_INTERVAL));
 
                 if (warrior.Health <= 0)
                     warrior.State = WarriorState.Died;
@@ -153,8 +149,13 @@ namespace Source.Code.BattleField
 
         private void SpawnWarrior()
         {
-            var selectedWarriorIndex = _random.Next(0, 2);
-            var warriorType = _battleModel.SelectedWarriors[selectedWarriorIndex];
+            WarriorTypeId warriorType = WarriorTypeId.None;
+
+            while (warriorType == WarriorTypeId.None)
+            {
+                var selectedWarriorIndex = _random.Next(0, _battleModel.SelectedWarriors.Count);
+                warriorType = _battleModel.SelectedWarriors[selectedWarriorIndex];
+            }
 
             var warrior = GetFreeWarrior(warriorType);
             

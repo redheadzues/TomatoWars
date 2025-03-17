@@ -20,8 +20,6 @@ namespace Source.Code.ModelsAndServices.Grid
     
     public class MergeGridService : IMergeGridService
     {
-        private const int BOOSTER_LIMIT = 30;
-        
         private readonly GridModel _gridModel;
         private readonly IStaticDataService _staticData;
         private readonly IPlayerService _playerService;
@@ -38,7 +36,7 @@ namespace Source.Code.ModelsAndServices.Grid
             _staticData = staticData;
 
             if (_gridModel.GridBoosters == null)
-                _gridModel.GridBoosters = Enumerable.Range(0, BOOSTER_LIMIT)
+                _gridModel.GridBoosters = Enumerable.Range(0, StaticConfig.BOOSTER_LIMIT)
                     .Select(i => new GridBooster(i)).ToList();
         }
 

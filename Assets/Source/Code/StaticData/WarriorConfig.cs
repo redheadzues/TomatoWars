@@ -5,6 +5,7 @@ namespace Source.Code.StaticData
 {
     public enum WarriorTypeId
     {
+        None,
         Tomato,
         Potato
     }

@@ -2,7 +2,7 @@
 using Source.Code.StaticData;
 using UnityEngine;
 
-namespace Source.Code.BattleField
+namespace Source.Code.ModelsAndServices.BattleField
 {
     public interface IReadOnlyBattleFieldModel
     {

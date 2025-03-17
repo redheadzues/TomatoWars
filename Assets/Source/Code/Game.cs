@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Source.Code.BattleField;
 using Source.Code.ModelsAndServices;
+using Source.Code.ModelsAndServices.BattleField;
 using Source.Code.ModelsAndServices.Grid;
 using Source.Code.ModelsAndServices.Player;
 
