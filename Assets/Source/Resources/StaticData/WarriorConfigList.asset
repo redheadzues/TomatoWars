@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: WarriorConfigList
   m_EditorClassIdentifier: 
   _warriors:
-  - <Sprite>k__BackingField: {fileID: 21300000, guid: 3ea5dcfdd30382b4aaec8371651dacd0, type: 3}
+  - <Icon>k__BackingField: {fileID: 21300000, guid: 3ea5dcfdd30382b4aaec8371651dacd0, type: 3}
     <Health>k__BackingField: 50
     <DamagePerSecond>k__BackingField: 10
     <NormalizedSpeed>k__BackingField: 0.12
     <TypeId>k__BackingField: 0
-  - <Sprite>k__BackingField: {fileID: 21300000, guid: 13f45d91dacd760458545f276b2d3cfd, type: 3}
+  - <Icon>k__BackingField: {fileID: 21300000, guid: 13f45d91dacd760458545f276b2d3cfd, type: 3}
     <Health>k__BackingField: 100
     <DamagePerSecond>k__BackingField: 8
     <NormalizedSpeed>k__BackingField: 0.1

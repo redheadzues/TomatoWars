@@ -2,10 +2,18 @@
 using Source.Code.Grid;
 using Source.Code.Services;
 using Source.Code.StaticData;
+using UnityEngine;
 
 namespace Source.Code.ModelsAndServices.Player
 {
-    public class PlayerService : Service
+    public interface IPlayerService : IService
+    {
+        PlayerModel Model { get; } 
+        bool TryAddBoosterToWarrior(GridBooster booster, WarriorTypeId warriorTypeId);
+        bool TrySpendGold(Currency currency, int value);
+    }
+    
+    public class PlayerService : IPlayerService
     {
         private readonly PlayerModel _model;
 
@@ -15,6 +23,7 @@ namespace Source.Code.ModelsAndServices.Player
         {
             _model = model;
             SyncOwnedWarriorByType();
+            SyncCurrencyByType();
         }
 
         public bool TryAddBoosterToWarrior(GridBooster booster, WarriorTypeId warriorTypeId)
@@ -54,6 +63,14 @@ namespace Source.Code.ModelsAndServices.Player
                     TypeId = typeId,
                     IsOwned = true,
                 });
+            }
+        }
+        
+        private void SyncCurrencyByType()
+        {
+            foreach (Currency typeId in Enum.GetValues(typeof(Currency)))
+            {
+                _model.Wallet.Balances.TryAdd(typeId, 0);
             }
         }
     }

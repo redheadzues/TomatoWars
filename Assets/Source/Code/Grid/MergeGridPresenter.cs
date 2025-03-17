@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Source.Code.Grid.View;
 using Source.Code.Models;
+using Source.Code.ModelsAndServices.Grid;
 using Source.Code.Services;
 using Source.Code.StaticData;
 
@@ -11,11 +12,11 @@ namespace Source.Code.Grid
     public class MergeGridPresenter
     {
         private readonly MergeGridView _view;
-        private readonly MergeGridService _gridService;
-        private readonly StaticDataService _staticData;
+        private readonly IMergeGridService _gridService;
+        private readonly IStaticDataService _staticData;
         private readonly IMergeGridModel _model;
 
-        public MergeGridPresenter(MergeGridService service, StaticDataService staticData, MergeGridView view)
+        public MergeGridPresenter(IMergeGridService service, IStaticDataService staticData, MergeGridView view)
         {
             _gridService = service;
             _staticData = staticData;

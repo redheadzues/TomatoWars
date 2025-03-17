@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Source.Code.Grid;
 
-namespace Source.Code.Models
+namespace Source.Code.ModelsAndServices.Grid
 {
     public interface IMergeGridModel
     {

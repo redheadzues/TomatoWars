@@ -9,13 +9,27 @@ using Random = System.Random;
 
 namespace Source.Code.BattleField
 {
-    public class BattleFieldService : Service
+    public interface IBattleFieldService : IService
+    {
+        event Action ReadyToStart;
+        event Action StageCompleted;
+        event Action TickCalculated;
+        event Action<int> BossHitLine;
+        event Action<IWarrior> WarriorSpawned;
+        event Action<IWarrior> WarriorAdded;
+        IReadOnlyBattleFieldModel BattleFieldModel { get; }
+        void Start();
+        void Stop();
+        void PrepareNewStage();
+    }
+    
+    public class BattleFieldService : IBattleFieldService
     {
         private const float TICK_INTERVAL = 0.5f;
         private const float SPAWN_TIME = 2f;
         
         private readonly CoreModel _coreModel;
-        private readonly StaticDataService _dataService;
+        private readonly IStaticDataService _dataService;
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
         
@@ -32,7 +46,7 @@ namespace Source.Code.BattleField
         public event Action<IWarrior> WarriorSpawned;
         public event Action<IWarrior> WarriorAdded;
         
-        public BattleFieldService(CoreModel model, StaticDataService dataService, ICoroutineRunner runner)
+        public BattleFieldService(CoreModel model, IStaticDataService dataService, ICoroutineRunner runner)
         {
             _coreModel = model;
             _coroutineRunner = runner;

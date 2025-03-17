@@ -5,7 +5,15 @@ using UnityEngine;
 
 namespace Source.Code.Services
 {
-    public class StaticDataService : Service
+    public interface IStaticDataService : IService
+    {
+        void LoadData();
+        WarriorConfig GetWarrior(WarriorTypeId typeId);
+        BossConfig GetBoss(int stage);
+        BoosterConfig GetBooster(BoosterTypeId typeId);
+    }
+    
+    public class StaticDataService : IStaticDataService
     {
         private Dictionary<WarriorTypeId, WarriorConfig> _warriors;
         private Dictionary<int, BossConfig> _bosses;

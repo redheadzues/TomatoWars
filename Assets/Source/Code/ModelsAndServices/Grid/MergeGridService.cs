@@ -1,28 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Source.Code.Grid;
 using Source.Code.Models;
 using Source.Code.ModelsAndServices.Player;
 using Source.Code.Services;
 using Source.Code.StaticData;
 using Random = System.Random;
 
-namespace Source.Code.Grid
+namespace Source.Code.ModelsAndServices.Grid
 {
-    public class MergeGridService : Service
+    public interface IMergeGridService : IService
+    {
+        IMergeGridModel GridModel { get; }
+        IReadOnlyList<WarriorTypeId> SelectedWarriors { get; }
+        bool IsEnableAddNewItem { get; }
+        bool TryMerge(int hostIndex, int inputIndex, out GridBooster newHostBooster, out int emptyIndex);
+        bool TryCreateNewBooster(out GridBooster booster);
+        
+    }
+    
+    public class MergeGridService : IMergeGridService
     {
         private const int BOOSTER_LIMIT = 30;
         
         private readonly GridModel _gridModel;
-        private readonly StaticDataService _staticData;
-        private readonly PlayerService _playerService;
+        private readonly IStaticDataService _staticData;
+        private readonly IPlayerService _playerService;
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
 
         public IMergeGridModel GridModel => _gridModel;
         public IReadOnlyList<WarriorTypeId> SelectedWarriors => _playerService.Model.SelectedWarrior;
         public bool IsEnableAddNewItem => GetFreeCellIndex() > -1;
 
-        public MergeGridService(CoreModel model, StaticDataService staticData, PlayerService playerService)
+        public MergeGridService(CoreModel model, IStaticDataService staticData, IPlayerService playerService)
         {
             _gridModel = model.Grid;
             _playerService = playerService;

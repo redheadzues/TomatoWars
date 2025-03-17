@@ -1,4 +1,5 @@
 ﻿using Source.Code.Grid.View;
+using Source.Code.ModelsAndServices.Grid;
 using Source.Code.Services;
 using UnityEngine;
 
@@ -12,8 +13,8 @@ namespace Source.Code.Grid
 
         protected override void OnProviderInitialized()
         {
-            var service = Provider.Get<MergeGridService>();
-            var staticData = Provider.Get<StaticDataService>();
+            var service = Provider.Get<IMergeGridService>();
+            var staticData = Provider.Get<IStaticDataService>();
             _presenter = new MergeGridPresenter(service, staticData, _view);
         }
         

@@ -4,6 +4,6 @@ namespace Source.Code.ModelsAndServices.Player
 {
     public class Wallet
     {
-        public Dictionary<Currency, int> Balances;
+        public Dictionary<Currency, int> Balances = new();
     }
 }

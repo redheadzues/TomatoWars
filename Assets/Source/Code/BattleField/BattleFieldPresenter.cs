@@ -1,16 +1,15 @@
 ﻿using Source.Code.BattleField.View;
 using Source.Code.StaticData;
-using UnityEngine;
 
 namespace Source.Code.BattleField
 {
     public class BattleFieldPresenter
     {
         private readonly BattleFieldView _view;
-        private readonly BattleFieldService _battleFieldService;
+        private readonly IBattleFieldService _battleFieldService;
         private IReadOnlyBattleFieldModel _model;
 
-        public BattleFieldPresenter(BattleFieldService service, BattleFieldView view)
+        public BattleFieldPresenter(IBattleFieldService service, BattleFieldView view)
         {
             _battleFieldService = service;
             _view = view;

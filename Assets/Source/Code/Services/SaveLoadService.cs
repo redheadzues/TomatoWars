@@ -2,7 +2,13 @@
 
 namespace Source.Code.Services
 {
-    public class SaveLoadService : Service
+    public interface ISaveLoadService : IService
+    {
+        void Load(Action onLoadComplete = null);
+        void Save();
+    }
+    
+    public class SaveLoadService : ISaveLoadService
     {
         public void Load(Action onLoadComplete = null)
         {

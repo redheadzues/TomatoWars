@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using Source.Code.BattleField;
-using Source.Code.Grid;
 using Source.Code.Models;
+using Source.Code.ModelsAndServices.Grid;
 using Source.Code.ModelsAndServices.Player;
 using Source.Code.Services;
 
 namespace Source.Code
 {
-    
     public class Game
     {
         private enum GameState
@@ -49,21 +48,21 @@ namespace Source.Code
 
         private void CreateServices()
         {
-            _serviceProvider = new ServiceProvider(_model);
-            var staticData = _serviceProvider.RegisterInstance<StaticDataService>(new StaticDataService());
-            var playerService = _serviceProvider.RegisterInstance<PlayerService>(new PlayerService(_model.Player));
+            _serviceProvider = new ServiceProvider();
+            var staticData = _serviceProvider.RegisterInstance<IStaticDataService>(new StaticDataService());
+            var playerService = _serviceProvider.RegisterInstance<IPlayerService>(new PlayerService(_model.Player));
             
-            _serviceProvider.RegisterLazy(() => new MergeGridService(_model, staticData, playerService));
-            _serviceProvider.RegisterLazy(() => new SaveLoadService());
-            _serviceProvider.RegisterLazy(() => new BattleFieldService(_model, staticData, _coroutineRunner));
+            _serviceProvider.RegisterLazy<IMergeGridService>(() => new MergeGridService(_model, staticData, playerService));
+            _serviceProvider.RegisterLazy<ISaveLoadService>(() => new SaveLoadService());
+            _serviceProvider.RegisterLazy<IBattleFieldService>(() => new BattleFieldService(_model, staticData, _coroutineRunner));
             
             ApplyState(GameState.LoadData);
         }
         
         private void LoadData()
         {
-            _serviceProvider.Get<StaticDataService>().LoadData();
-            _serviceProvider.Get<SaveLoadService>().Load(() => ApplyState(GameState.GameLoop));
+            _serviceProvider.Get<IStaticDataService>().LoadData();
+            _serviceProvider.Get<ISaveLoadService>().Load(() => ApplyState(GameState.GameLoop));
         }
 
         private void InitializeSceneObject()

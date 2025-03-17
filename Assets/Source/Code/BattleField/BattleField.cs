@@ -8,11 +8,11 @@ namespace Source.Code.BattleField
         [SerializeField] private BattleFieldView _view;
         
         private BattleFieldPresenter _presenter;
-        private BattleFieldService _battleService;
+        private IBattleFieldService _battleService;
 
         protected override void OnProviderInitialized()
         {
-            _battleService = Provider.Get<BattleFieldService>();
+            _battleService = Provider.Get<IBattleFieldService>();
             _presenter = new BattleFieldPresenter(_battleService, _view);
         }
         
