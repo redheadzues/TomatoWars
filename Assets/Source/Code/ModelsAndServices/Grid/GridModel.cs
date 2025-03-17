@@ -4,17 +4,17 @@ using Source.Code.Grid;
 
 namespace Source.Code.ModelsAndServices.Grid
 {
-    public interface IMergeGridModel
+    public interface IReadOnlyGridModel
     {
         IReadOnlyList<GridBooster> GridBoosters { get; }
     }
 
     [Serializable]
-    public class GridModel : IMergeGridModel
+    public class GridModel : IReadOnlyGridModel
     {
         public List<GridBooster> GridBoosters { get; set; }
         public int MergeCount;
-        IReadOnlyList<GridBooster> IMergeGridModel.GridBoosters => GridBoosters;
+        IReadOnlyList<GridBooster> IReadOnlyGridModel.GridBoosters => GridBoosters;
         
     }
 }

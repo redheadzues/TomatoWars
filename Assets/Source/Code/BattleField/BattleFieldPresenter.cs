@@ -7,7 +7,6 @@ namespace Source.Code.BattleField
     {
         private readonly BattleFieldView _view;
         private readonly IBattleFieldService _battleFieldService;
-        private IReadOnlyBattleFieldModel _model;
 
         public BattleFieldPresenter(IBattleFieldService service, BattleFieldView view)
         {
@@ -24,10 +23,20 @@ namespace Source.Code.BattleField
             _battleFieldService.PrepareNewStage();
         }
         
+        public void CleanUp()
+        {
+            _battleFieldService.WarriorAdded -= AddWarriorView;
+            _battleFieldService.BossHitLine -= HitLine;
+            _battleFieldService.WarriorSpawned -= SpawnWarrior;
+            _battleFieldService.ReadyToStart -= OnReadyToStart;
+            _battleFieldService.StageCompleted -= OnStageCompleted;
+            _battleFieldService.TickCalculated -= OnTickCalculated;
+        }
+        
         private void OnReadyToStart()
         {
-            _model = _battleFieldService.BattleFieldModel;
-            _view.Init(_model.BossSprite, _model.BossMaxHp);
+           
+            _view.Init(_battleFieldService.Model.BossSprite, _battleFieldService.Model.BossMaxHp);
             _battleFieldService.Start();
         }
         
@@ -39,18 +48,8 @@ namespace Source.Code.BattleField
 
         private void OnTickCalculated()
         {
-            _view.UpdateBossHp(_model.BossCurrentHp, _model.BossMaxHp);
-            _view.UpdateWarriors(_model.ReadOnlyWarriors);
-        }
-
-        public void CleanUp()
-        {
-            _battleFieldService.WarriorAdded -= AddWarriorView;
-            _battleFieldService.BossHitLine -= HitLine;
-            _battleFieldService.WarriorSpawned -= SpawnWarrior;
-            _battleFieldService.ReadyToStart -= OnReadyToStart;
-            _battleFieldService.StageCompleted -= OnStageCompleted;
-            _battleFieldService.TickCalculated -= OnTickCalculated;
+            _view.UpdateBossHp(_battleFieldService.Model.BossCurrentHp, _battleFieldService.Model.BossMaxHp);
+            _view.UpdateWarriors(_battleFieldService.Model.ReadOnlyWarriors);
         }
 
         private void SpawnWarrior(IWarrior warrior) => 

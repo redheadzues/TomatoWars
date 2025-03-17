@@ -1,6 +1,6 @@
 ﻿using Source.Code.Grid.View;
+using Source.Code.ModelsAndServices;
 using Source.Code.ModelsAndServices.Grid;
-using Source.Code.Services;
 using UnityEngine;
 
 namespace Source.Code.Grid

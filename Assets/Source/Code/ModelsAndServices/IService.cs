@@ -1,4 +1,4 @@
-﻿namespace Source.Code.Services
+﻿namespace Source.Code.ModelsAndServices
 {
     public interface IService
     {

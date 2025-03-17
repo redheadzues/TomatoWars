@@ -1,4 +1,4 @@
-﻿namespace Source.Code.Models
+﻿namespace Source.Code.ModelsAndServices.Player
 {
     public interface IReadOnlyPlayerModel
     {

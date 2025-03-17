@@ -3,7 +3,7 @@ using System.Linq;
 using Source.Code.StaticData;
 using UnityEngine;
 
-namespace Source.Code.Services
+namespace Source.Code.ModelsAndServices
 {
     public interface IStaticDataService : IService
     {

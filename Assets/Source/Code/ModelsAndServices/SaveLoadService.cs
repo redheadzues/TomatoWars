@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Source.Code.Services
+namespace Source.Code.ModelsAndServices
 {
     public interface ISaveLoadService : IService
     {

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Source.Code.BattleField;
-using Source.Code.Models;
+using Source.Code.ModelsAndServices;
 using Source.Code.ModelsAndServices.Grid;
 using Source.Code.ModelsAndServices.Player;
-using Source.Code.Services;
 
 namespace Source.Code
 {

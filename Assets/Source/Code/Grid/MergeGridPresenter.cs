@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Source.Code.Grid.View;
-using Source.Code.Models;
+using Source.Code.ModelsAndServices;
 using Source.Code.ModelsAndServices.Grid;
-using Source.Code.Services;
 using Source.Code.StaticData;
 
 namespace Source.Code.Grid
@@ -14,20 +13,18 @@ namespace Source.Code.Grid
         private readonly MergeGridView _view;
         private readonly IMergeGridService _gridService;
         private readonly IStaticDataService _staticData;
-        private readonly IMergeGridModel _model;
 
         public MergeGridPresenter(IMergeGridService service, IStaticDataService staticData, MergeGridView view)
         {
             _gridService = service;
             _staticData = staticData;
-            _model = _gridService.GridModel;
             _view = view;
-
-            InitView();
 
             _view.CellsMergeAttempt += HandleMergeAttempt;
             _view.CreateButtonClicked += OnCreateButtonClicked;
             _view.DragStarted += OnDragStarted;
+
+            InitView();
         }
 
         private void InitView()
@@ -46,7 +43,7 @@ namespace Source.Code.Grid
                 selectedWarriors.Add(warrior);
             }
             
-            _view.Init(_model.GridBoosters, selectedWarriors);
+            _view.Init(_gridService.GridModel.GridBoosters, selectedWarriors);
         }
 
         public void CleanUp()
@@ -81,9 +78,9 @@ namespace Source.Code.Grid
         
         private void OnDragStarted(int index)
         {
-            var booster = _model.GridBoosters[index];
+            var booster = _gridService.GridModel.GridBoosters[index];
 
-            var boostersIndex = _model.GridBoosters.Where(x =>
+            var boostersIndex = _gridService.GridModel.GridBoosters.Where(x =>
                 x != null &&
                 x != booster &&
                 x.Level == booster.Level &&

@@ -1,8 +1,6 @@
 ﻿using System;
 using Source.Code.Grid;
-using Source.Code.Services;
 using Source.Code.StaticData;
-using UnityEngine;
 
 namespace Source.Code.ModelsAndServices.Player
 {

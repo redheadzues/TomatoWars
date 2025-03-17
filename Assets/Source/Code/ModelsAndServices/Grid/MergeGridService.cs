@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Source.Code.Grid;
-using Source.Code.Models;
 using Source.Code.ModelsAndServices.Player;
-using Source.Code.Services;
 using Source.Code.StaticData;
 using Random = System.Random;
 
@@ -12,7 +10,7 @@ namespace Source.Code.ModelsAndServices.Grid
 {
     public interface IMergeGridService : IService
     {
-        IMergeGridModel GridModel { get; }
+        IReadOnlyGridModel GridModel { get; }
         IReadOnlyList<WarriorTypeId> SelectedWarriors { get; }
         bool IsEnableAddNewItem { get; }
         bool TryMerge(int hostIndex, int inputIndex, out GridBooster newHostBooster, out int emptyIndex);
@@ -29,7 +27,7 @@ namespace Source.Code.ModelsAndServices.Grid
         private readonly IPlayerService _playerService;
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
 
-        public IMergeGridModel GridModel => _gridModel;
+        public IReadOnlyGridModel GridModel => _gridModel;
         public IReadOnlyList<WarriorTypeId> SelectedWarriors => _playerService.Model.SelectedWarrior;
         public bool IsEnableAddNewItem => GetFreeCellIndex() > -1;
 

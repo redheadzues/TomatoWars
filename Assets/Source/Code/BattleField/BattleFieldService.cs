@@ -1,8 +1,7 @@
-﻿using Source.Code.Models;
-using Source.Code.Services;
-using System;
+﻿using System;
 using System.Collections;
 using System.Linq;
+using Source.Code.ModelsAndServices;
 using Source.Code.StaticData;
 using UnityEngine;
 using Random = System.Random;
@@ -17,7 +16,7 @@ namespace Source.Code.BattleField
         event Action<int> BossHitLine;
         event Action<IWarrior> WarriorSpawned;
         event Action<IWarrior> WarriorAdded;
-        IReadOnlyBattleFieldModel BattleFieldModel { get; }
+        IReadOnlyBattleFieldModel Model { get; }
         void Start();
         void Stop();
         void PrepareNewStage();
@@ -38,7 +37,7 @@ namespace Source.Code.BattleField
         private Coroutine _updateCoroutine;
         private float _timeBeforeSpawn;
 
-        public IReadOnlyBattleFieldModel BattleFieldModel => _battleModel;
+        public IReadOnlyBattleFieldModel Model => _battleModel;
         public event Action ReadyToStart;
         public event Action StageCompleted;
         public event Action TickCalculated;
