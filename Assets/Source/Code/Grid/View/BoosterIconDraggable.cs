@@ -54,7 +54,7 @@ namespace Source.Code.Grid.View
         {
             if (other.transform == _parentTransform.transform)
                 return;
-            
+
             TriggerEnter?.Invoke(other);
         }
 

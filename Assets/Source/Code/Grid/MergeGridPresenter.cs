@@ -20,9 +20,10 @@ namespace Source.Code.Grid
             _staticData = staticData;
             _view = view;
 
-            _view.CellsMergeAttempt += HandleMergeAttempt;
+            _view.BoostersMergeAttempt += HandleMergeAttempt;
             _view.CreateButtonClicked += OnCreateButtonClicked;
             _view.DragStarted += OnDragStarted;
+            _view.WarriorBoosterMergeAttempt += HandleMergeAttempt;
 
             InitView();
         }
@@ -48,7 +49,7 @@ namespace Source.Code.Grid
 
         public void CleanUp()
         {
-            _view.CellsMergeAttempt -= HandleMergeAttempt;
+            _view.BoostersMergeAttempt -= HandleMergeAttempt;
             _view.CreateButtonClicked -= OnCreateButtonClicked;
             _view.DragStarted -= OnDragStarted;
         }
@@ -63,6 +64,19 @@ namespace Source.Code.Grid
             else
             {
                 _view.RejectMerge(hostIndex, inputIndex);
+            }
+        }
+        
+        private void HandleMergeAttempt(WarriorTypeId warriorType, int boosterIndex)
+        {
+            if (_gridService.TryMerge(warriorType, boosterIndex, out GridBooster booster))
+            {
+                _view.UpdateGrid(booster);
+                _view.SetActiveBuyButton(_gridService.IsEnableAddNewItem);
+            }
+            else
+            {
+                _view.RejectMerge(boosterIndex);
             }
         }
         

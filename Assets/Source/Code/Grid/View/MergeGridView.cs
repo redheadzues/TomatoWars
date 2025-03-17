@@ -17,9 +17,11 @@ namespace Source.Code.Grid.View
         private List<int> _mergeTargetIndexes;
         private List<CellView> _cellViews;
         private MergeCollisionHandler _mergeCollisionHandler;
-
+        private IHighlightElement _lastHighlight;
+        
         public event Action CreateButtonClicked;
-        public event Action<int, int> CellsMergeAttempt;
+        public event Action<int, int> BoostersMergeAttempt;
+        public event Action<WarriorTypeId, int> WarriorBoosterMergeAttempt;
         public event Action<int> DragStarted;
 
         private void OnEnable()
@@ -27,6 +29,7 @@ namespace Source.Code.Grid.View
             _createNewBoosterButton.onClick.AddListener(OnCreateButtonClicked);
             _cellViews?.ForEach(x => x.Draggable.DragStarted += OnDragStarted);
             _cellViews?.ForEach(x => x.Draggable.DragEnded += OnDragEnded);
+            
         }
 
         private void OnDisable()
@@ -38,6 +41,9 @@ namespace Source.Code.Grid.View
 
         private void OnDestroy()
         {
+            if(_mergeCollisionHandler != null)
+                _mergeCollisionHandler.ElementOverlaps -= OnElementOverlaps;
+            
             _mergeCollisionHandler?.CleanUp();
         }
 
@@ -46,6 +52,7 @@ namespace Source.Code.Grid.View
             ClearGrid();
             
             _mergeCollisionHandler = new MergeCollisionHandler(this, this);
+            _mergeCollisionHandler.ElementOverlaps += OnElementOverlaps;
             
             _cellViews = new(30);
             
@@ -60,7 +67,12 @@ namespace Source.Code.Grid.View
                 _mergeCollisionHandler.AddCellView(cell);
             }
             
-            selectedWarriors.ForEach(x => Instantiate(_warriorPrefab, _warriorContainer).Init(x));
+            foreach (var warrior in selectedWarriors)
+            {
+                var view = Instantiate(_warriorPrefab, _warriorContainer);
+                view.Init(warrior);
+                _mergeCollisionHandler.AddWarriorView(view);
+            }
         }
 
         public void SetActiveBuyButton(bool isActive)
@@ -85,6 +97,11 @@ namespace Source.Code.Grid.View
             _cellViews[inputIndex].ReturnPosition();
         }
 
+        public void RejectMerge(int index)
+        {
+            _cellViews[index].ReturnPosition();
+        }
+
         public void HighlightMergeTarget(List<int> targetIndexes)
         {
             _mergeTargetIndexes = targetIndexes;
@@ -92,9 +109,16 @@ namespace Source.Code.Grid.View
             _mergeTargetIndexes.ForEach(i => _cellViews[i].HighlightAsTarget(true));
         }
 
-        public void MergeAttempt(int hostIndex, int inputIndex)
+        public void MergeAttempt(IHighlightElement hostElement, int inputIndex)
         {
-            CellsMergeAttempt?.Invoke(hostIndex, inputIndex);
+            if (hostElement is CellView cellView)
+            {
+                BoostersMergeAttempt?.Invoke(cellView.Index, inputIndex);
+            }
+            else if (hostElement is WarriorView warriorView)
+            {
+                WarriorBoosterMergeAttempt?.Invoke(warriorView.TypeId, inputIndex);
+            }
         }
         
         private void ClearGrid()
@@ -102,6 +126,22 @@ namespace Source.Code.Grid.View
             foreach (Transform child in _grid.transform)
             {
                 Destroy(child.gameObject);
+            }
+        }
+        
+        
+        private void OnElementOverlaps(IHighlightElement element)
+        {
+            if (element == null)
+            {
+                _lastHighlight?.Highlight(false);
+                _lastHighlight = null;
+            }
+            else
+            {
+                _lastHighlight?.Highlight(false);
+                _lastHighlight = element;
+                _lastHighlight.Highlight(true);
             }
         }
 

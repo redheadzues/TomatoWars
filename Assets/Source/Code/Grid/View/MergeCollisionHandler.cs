@@ -1,20 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using Source.Code.Grid.View;
 using UnityEngine;
 
-namespace Source.Code.Grid
+namespace Source.Code.Grid.View
 {
     public class MergeCollisionHandler
     {
         private readonly MergeGridView _view;
         private readonly Dictionary<Collider2D, CellView> _colliderToCellView = new();
+        private readonly Dictionary<Collider2D, WarriorView> _colliderToWarriorView = new();
         private readonly HashSet<Collider2D> _triggeredColliders = new();
         private readonly ICoroutineRunner _coroutineRunner;
         
         private CellView _draggingCellView;
-        private CellView _bestOverlapView;
+        private Collider2D _bestOverlap;
         private Coroutine _overlapCoroutine;
+        
+        public event Action<IHighlightElement> ElementOverlaps;
         
         public MergeCollisionHandler(MergeGridView view, ICoroutineRunner coroutineRunner)
         {
@@ -27,6 +30,11 @@ namespace Source.Code.Grid
             _colliderToCellView.Add(view.Collider, view);
             view.Draggable.DragStarted += OnDragStarted;
             view.Draggable.DragEnded += OnDragEnded;
+        }
+
+        public void AddWarriorView(WarriorView view)
+        {
+            _colliderToWarriorView.Add(view.Collider, view);
         }
 
         public void CleanUp()
@@ -57,8 +65,8 @@ namespace Source.Code.Grid
         
         private void OnDragEnded(BoosterIconDraggable draggable)
         {
-            if(_bestOverlapView != null)
-                _view.MergeAttempt(_bestOverlapView.Index, _draggingCellView.Index);
+            if(_bestOverlap != null)
+                _view.MergeAttempt(GetElementByCollider(_bestOverlap), _draggingCellView.Index);
             else
                 draggable.ReturnPosition();
             
@@ -67,7 +75,7 @@ namespace Source.Code.Grid
             
             _draggingCellView = null;
             _triggeredColliders.Clear();
-            _bestOverlapView?.HighlightAsSelect(false);
+            ElementOverlaps?.Invoke(null);
             StopCoroutine();
         }
         
@@ -85,8 +93,8 @@ namespace Source.Code.Grid
         {
             if (_triggeredColliders.Count == 0)
             {
-                _bestOverlapView?.HighlightAsSelect(false);
-                _bestOverlapView = null;
+                ElementOverlaps?.Invoke(null);
+                _bestOverlap = null;
                 return;
             }
 
@@ -103,11 +111,11 @@ namespace Source.Code.Grid
                 }
             }
 
-            if (bestCollider != null && _bestOverlapView != _colliderToCellView[bestCollider])
+            if (bestCollider != null && _bestOverlap != bestCollider)
             {
-                _bestOverlapView?.HighlightAsSelect(false);
-                _bestOverlapView = _colliderToCellView[bestCollider];
-                _bestOverlapView.HighlightAsSelect(true);
+                _bestOverlap = bestCollider;
+                var highlight = GetElementByCollider(_bestOverlap);
+                ElementOverlaps?.Invoke(highlight);
             }
         }
 
@@ -131,6 +139,12 @@ namespace Source.Code.Grid
         {
             if(_overlapCoroutine != null)
                 _coroutineRunner.StopCoroutine(_overlapCoroutine);
+        }
+
+        private IHighlightElement GetElementByCollider(Collider2D collider)
+        {
+            return _colliderToCellView.GetValueOrDefault(collider) ??
+                   _colliderToWarriorView.GetValueOrDefault(collider) as IHighlightElement;
         }
     }
 }

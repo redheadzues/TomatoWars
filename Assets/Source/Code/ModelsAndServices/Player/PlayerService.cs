@@ -1,6 +1,7 @@
 ﻿using System;
 using Source.Code.Grid;
 using Source.Code.StaticData;
+using UnityEngine;
 
 namespace Source.Code.ModelsAndServices.Player
 {
@@ -27,7 +28,7 @@ namespace Source.Code.ModelsAndServices.Player
         public bool TryAddBoosterToWarrior(GridBooster booster, WarriorTypeId warriorTypeId)
         {
             var warrior = _model.OwnedWarriors[warriorTypeId];
-
+            
             if (warrior == null || !warrior.IsOwned || booster.TypeId == BoosterTypeId.None)
                 return false;
 

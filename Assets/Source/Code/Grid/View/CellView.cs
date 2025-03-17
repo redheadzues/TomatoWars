@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Source.Code.Grid.View
 {
-    public class CellView : MonoBehaviour
+    public class CellView : MonoBehaviour, IHighlightElement
     {
         [SerializeField] private Image _icon;
         [SerializeField] private Image _selectHighlighter;
@@ -80,8 +80,7 @@ namespace Source.Code.Grid.View
             _draggable.ReturnPosition();
         }
 
-
-        public void HighlightAsSelect(bool isActive)
+        public void Highlight(bool isActive)
         {
             if (_booster == null)
                 return;
