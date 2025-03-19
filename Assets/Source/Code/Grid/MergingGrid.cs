@@ -14,15 +14,13 @@ namespace Source.Code.Grid
         protected override void OnProviderInitialized()
         {
             var service = Provider.Get<IMergeGridService>();
-            var staticData = Provider.Get<IStaticDataService>();
-            _presenter = new MergeGridPresenter(service, staticData, _view);
+            var warriorFactory = Provider.Get<IWarriorFactory>();
+            _presenter = new MergeGridPresenter(service, warriorFactory, _view);
         }
         
         private void OnDestroy()
         {
             _presenter.CleanUp();
         }
-
-
     }
 }

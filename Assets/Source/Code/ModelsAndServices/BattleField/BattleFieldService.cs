@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using Source.Code.BattleField;
 using Source.Code.StaticData;
 using UnityEngine;
 using Random = System.Random;
@@ -24,7 +25,8 @@ namespace Source.Code.ModelsAndServices.BattleField
     public class BattleFieldService : IBattleFieldService
     {
         private readonly CoreModel _coreModel;
-        private readonly IStaticDataService _dataService;
+        private readonly IStaticDataService _staticData;
+        private readonly IWarriorFactory _warriorFactory;
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
         
@@ -41,11 +43,12 @@ namespace Source.Code.ModelsAndServices.BattleField
         public event Action<IWarrior> WarriorSpawned;
         public event Action<IWarrior> WarriorAdded;
         
-        public BattleFieldService(CoreModel model, IStaticDataService dataService, ICoroutineRunner runner)
+        public BattleFieldService(CoreModel model, IStaticDataService staticData, ICoroutineRunner runner, IWarriorFactory warriorFactory)
         {
             _coreModel = model;
             _coroutineRunner = runner;
-            _dataService = dataService;
+            _warriorFactory = warriorFactory;
+            _staticData = staticData;
         }
 
         public void Start() => 
@@ -64,7 +67,7 @@ namespace Source.Code.ModelsAndServices.BattleField
         {
             _battleModel.SelectedWarriors = _coreModel.Player.SelectedWarrior;
 
-            var bossConfig = _dataService.GetBoss(_coreModel.Player.Stage);
+            var bossConfig = _staticData.GetBossConfig(_coreModel.Player.Stage);
 
             if (bossConfig == null)
             {
@@ -127,7 +130,7 @@ namespace Source.Code.ModelsAndServices.BattleField
             _tikDamage += warrior.BaseDamagePerSecond;
 
         private void Move(Warrior warrior) => 
-            warrior.NormalizePosition = Math.Clamp(warrior.NormalizePosition + warrior.NormalizedSpeed, 0f, 1f);
+            warrior.NormalizePosition = Math.Clamp(warrior.NormalizePosition + warrior.BaseNormalizedSpeed, 0f, 1f);
 
         private void BossAttack()
         {
@@ -162,8 +165,6 @@ namespace Source.Code.ModelsAndServices.BattleField
             warrior.ResetWarrior();
             warrior.LineIndex = _random.Next(0, 3);
             
-            _battleModel.Warriors.Add(warrior);
-            
             WarriorSpawned?.Invoke(warrior);
         }
 
@@ -174,9 +175,8 @@ namespace Source.Code.ModelsAndServices.BattleField
 
         private Warrior CreateNewWarrior(WarriorTypeId typeId)
         {
-            var config = _dataService.GetWarrior(typeId);
-            var warrior = new Warrior(config);
-            
+            var warrior = _warriorFactory.CreateWarrior(typeId);
+            _battleModel.Warriors.Add(warrior);
             WarriorAdded?.Invoke(warrior);
 
             return warrior;

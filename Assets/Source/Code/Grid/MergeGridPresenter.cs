@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Source.Code.BattleField;
 using Source.Code.Grid.View;
 using Source.Code.ModelsAndServices;
 using Source.Code.ModelsAndServices.Grid;
@@ -12,12 +13,12 @@ namespace Source.Code.Grid
     {
         private readonly MergeGridView _view;
         private readonly IMergeGridService _gridService;
-        private readonly IStaticDataService _staticData;
+        private readonly IWarriorFactory _warriorFactory;
 
-        public MergeGridPresenter(IMergeGridService service, IStaticDataService staticData, MergeGridView view)
+        public MergeGridPresenter(IMergeGridService service, IWarriorFactory warriorFactory, MergeGridView view)
         {
             _gridService = service;
-            _staticData = staticData;
+            _warriorFactory = warriorFactory;
             _view = view;
 
             _view.BoostersMergeAttempt += HandleMergeAttempt;
@@ -34,12 +35,7 @@ namespace Source.Code.Grid
             
             foreach (var warriorTypeId in _gridService.SelectedWarriors)
             {
-                var warriorConfig = _staticData.GetWarrior(warriorTypeId);
-                
-                if(warriorConfig == null)
-                    throw new NullReferenceException($"Missing warrior config by {warriorTypeId} type");
-
-                var warrior = new Warrior(warriorConfig);
+                var warrior = _warriorFactory.CreateWarrior(warriorTypeId);
                 
                 selectedWarriors.Add(warrior);
             }

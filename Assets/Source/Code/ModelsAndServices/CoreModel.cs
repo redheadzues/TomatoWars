@@ -5,7 +5,7 @@ using Source.Code.ModelsAndServices.Player;
 namespace Source.Code.ModelsAndServices
 {
     [Serializable]
-    public class CoreModel : IReadOnlyCoreModel
+    public class CoreModel
     {
         public PlayerModel Player { get; set; }
         public GridModel Grid { get; set; }

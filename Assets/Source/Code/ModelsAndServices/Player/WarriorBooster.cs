@@ -4,7 +4,7 @@ namespace Source.Code.ModelsAndServices.Player
 {
     public class WarriorBooster
     {
-        public BoosterTypeId BoosterTypeId;
+        public BoosterTypeId TypeId;
         public int Level;
         public Rarity Rarity;
     }

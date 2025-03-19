@@ -17,6 +17,5 @@ namespace Source.Code.ModelsAndServices.Player
         };
 
         public Dictionary<WarriorTypeId, OwnedWarrior> OwnedWarriors = new();
-
     }
 }

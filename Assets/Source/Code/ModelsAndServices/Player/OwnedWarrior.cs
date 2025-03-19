@@ -9,5 +9,6 @@ namespace Source.Code.ModelsAndServices.Player
         public WarriorTypeId TypeId;
         public bool IsOwned;
         public WarriorBooster Booster;
+        public int Level;
     }
 }

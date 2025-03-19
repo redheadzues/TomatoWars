@@ -8,7 +8,7 @@ namespace Source.Code.ModelsAndServices.Player
     public interface IPlayerService : IService
     {
         PlayerModel Model { get; } 
-        bool TryAddBoosterToWarrior(GridBooster booster, WarriorTypeId warriorTypeId);
+        bool TryAddBoosterToWarrior(WarriorBooster booster, WarriorTypeId warriorTypeId);
         bool TrySpendGold(Currency currency, int value);
     }
     
@@ -25,19 +25,14 @@ namespace Source.Code.ModelsAndServices.Player
             SyncCurrencyByType();
         }
 
-        public bool TryAddBoosterToWarrior(GridBooster booster, WarriorTypeId warriorTypeId)
+        public bool TryAddBoosterToWarrior(WarriorBooster booster, WarriorTypeId warriorTypeId)
         {
             var warrior = _model.OwnedWarriors[warriorTypeId];
             
             if (warrior == null || !warrior.IsOwned || booster.TypeId == BoosterTypeId.None)
                 return false;
 
-            warrior.Booster = new WarriorBooster
-            {
-                BoosterTypeId = booster.TypeId,
-                Level = booster.Level,
-                Rarity = booster.Rarity
-            };
+            warrior.Booster = booster;
 
             return true;
         }

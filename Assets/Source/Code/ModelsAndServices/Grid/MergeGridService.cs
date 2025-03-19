@@ -14,7 +14,7 @@ namespace Source.Code.ModelsAndServices.Grid
         IReadOnlyList<WarriorTypeId> SelectedWarriors { get; }
         bool IsEnableAddNewItem { get; }
         bool TryMerge(int hostIndex, int inputIndex, out GridBooster newHostBooster, out int emptyIndex);
-        bool TryMerge(WarriorTypeId warriorType, int boosterIndex, out GridBooster newBooster);
+        bool TryMerge(WarriorTypeId warriorType, int boosterIndex, out GridBooster booster);
         bool TryCreateNewBooster(out GridBooster booster);
 
     }
@@ -30,9 +30,9 @@ namespace Source.Code.ModelsAndServices.Grid
         public IReadOnlyList<WarriorTypeId> SelectedWarriors => _playerService.Model.SelectedWarrior;
         public bool IsEnableAddNewItem => GetFreeCellIndex() > -1;
 
-        public MergeGridService(CoreModel model, IStaticDataService staticData, IPlayerService playerService)
+        public MergeGridService(GridModel model, IStaticDataService staticData, IPlayerService playerService)
         {
-            _gridModel = model.Grid;
+            _gridModel = model;
             _playerService = playerService;
             _staticData = staticData;
 
@@ -71,13 +71,20 @@ namespace Source.Code.ModelsAndServices.Grid
             return false;
         }
         
-        public bool TryMerge(WarriorTypeId warriorType, int boosterIndex, out GridBooster newBooster)
+        public bool TryMerge(WarriorTypeId warriorType, int boosterIndex, out GridBooster booster)
         {
-            newBooster = _gridModel.GridBoosters[boosterIndex];
-            
-            if (_playerService.TryAddBoosterToWarrior(_gridModel.GridBoosters[boosterIndex], warriorType))
+            booster = _gridModel.GridBoosters[boosterIndex];
+
+            WarriorBooster warriorBooster = new()
             {
-                newBooster = CreateEmptyBooster(boosterIndex);
+                TypeId = booster.TypeId,
+                Level = booster.Level,
+                Rarity = booster.Rarity
+            };
+            
+            if (_playerService.TryAddBoosterToWarrior(warriorBooster, warriorType))
+            {
+                booster = CreateEmptyBooster(boosterIndex);
                 return true;
             }
 
@@ -119,7 +126,7 @@ namespace Source.Code.ModelsAndServices.Grid
             var values = Enum.GetValues(typeof(BoosterTypeId));
             var typeId = (BoosterTypeId)values.GetValue(_random.Next(1, values.Length));
 
-            var config = _staticData.GetBooster(typeId);
+            var config = _staticData.GetBoosterConfig(typeId);
 
             if (config == null)
                 throw new NullReferenceException($"no config found by {typeId}");
@@ -141,8 +148,6 @@ namespace Source.Code.ModelsAndServices.Grid
 
         private GridBooster CopyBoosterWithNewIndex(GridBooster booster, int newIndex) => 
             new(newIndex, booster.TypeId, booster.Level, booster.Icon);
-
-
 
         private int GetFreeCellIndex() => 
             _gridModel.GridBoosters.FindIndex(booster => booster.TypeId == BoosterTypeId.None);
