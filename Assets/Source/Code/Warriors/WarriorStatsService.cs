@@ -21,13 +21,13 @@ namespace Source.Code.Warriors
         {
             _staticData = staticData;
             _model = model;
-            InitializeCharacteristics();
+            InitializeStats();
         }
 
         public WarriorStats GetStatsByType(WarriorTypeId typeId) => 
             _warriorStatsByType.GetValueOrDefault(typeId);
         
-        private void InitializeCharacteristics()
+        private void InitializeStats()
         {
             foreach (WarriorTypeId typeId in Enum.GetValues(typeof(WarriorTypeId)))
             {

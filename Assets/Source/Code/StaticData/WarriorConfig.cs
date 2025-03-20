@@ -36,6 +36,9 @@ namespace Source.Code.StaticData
 
         public WarriorStats GetStatsByLevel(int level)
         {
+            if (level == 0)
+                level = 1;
+            
             var stats = new WarriorStats()
             {
                 MaxHealth = _health,
