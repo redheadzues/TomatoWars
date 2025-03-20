@@ -1,7 +1,7 @@
 ﻿using Source.Code.StaticData;
 using UnityEngine;
 
-namespace Source.Code.BattleField
+namespace Source.Code.Warriors
 {
     public interface IWarrior
     {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using DG.Tweening;
 using Source.Code.StaticData;
+using Source.Code.Warriors;
 using UnityEngine;
 
 namespace Source.Code.BattleField.View

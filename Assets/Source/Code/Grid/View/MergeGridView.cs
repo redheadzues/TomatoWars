@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Source.Code.BattleField;
 using Source.Code.StaticData;
+using Source.Code.Warriors;
 using UnityEngine;
 using UnityEngine.UI;
 

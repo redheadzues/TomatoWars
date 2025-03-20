@@ -1,10 +1,9 @@
 ﻿using System;
 using Source.Code.ModelsAndServices.Player;
 using Source.Code.StaticData;
-using Source.Code.Warriors;
 using UnityEngine;
 
-namespace Source.Code.BattleField
+namespace Source.Code.Warriors
 {
     public class Warrior : IWarrior
     {
@@ -24,7 +23,7 @@ namespace Source.Code.BattleField
         public int LineIndex {get; set; }
         public float NormalizePosition {get; set; }
         public WarriorBooster BoosterInfo { get; set; }
-        public WarriorCharacteristicBooster  Booster { get; set; }
+        public WarriorStatsBooster  Booster { get; set; }
        
         public Warrior(WarriorStats stats, WarriorTypeId typeId, Sprite icon)
         {

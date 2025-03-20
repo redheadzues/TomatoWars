@@ -2,6 +2,7 @@
 using Source.Code.BattleField;
 using Source.Code.StaticData;
 using Source.Code.UiGeneral;
+using Source.Code.Warriors;
 using UnityEngine;
 using UnityEngine.UI;
 

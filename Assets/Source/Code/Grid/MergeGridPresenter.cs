@@ -6,6 +6,7 @@ using Source.Code.Grid.View;
 using Source.Code.ModelsAndServices;
 using Source.Code.ModelsAndServices.Grid;
 using Source.Code.StaticData;
+using Source.Code.Warriors;
 
 namespace Source.Code.Grid
 {

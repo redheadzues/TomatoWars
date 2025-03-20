@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using Source.Code.BattleField;
 using Source.Code.StaticData;
+using Source.Code.Warriors;
 using UnityEngine;
 using Random = System.Random;
 

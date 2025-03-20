@@ -1,6 +1,7 @@
 ﻿using Source.Code.BattleField.View;
 using Source.Code.ModelsAndServices.BattleField;
 using Source.Code.StaticData;
+using Source.Code.Warriors;
 
 namespace Source.Code.BattleField
 {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Source.Code.ModelsAndServices;
 using Source.Code.ModelsAndServices.BattleField;
+using Source.Code.Warriors;
 
 namespace Source.Code.BattleField.Buff
 {

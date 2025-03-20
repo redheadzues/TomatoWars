@@ -1,5 +1,6 @@
 ﻿using System;
 using Source.Code.BattleField;
+using Source.Code.Warriors;
 using UnityEngine;
 
 namespace Source.Code.StaticData
@@ -18,15 +19,17 @@ namespace Source.Code.StaticData
         [SerializeField] private float _criticalPower; 
         [SerializeField] private int _maxHealth;
 
-        public WarriorCharacteristicBooster GetCharacteristicBoosterByLevel(int level)
+        public WarriorStatsBooster GetStatsBoosterByLevel(int level, Rarity rarity)
         {
-            var damage = _damagePerSecond * level;
-            var speed = Math.Clamp(_normalizedSpeed * level, 0, _maxSpeed);
-            var criticalChance = Math.Clamp(_criticalChance * level, 0, _maxCriticalChance);
-            var criticalPower = _criticalChance * level;
-            var maxHealth = _maxHealth * level;
+            var rarityMultiplier = 0.5f + ((int)rarity * 0.5f);
+            
+            var damage = (int)(_damagePerSecond * level * rarityMultiplier);
+            var speed = Math.Clamp(_normalizedSpeed * level * rarityMultiplier, 0, _maxSpeed);
+            var criticalChance = Math.Clamp(_criticalChance * level * rarityMultiplier, 0, _maxCriticalChance);
+            var criticalPower = _criticalChance * level * rarityMultiplier;
+            var maxHealth = (int)(_maxHealth * level * rarityMultiplier);
 
-            return new WarriorCharacteristicBooster(damage, speed, criticalChance, criticalPower, maxHealth);
+            return new WarriorStatsBooster(damage, speed, criticalChance, criticalPower, maxHealth);
         }
     }
         

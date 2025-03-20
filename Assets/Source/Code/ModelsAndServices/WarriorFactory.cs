@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Source.Code.BattleField;
 using Source.Code.ModelsAndServices.Player;
 using Source.Code.StaticData;
@@ -17,7 +16,6 @@ namespace Source.Code.ModelsAndServices
         private readonly PlayerModel _playerModel;
         private readonly IWarriorStatsService _warriorStats;
         private readonly IStaticDataService _staticData;
-        private readonly Dictionary<WarriorTypeId, WarriorCharacteristicBooster> _boostersByWarriorType = new();
 
         public WarriorFactory(PlayerModel playerModel, IWarriorStatsService warriorStats, IStaticDataService staticData)
         {
@@ -33,12 +31,11 @@ namespace Source.Code.ModelsAndServices
             
             var warrior = new Warrior(warriorStats, typeId, icon)
             {
-                Booster = _boostersByWarriorType.GetValueOrDefault(typeId)  ?? new WarriorCharacteristicBooster(),
+                Booster = _warriorStats.GetBoosterByType(typeId),
                 BoosterInfo = _playerModel.OwnedWarriors.GetValueOrDefault(typeId)?.Booster
             };
 
             return warrior;
-
         }
     }
 }
