@@ -21,7 +21,7 @@ namespace Source.Code.StaticData
         [SerializeField] private float _criticalPower; 
         [SerializeField] private int _maxHealth;
 
-        public WarriorStatsBooster GetStatsBoosterByLevel(int level, Rarity rarity)
+        public WarriorBooster GetStatsBoosterByLevel(int level, Rarity rarity)
         {
             var rarityMultiplier = 0.5f + ((int)rarity * 0.5f);
             
@@ -31,7 +31,7 @@ namespace Source.Code.StaticData
             var criticalPower = _criticalChance * level * rarityMultiplier;
             var maxHealth = (int)(_maxHealth * level * rarityMultiplier);
 
-            return new WarriorStatsBooster(damage, speed, criticalChance, criticalPower, maxHealth);
+            return new WarriorBooster(TypeId, level, rarity, damage,speed, criticalChance, criticalPower, maxHealth);
         }
     }
         

@@ -76,14 +76,10 @@ namespace Source.Code.ModelsAndServices.Grid
         {
             booster = _gridModel.GridBoosters[boosterIndex];
 
-            WarriorBoosterInfo warriorBoosterInfo = new()
-            {
-                TypeId = booster.TypeId,
-                Level = booster.Level,
-                Rarity = booster.Rarity
-            };
+            Booster boosterInfo = new(booster.TypeId, booster.Level, booster.Rarity);
+     
             
-            if (_playerService.TryAddBoosterToWarrior(warriorBoosterInfo, warriorType))
+            if (_playerService.TryAddBoosterToWarrior(boosterInfo, warriorType))
             {
                 booster = CreateEmptyBooster(boosterIndex);
                 return true;

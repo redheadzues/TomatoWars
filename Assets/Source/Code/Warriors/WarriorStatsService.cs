@@ -9,15 +9,13 @@ namespace Source.Code.Warriors
     public interface IWarriorStatsService : IService, ICleanable
     {
         WarriorStats GetStatsByType(WarriorTypeId typeId);
-        WarriorStatsBooster GetStatsBoosterByType(WarriorTypeId typeId);
-        WarriorBoosterInfo GetBoosterInfoByType(WarriorTypeId typeId);
+        WarriorBooster GetWarriorBoosterByType(WarriorTypeId typeId);
     }
     
     public class WarriorStatsService : IWarriorStatsService
     {
         private readonly Dictionary<WarriorTypeId, WarriorStats> _warriorStatsByType = new();
-        private readonly Dictionary<WarriorTypeId, WarriorStatsBooster> _statsBoostersByType = new();
-        private readonly Dictionary<WarriorTypeId, WarriorBoosterInfo> _boosterInfoByType = new();
+        private readonly Dictionary<WarriorTypeId, WarriorBooster> _statsBoostersByType = new();
         private readonly IStaticDataService _staticData;
         private readonly IPlayerService _playerService;
 
@@ -42,11 +40,8 @@ namespace Source.Code.Warriors
         public WarriorStats GetStatsByType(WarriorTypeId typeId) => 
             _warriorStatsByType.GetValueOrDefault(typeId);
 
-        public WarriorStatsBooster GetStatsBoosterByType(WarriorTypeId typeId) => 
+        public WarriorBooster GetWarriorBoosterByType(WarriorTypeId typeId) => 
             _statsBoostersByType.GetValueOrDefault(typeId);
-
-        public WarriorBoosterInfo GetBoosterInfoByType(WarriorTypeId typeId) =>
-            _boosterInfoByType.GetValueOrDefault(typeId);
 
         private void InitializeStats()
         {
@@ -79,20 +74,19 @@ namespace Source.Code.Warriors
             }
         }
 
-        private void AddBoosterByType(WarriorTypeId typeId, WarriorBoosterInfo boosterInfo)
+        private void AddBoosterByType(WarriorTypeId typeId, Booster boosterInfo)
         {
             if (boosterInfo.TypeId == BoosterTypeId.None)
                 return;
             
             var boosterConfig = _staticData.GetBoosterConfig(boosterInfo.TypeId);
-            var warriorStatsBooster = boosterConfig.GetStatsBoosterByLevel(boosterInfo.Level, boosterInfo.Rarity);
+            var warriorBooster = boosterConfig.GetStatsBoosterByLevel(boosterInfo.Level, boosterInfo.Rarity);
 
-            _statsBoostersByType[typeId] = warriorStatsBooster;
-            _boosterInfoByType[typeId] = boosterInfo;
+            _statsBoostersByType[typeId] = warriorBooster;
         }
 
-        private void OnBoosterUpdated(WarriorTypeId typeId, WarriorBoosterInfo boosterInfo) => 
-            AddBoosterByType(typeId, boosterInfo);
+        private void OnBoosterUpdated(WarriorTypeId typeId, Booster booster) => 
+            AddBoosterByType(typeId, booster);
 
         private void OnLevelUp(WarriorTypeId typeId) => 
             AddStatsByType(typeId);

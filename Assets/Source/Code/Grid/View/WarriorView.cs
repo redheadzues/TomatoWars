@@ -37,7 +37,7 @@ namespace Source.Code.Grid.View
         private void UpdateDescription()
         {
             var description = 
-                $"Урон {_warrior.BaseDamagePerSecond} + <color=green>{_warrior.StatsBooster.DamagePerSecond}</color>\n"
+                $"Урон {_warrior.BaseDamagePerSecond} + <color=green>{_warrior.Booster.DamagePerSecond}</color>\n"
                 + $"Скорость {_warrior.BaseNormalizedSpeed}";
             
             _tooltip.SetDescription(description);

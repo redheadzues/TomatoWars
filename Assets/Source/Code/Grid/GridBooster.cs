@@ -5,28 +5,21 @@ using UnityEngine;
 namespace Source.Code.Grid
 {
     [Serializable]
-    public class GridBooster
+    public class GridBooster : Booster
     {
         public int Index { get; }
-        public int Level { get; }
-        public BoosterTypeId TypeId { get;}
-        public Rarity Rarity { get; }
         public Sprite Icon { get; }
         
         
-        public GridBooster(int index, BoosterTypeId typeId, int level, Sprite icon, Rarity rarity = Rarity.Common)
+        public GridBooster(int index, BoosterTypeId typeId, int level, Sprite icon, Rarity rarity = Rarity.Common) : base(typeId, level, rarity)
         {
             Index = index;
-            TypeId = typeId;
-            Level = level;
             Icon = icon;
-            Rarity = rarity;
         }
 
-        public GridBooster(int index)
+        public GridBooster(int index) : base(BoosterTypeId.None)
         {
             Index = index;
-            TypeId = BoosterTypeId.None;
         }
     }
 }

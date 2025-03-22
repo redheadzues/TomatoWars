@@ -23,15 +23,13 @@ namespace Source.Code.Warriors
         public float BaseDamageReduce => _stats.DamageReduce;
         public int LineIndex {get; set; }
         public float NormalizePosition {get; set; }
-        public WarriorBoosterInfo BoosterInfo { get; }
-        public WarriorStatsBooster StatsBooster { get;}
+        public WarriorBooster Booster { get;}
         public List<BattleEffect> ActiveEffects { get;  }
        
-        public Warrior(WarriorTypeId typeId, WarriorStats stats, WarriorStatsBooster statsBooster, WarriorBoosterInfo boosterInfo, Sprite icon)
+        public Warrior(WarriorTypeId typeId, WarriorStats stats, WarriorBooster booster,  Sprite icon)
         {
             _stats = stats;
-            StatsBooster = statsBooster;
-            BoosterInfo = boosterInfo;
+            Booster = booster;
             Icon = icon;
             TypeId = typeId;
             _health = stats.MaxHealth;
@@ -57,7 +55,7 @@ namespace Source.Code.Warriors
         {
             //to do implement critical damage
             
-            return (int)((BaseDamagePerSecond + StatsBooster.DamagePerSecond) * tickTime);
+            return (int)((BaseDamagePerSecond + Booster.DamagePerSecond) * tickTime);
         }
 
         public void TakeHeal(int value)
@@ -67,10 +65,10 @@ namespace Source.Code.Warriors
 
         private int CalculateMaxHealth()
         {
-            if (StatsBooster == null)
+            if (Booster == null)
                 return _baseMaxHealth;
 
-            return _baseMaxHealth * StatsBooster.MaxHealth;
+            return _baseMaxHealth * Booster.MaxHealth;
         }
     }
 }

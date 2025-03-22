@@ -1,14 +1,15 @@
 ﻿using System;
 using Source.Code.StaticData;
+using Source.Code.Warriors;
 
 namespace Source.Code.ModelsAndServices.Player
 {
     public interface IPlayerService : IService
     {
         public event Action<WarriorTypeId> WarriorLevelUp;
-        public event Action<WarriorTypeId, WarriorBoosterInfo> BoosterUpdated;
+        public event Action<WarriorTypeId, Booster> BoosterUpdated;
         PlayerModel Model { get; } 
-        bool TryAddBoosterToWarrior(WarriorBoosterInfo boosterInfo, WarriorTypeId warriorTypeId);
+        bool TryAddBoosterToWarrior(Booster booster, WarriorTypeId warriorTypeId);
         bool TrySpendCurrency(Currency currency, int value);
         bool TryLevelUpWarrior(WarriorTypeId typeId);
     }
@@ -19,7 +20,7 @@ namespace Source.Code.ModelsAndServices.Player
 
         public PlayerModel Model => _model; 
         public event Action<WarriorTypeId> WarriorLevelUp;
-        public event Action<WarriorTypeId, WarriorBoosterInfo> BoosterUpdated;
+        public event Action<WarriorTypeId, Booster> BoosterUpdated;
 
         public PlayerService(PlayerModel model)
         {
@@ -28,16 +29,16 @@ namespace Source.Code.ModelsAndServices.Player
             SyncCurrencyByType();
         }
 
-        public bool TryAddBoosterToWarrior(WarriorBoosterInfo boosterInfo, WarriorTypeId warriorTypeId)
+        public bool TryAddBoosterToWarrior(Booster booster, WarriorTypeId warriorTypeId)
         {
             var warrior = _model.OwnedWarriors[warriorTypeId];
             
-            if (warrior == null || !warrior.IsOwned || boosterInfo.TypeId == BoosterTypeId.None)
+            if (warrior == null || !warrior.IsOwned || booster.TypeId == BoosterTypeId.None)
                 return false;
 
-            warrior.BoosterInfo = boosterInfo;
+            warrior.BoosterInfo = booster;
             
-            BoosterUpdated?.Invoke(warriorTypeId, boosterInfo);
+            BoosterUpdated?.Invoke(warriorTypeId, booster);
 
             return true;
         }

@@ -21,13 +21,12 @@ namespace Source.Code.ModelsAndServices
 
         public Warrior CreateWarrior(WarriorTypeId typeId)
         {
-            var warriorStats = _warriorStats.GetStatsByType(typeId);
             var icon = _staticData.GetWarriorConfig(typeId)?.Icon;
 
-            var statsBooster = _warriorStats.GetStatsBoosterByType(typeId);
-            var boosterInfo = _warriorStats.GetBoosterInfoByType(typeId);
+            var warriorStats = _warriorStats.GetStatsByType(typeId);
+            var statsBooster = _warriorStats.GetWarriorBoosterByType(typeId);
 
-            var warrior = new Warrior(typeId, warriorStats, statsBooster, boosterInfo, icon);
+            var warrior = new Warrior(typeId, warriorStats, statsBooster, icon);
 
             return warrior;
         }
