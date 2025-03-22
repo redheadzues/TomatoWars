@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Source.Code.Grid;
 using Source.Code.ModelsAndServices.Player;
@@ -75,14 +76,14 @@ namespace Source.Code.ModelsAndServices.Grid
         {
             booster = _gridModel.GridBoosters[boosterIndex];
 
-            WarriorBooster warriorBooster = new()
+            WarriorBoosterInfo warriorBoosterInfo = new()
             {
                 TypeId = booster.TypeId,
                 Level = booster.Level,
                 Rarity = booster.Rarity
             };
             
-            if (_playerService.TryAddBoosterToWarrior(warriorBooster, warriorType))
+            if (_playerService.TryAddBoosterToWarrior(warriorBoosterInfo, warriorType))
             {
                 booster = CreateEmptyBooster(boosterIndex);
                 return true;
@@ -95,7 +96,7 @@ namespace Source.Code.ModelsAndServices.Grid
         {
             booster = null;
 
-            if (!_playerService.TrySpendGold(Currency.Gold, 0))
+            if (!_playerService.TrySpendCurrency(Currency.Gold, 0))
                 return false;
 
             int freeIndex = GetFreeCellIndex();

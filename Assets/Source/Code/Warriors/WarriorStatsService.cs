@@ -9,39 +9,44 @@ namespace Source.Code.Warriors
     public interface IWarriorStatsService : IService, ICleanable
     {
         WarriorStats GetStatsByType(WarriorTypeId typeId);
-        WarriorStatsBooster GetBoosterByType(WarriorTypeId typeId);
+        WarriorStatsBooster GetStatsBoosterByType(WarriorTypeId typeId);
+        WarriorBoosterInfo GetBoosterInfoByType(WarriorTypeId typeId);
     }
     
     public class WarriorStatsService : IWarriorStatsService
     {
         private readonly Dictionary<WarriorTypeId, WarriorStats> _warriorStatsByType = new();
-        private readonly Dictionary<WarriorTypeId, WarriorStatsBooster> _boostersByType = new();
+        private readonly Dictionary<WarriorTypeId, WarriorStatsBooster> _statsBoostersByType = new();
+        private readonly Dictionary<WarriorTypeId, WarriorBoosterInfo> _boosterInfoByType = new();
         private readonly IStaticDataService _staticData;
-        private readonly PlayerModel _model;
+        private readonly IPlayerService _playerService;
 
-        public WarriorStatsService(IStaticDataService staticData, PlayerModel model)
+        public WarriorStatsService(IStaticDataService staticData, IPlayerService playerService)
         {
             _staticData = staticData;
-            _model = model;
+            _playerService = playerService;
             
             InitializeStats();
             InitializeBoosters();
+
+            _playerService.WarriorLevelUp += OnLevelUp;
+            _playerService.BoosterUpdated += OnBoosterUpdated;
         }
 
         public void CleanUp()
         {
-            foreach (var warrior in _model.OwnedWarriors.Values)
-            {
-                warrior.BoosterUpdated -= OnBoosterUpdated;
-                warrior.LevelUp -= OnLevelUp;
-            }
+            _playerService.WarriorLevelUp -= OnLevelUp;
+            _playerService.BoosterUpdated -= OnBoosterUpdated;
         }
 
         public WarriorStats GetStatsByType(WarriorTypeId typeId) => 
             _warriorStatsByType.GetValueOrDefault(typeId);
 
-        public WarriorStatsBooster GetBoosterByType(WarriorTypeId typeId) => 
-            _boostersByType.GetValueOrDefault(typeId) ?? new WarriorStatsBooster();
+        public WarriorStatsBooster GetStatsBoosterByType(WarriorTypeId typeId) => 
+            _statsBoostersByType.GetValueOrDefault(typeId);
+
+        public WarriorBoosterInfo GetBoosterInfoByType(WarriorTypeId typeId) =>
+            _boosterInfoByType.GetValueOrDefault(typeId);
 
         private void InitializeStats()
         {
@@ -53,44 +58,41 @@ namespace Source.Code.Warriors
                 AddStatsByType(typeId);
             }
         }
-
-        private void InitializeBoosters()
-        {
-            foreach (var warrior in _model.OwnedWarriors)
-            {
-                warrior.Value.BoosterUpdated += OnBoosterUpdated;
-                warrior.Value.LevelUp += OnLevelUp;
-                
-                if (warrior.Value.IsOwned == false)
-                    return;
-                
-                AddBoosterByType(warrior.Key, warrior.Value.Booster);
-            }
-        }
-
-        private void AddBoosterByType(WarriorTypeId typeId, WarriorBooster booster)
-        {
-            if (booster == null || booster.TypeId == BoosterTypeId.None)
-                return;
-            
-            var boosterConfig = _staticData.GetBoosterConfig(booster.TypeId);
-            var warriorBooster = boosterConfig.GetStatsBoosterByLevel(booster.Level, booster.Rarity);
-
-            _boostersByType[typeId] = warriorBooster;
-        }
         
         private void AddStatsByType(WarriorTypeId typeId)
         {
             var config = _staticData.GetWarriorConfig(typeId);
-            var level = _model.OwnedWarriors[typeId].Level;
+            var level = _playerService.Model.OwnedWarriors[typeId].Level;
             var stats = config.GetStatsByLevel(level);
 
             _warriorStatsByType[typeId] = stats;
         }
 
+        private void InitializeBoosters()
+        {
+            foreach (var warrior in _playerService.Model.OwnedWarriors)
+            {
+                if (warrior.Value.IsOwned == false)
+                    return;
+                
+                AddBoosterByType(warrior.Key, warrior.Value.BoosterInfo);
+            }
+        }
 
-        private void OnBoosterUpdated(WarriorTypeId typeId, WarriorBooster booster) => 
-            AddBoosterByType(typeId, booster);
+        private void AddBoosterByType(WarriorTypeId typeId, WarriorBoosterInfo boosterInfo)
+        {
+            if (boosterInfo.TypeId == BoosterTypeId.None)
+                return;
+            
+            var boosterConfig = _staticData.GetBoosterConfig(boosterInfo.TypeId);
+            var warriorStatsBooster = boosterConfig.GetStatsBoosterByLevel(boosterInfo.Level, boosterInfo.Rarity);
+
+            _statsBoostersByType[typeId] = warriorStatsBooster;
+            _boosterInfoByType[typeId] = boosterInfo;
+        }
+
+        private void OnBoosterUpdated(WarriorTypeId typeId, WarriorBoosterInfo boosterInfo) => 
+            AddBoosterByType(typeId, boosterInfo);
 
         private void OnLevelUp(WarriorTypeId typeId) => 
             AddStatsByType(typeId);

@@ -14,5 +14,6 @@ namespace Source.Code.Warriors
         public float BaseNormalizedSpeed {get;}
         public int LineIndex {get;}
         public float NormalizePosition {get;}
+        WarriorStatsBooster StatsBooster { get; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Source.Code.BattleField;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
@@ -16,9 +17,11 @@ namespace Source.Code.Grid.View
         [SerializeField] private Transform _warriorContainer;
         [SerializeField] private WarriorView _warriorPrefab;
         
-        private List<int> _mergeTargetIndexes;
-        private List<CellView> _cellViews;
+        private readonly List<CellView> _cellViews = new(StaticConfig.BOOSTER_LIMIT);
+        private readonly List<WarriorView> _selectedWarriors = new();
+        
         private MergeCollisionHandler _mergeCollisionHandler;
+        private List<int> _mergeTargetIndexes;
         private IHighlightElement _lastHighlight;
         
         public event Action CreateButtonClicked;
@@ -29,16 +32,15 @@ namespace Source.Code.Grid.View
         private void OnEnable()
         {
             _createNewBoosterButton.onClick.AddListener(OnCreateButtonClicked);
-            _cellViews?.ForEach(x => x.Draggable.DragStarted += OnDragStarted);
-            _cellViews?.ForEach(x => x.Draggable.DragEnded += OnDragEnded);
-            
+            _cellViews.ForEach(x => x.Draggable.DragStarted += OnDragStarted);
+            _cellViews.ForEach(x => x.Draggable.DragEnded += OnDragEnded);
         }
 
         private void OnDisable()
         {
             _createNewBoosterButton.onClick.RemoveListener(OnCreateButtonClicked);
-            _cellViews?.ForEach(x => x.Draggable.DragStarted -= OnDragStarted);
-            _cellViews?.ForEach(x => x.Draggable.DragEnded -= OnDragEnded);
+            _cellViews.ForEach(x => x.Draggable.DragStarted -= OnDragStarted);
+            _cellViews.ForEach(x => x.Draggable.DragEnded -= OnDragEnded);
         }
 
         private void OnDestroy()
@@ -55,9 +57,7 @@ namespace Source.Code.Grid.View
             
             _mergeCollisionHandler = new MergeCollisionHandler(this, this);
             _mergeCollisionHandler.ElementOverlaps += OnElementOverlaps;
-            
-            _cellViews = new(30);
-            
+           
             for (var i = 0; i < boosters.Count; i++)
             {
                 var cell = Instantiate(_cellPrefab, _grid.transform);
@@ -72,9 +72,23 @@ namespace Source.Code.Grid.View
             foreach (var warrior in selectedWarriors)
             {
                 var view = Instantiate(_warriorPrefab, _warriorContainer);
-                view.Init(warrior);
+                view.SetWarrior(warrior);
+                _selectedWarriors.Add(view);
                 _mergeCollisionHandler.AddWarriorView(view);
             }
+        }
+
+        public void UpdateWarrior(IWarrior warrior)
+        {
+            var view = _selectedWarriors.FirstOrDefault(x => x.TypeId == warrior.TypeId);
+
+            if (view == null)
+            {
+                Debug.LogWarning($"Cant find view for warrior type {warrior.TypeId} for update");
+                return;
+            }
+            
+            view.SetWarrior(warrior);
         }
 
         public void SetActiveBuyButton(bool isActive)

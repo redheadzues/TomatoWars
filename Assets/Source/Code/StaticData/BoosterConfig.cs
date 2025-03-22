@@ -1,5 +1,5 @@
 ﻿using System;
-using Source.Code.BattleField;
+using System.Collections.Generic;
 using Source.Code.Warriors;
 using UnityEngine;
 
@@ -10,7 +10,9 @@ namespace Source.Code.StaticData
     {
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public BoosterTypeId TypeId { get; private set; }
+        [field: SerializeField] public List<EffectByRarity> EffectsByRarity { get; private set; }
         
+        [Space] [Header("Stats")]
         [SerializeField] private int _damagePerSecond; 
         [SerializeField] private float _normalizedSpeed;
         [SerializeField] private float _maxSpeed;
@@ -39,6 +41,15 @@ namespace Source.Code.StaticData
         Sword,
         Axe,
         Shield,
-        Heal,
+        Health,
+    }
+
+    [Serializable]
+    public class EffectByRarity
+    {
+        [field: SerializeField] public Rarity Rarity { get; private set; }
+        [SerializeField] private List<EffectType> _effectType;
+
+        public IReadOnlyList<EffectType> EffectTypes => _effectType;
     }
 }

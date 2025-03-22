@@ -1,6 +1,4 @@
-﻿using System;
-using Source.Code.BattleField;
-using Source.Code.StaticData;
+﻿using Source.Code.StaticData;
 using Source.Code.UiGeneral;
 using Source.Code.Warriors;
 using UnityEngine;
@@ -24,7 +22,7 @@ namespace Source.Code.Grid.View
             Highlight(false);
         }
 
-        public void Init(IWarrior warrior)
+        public void SetWarrior(IWarrior warrior)
         {
             _warrior = warrior;
             _warriorIcon.sprite = warrior.Icon;
@@ -36,10 +34,11 @@ namespace Source.Code.Grid.View
             _highlight.gameObject.SetActive(isActive);
         }
 
-        public void UpdateDescription()
+        private void UpdateDescription()
         {
-            var description = $"Урон {_warrior.BaseDamagePerSecond}\n" +
-                                $"Скорость {_warrior.BaseNormalizedSpeed}";
+            var description = 
+                $"Урон {_warrior.BaseDamagePerSecond} + <color=green>{_warrior.StatsBooster.DamagePerSecond}</color>\n"
+                + $"Скорость {_warrior.BaseNormalizedSpeed}";
             
             _tooltip.SetDescription(description);
         }

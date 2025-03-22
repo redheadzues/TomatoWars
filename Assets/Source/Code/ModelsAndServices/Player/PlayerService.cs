@@ -1,15 +1,16 @@
 ﻿using System;
-using Source.Code.Grid;
 using Source.Code.StaticData;
-using UnityEngine;
 
 namespace Source.Code.ModelsAndServices.Player
 {
     public interface IPlayerService : IService
     {
+        public event Action<WarriorTypeId> WarriorLevelUp;
+        public event Action<WarriorTypeId, WarriorBoosterInfo> BoosterUpdated;
         PlayerModel Model { get; } 
-        bool TryAddBoosterToWarrior(WarriorBooster booster, WarriorTypeId warriorTypeId);
-        bool TrySpendGold(Currency currency, int value);
+        bool TryAddBoosterToWarrior(WarriorBoosterInfo boosterInfo, WarriorTypeId warriorTypeId);
+        bool TrySpendCurrency(Currency currency, int value);
+        bool TryLevelUpWarrior(WarriorTypeId typeId);
     }
     
     public class PlayerService : IPlayerService
@@ -17,6 +18,8 @@ namespace Source.Code.ModelsAndServices.Player
         private readonly PlayerModel _model;
 
         public PlayerModel Model => _model; 
+        public event Action<WarriorTypeId> WarriorLevelUp;
+        public event Action<WarriorTypeId, WarriorBoosterInfo> BoosterUpdated;
 
         public PlayerService(PlayerModel model)
         {
@@ -25,19 +28,21 @@ namespace Source.Code.ModelsAndServices.Player
             SyncCurrencyByType();
         }
 
-        public bool TryAddBoosterToWarrior(WarriorBooster booster, WarriorTypeId warriorTypeId)
+        public bool TryAddBoosterToWarrior(WarriorBoosterInfo boosterInfo, WarriorTypeId warriorTypeId)
         {
             var warrior = _model.OwnedWarriors[warriorTypeId];
             
-            if (warrior == null || !warrior.IsOwned || booster.TypeId == BoosterTypeId.None)
+            if (warrior == null || !warrior.IsOwned || boosterInfo.TypeId == BoosterTypeId.None)
                 return false;
 
-            warrior.Booster = booster;
+            warrior.BoosterInfo = boosterInfo;
+            
+            BoosterUpdated?.Invoke(warriorTypeId, boosterInfo);
 
             return true;
         }
 
-        public bool TrySpendGold(Currency currency, int value)
+        public bool TrySpendCurrency(Currency currency, int value)
         {
             if (_model.Wallet.Balances.TryGetValue(currency, out var currentValue) && currentValue - value >= 0)
             {
@@ -46,6 +51,15 @@ namespace Source.Code.ModelsAndServices.Player
             }
 
             return false;
+        }
+
+        public bool TryLevelUpWarrior(WarriorTypeId typeId)
+        {
+            if (typeId == WarriorTypeId.None)
+                return false;
+            
+            WarriorLevelUp?.Invoke(typeId);
+            return true;
         }
 
         private void SyncOwnedWarriorByType()

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using Source.Code.BattleField;
+using Source.Code.BattleField.Buff;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
 using UnityEngine;
@@ -29,6 +30,7 @@ namespace Source.Code.ModelsAndServices.BattleField
         private readonly IStaticDataService _staticData;
         private readonly IWarriorFactory _warriorFactory;
         private readonly ICoroutineRunner _coroutineRunner;
+        private readonly BattleEffectSystem _battleEffect;
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
         
         private BattleFieldModel _battleModel;

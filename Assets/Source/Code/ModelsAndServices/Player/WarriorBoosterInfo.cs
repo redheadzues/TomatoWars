@@ -2,7 +2,7 @@
 
 namespace Source.Code.ModelsAndServices.Player
 {
-    public class WarriorBooster
+    public class WarriorBoosterInfo
     {
         public BoosterTypeId TypeId;
         public int Level;

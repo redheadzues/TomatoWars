@@ -75,11 +75,10 @@ namespace Source.Code
         {
             var staticData = _serviceProvider.Get<IStaticDataService>();
             var playerService = _serviceProvider.RegisterInstance<IPlayerService>(new PlayerService(_model.Player));
-            var warriorStats = _serviceProvider.RegisterInstance<IWarriorStatsService>(new WarriorStatsService(staticData, _model.Player));
-            var warriorFactory = _serviceProvider.RegisterInstance<IWarriorFactory>(new WarriorFactory(_model.Player, warriorStats, staticData));
+            var warriorStats = _serviceProvider.RegisterInstance<IWarriorStatsService>(new WarriorStatsService(staticData, playerService));
+            var warriorFactory = _serviceProvider.RegisterInstance<IWarriorFactory>(new WarriorFactory(warriorStats, staticData));
             
             _serviceProvider.RegisterLazy<IMergeGridService>(() => new MergeGridService(_model.Grid, staticData, playerService));
-            
             _serviceProvider.RegisterLazy<IBattleFieldService>(() => new BattleFieldService(_model, staticData, _coroutineRunner, warriorFactory));
             
             ApplyState(GameState.GameLoop);
