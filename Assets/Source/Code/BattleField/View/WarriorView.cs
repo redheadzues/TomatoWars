@@ -114,7 +114,7 @@ namespace Source.Code.BattleField.View
                 transform.localPosition = Vector2.MoveTowards(
                     transform.localPosition, 
                     new Vector2(transform.localPosition.x, _warrior.NormalizePosition - 0.5f), 
-                    _warrior.BaseNormalizedSpeed / (0.5f/Time.deltaTime) );
+                    _warrior.BaseNormalizedSpeed / (StaticConfig.TICK_INTERVAL/Time.deltaTime) );
 
                 yield return null;
             }
