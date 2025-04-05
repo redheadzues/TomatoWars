@@ -78,7 +78,10 @@ namespace Source.Code.Warriors
         private void AddBoosterByType(WarriorTypeId typeId, Booster boosterInfo)
         {
             if (boosterInfo.TypeId == BoosterTypeId.None)
+            {
+                _statsBoostersByType[typeId] = new WarriorBooster(BoosterTypeId.None);
                 return;
+            }
             
             var boosterConfig = _staticData.GetBoosterConfig(boosterInfo.TypeId);
             var warriorBooster = boosterConfig.GetStatsBoosterByLevel(boosterInfo.Level, boosterInfo.Rarity);
