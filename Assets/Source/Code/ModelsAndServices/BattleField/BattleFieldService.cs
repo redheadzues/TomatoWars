@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using Source.Code.BattleField.Buff;
+using Source.Code.IdleNumbers;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace Source.Code.ModelsAndServices.BattleField
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
         
         private BattleFieldModel _battleModel;
-        private int _tikDamage;
+        private IdleNumber _tikDamage;
         private Coroutine _updateCoroutine;
         private float _timeBeforeSpawn;
 

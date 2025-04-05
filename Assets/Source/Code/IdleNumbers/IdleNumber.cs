@@ -1,14 +1,18 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Source.Code.IdleNumbers
 {
+    
+    [Serializable]
         public struct IdleNumber
     {
+        private const int TEN_CUBED = 1000;
+        private int _id;
+        
         public float Value { get; private set; }
         public int Degree { get; private set; }
 
-        private int _id;
-        private const int _tenCubed = 1000;
 
         public IdleNumber(float value, int degree)
         {
@@ -36,6 +40,21 @@ namespace Source.Code.IdleNumbers
 
             NormalizedNumber();
         }
+        
+        public static implicit operator IdleNumber(int value)
+        {
+            return new IdleNumber(value);
+        }
+
+        public static implicit operator IdleNumber(float value)
+        {
+            return new IdleNumber(value);
+        }
+
+        public static implicit operator IdleNumber(double value)
+        {
+            return new IdleNumber(value);
+        }
 
         private void NormalizedNumber()
         {
@@ -43,14 +62,14 @@ namespace Source.Code.IdleNumbers
             {
                 while (Math.Abs(Value) < 1)
                 {
-                    Value *= _tenCubed;
+                    Value *= TEN_CUBED;
                     Degree -= 3;
                 }
             }
 
-            while (Math.Abs(Value) >= _tenCubed)
+            while (Math.Abs(Value) >= TEN_CUBED)
             {
-                Value /= _tenCubed;
+                Value /= TEN_CUBED;
                 Degree += 3;
             }
         }
@@ -242,6 +261,11 @@ namespace Source.Code.IdleNumbers
             }
             return _id == idleNumber.GetHashCode();
         }
+        
+        public static explicit operator float(IdleNumber number)
+        {
+            return number.Value * Mathf.Pow(10, number.Degree);
+        }
 
         public override int GetHashCode()
         {
@@ -252,12 +276,30 @@ namespace Source.Code.IdleNumbers
         {
             string value;
 
-            if (this > _tenCubed)
+            if (this > TEN_CUBED)
                 value = Value.ToString("#.##");
             else
                 value = Math.Round(Value).ToString();
 
             return value + " " + PowTenToName.Get(Degree);
         }
+        
+        public static IdleNumber Clamp(IdleNumber value, IdleNumber min, IdleNumber max)
+        {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }
+        
+        public float ToFloat()
+        {
+            return (float)(Value * Math.Pow(10, Degree));
+        }
+        
+        public double ToDouble()
+        {
+            return Value * Math.Pow(10, Degree);
+        }
+
     }
 }
