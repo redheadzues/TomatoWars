@@ -1,7 +1,4 @@
-using System.Collections;
 using DG.Tweening;
-using Source.Code.IdleNumbers;
-using Source.Code.StaticData;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,56 +11,26 @@ namespace Source.Code.BattleField.View
         [SerializeField] private Image _bossHpBar;
         [SerializeField] private TMP_Text _bossHpText;
 
-        private IdleNumber _displayingHp;
-        private IdleNumber _bossMaxHp;
-        private Coroutine _calculateBossHpCoroutine;
-        
-        public void Init(Sprite sprite, IdleNumber bossMaxHp)
+        private int _displayingHp;
+
+        public void Init(Sprite sprite, int bossStartHp)
         {
             _bossSprite.sprite = sprite;
-            _displayingHp = bossMaxHp;
-            DisplayBossHp();
+            _bossHpText.text = $"{bossStartHp}/{bossStartHp}";
             _bossHpBar.fillAmount = 1f;
         }
         
-        public void UpdateBossHp(IdleNumber currentHp, IdleNumber bossMaxHp)
+        public void UpdateBossHp(int currentHp, int maxHp)
         {
-            _bossMaxHp = bossMaxHp;
-            float barFill = (float)(currentHp / _bossMaxHp);
+            float barFill = (float)currentHp / maxHp;
         
-            _bossHpBar.DOFillAmount(barFill, StaticConfig.TICK_INTERVAL);
+            _bossHpBar.DOFillAmount(barFill, 0.5f);
         
-            if(_calculateBossHpCoroutine != null)
-                StopCoroutine(_calculateBossHpCoroutine);
-
-            _calculateBossHpCoroutine = StartCoroutine(CalculateCurrentDisplayBossHp(currentHp, bossMaxHp));
-        }
-
-        private void DisplayBossHp()
-        {
-            _bossHpText.text = $"{_displayingHp}/{_bossMaxHp}";
-        }
-
-        private IEnumerator CalculateCurrentDisplayBossHp(IdleNumber currentHp, IdleNumber bossMaxHp)
-        {
-            float remainingTime = 0;
-            var difference = _displayingHp - currentHp;
-            var startHp = _displayingHp;
-
-
-            while (remainingTime < StaticConfig.TICK_INTERVAL)
+            DOTween.To(() => _displayingHp, x =>
             {
-                remainingTime += Time.time;
-                var ratio = remainingTime / StaticConfig.TICK_INTERVAL;
-                _displayingHp = startHp - difference * ratio;
-                
-                DisplayBossHp();
-
-                yield return null;
-            }
-
-            _displayingHp = currentHp;
-            DisplayBossHp();
+                _displayingHp = x;
+                _bossHpText.text = $"{_displayingHp}/{maxHp}";
+            }, currentHp, 0.5f);
         }
     }
 }

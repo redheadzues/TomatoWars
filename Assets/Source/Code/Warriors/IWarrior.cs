@@ -1,5 +1,4 @@
-﻿using Source.Code.IdleNumbers;
-using Source.Code.StaticData;
+﻿using Source.Code.StaticData;
 using UnityEngine;
 
 namespace Source.Code.Warriors
@@ -9,9 +8,9 @@ namespace Source.Code.Warriors
         public Sprite Icon { get;}
         public WarriorTypeId TypeId {get;}    
         public WarriorState State {get;}
-        public IdleNumber Health {get;}
-        public IdleNumber MaxHealth { get;}
-        public IdleNumber BaseDamagePerSecond {get;}
+        public int Health {get;}
+        public int MaxHealth { get;}
+        public int BaseDamagePerSecond {get;}
         public float BaseNormalizedSpeed {get;}
         public int LineIndex {get;}
         public float NormalizePosition {get;}

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Source.Code.IdleNumbers;
+using Source.Code.ModelsAndServices.Player;
 using Source.Code.StaticData;
 using UnityEngine;
 
@@ -8,15 +8,15 @@ namespace Source.Code.Warriors
 {
     public class Warrior : IWarrior
     {
-        private IdleNumber _baseMaxHealth;
-        private IdleNumber _health;
+        private int _baseMaxHealth;
+        private int _health;
         private WarriorStats _stats;
         public Sprite Icon { get; }
         public WarriorTypeId TypeId {get;}
         public WarriorState State { get; set; }
-        public IdleNumber Health => _health;
-        public IdleNumber MaxHealth => CalculateMaxHealth();
-        public IdleNumber BaseDamagePerSecond => _stats.DamagePerSecond;
+        public int Health => _health;
+        public int MaxHealth => CalculateMaxHealth();
+        public int BaseDamagePerSecond => _stats.DamagePerSecond;
         public float BaseNormalizedSpeed => _stats.NormalizedSpeed;
         public float BaseCriticalChance => _stats.CriticalChance;
         public float BaseCriticalPower => _stats.CriticalPower;
@@ -51,19 +51,19 @@ namespace Source.Code.Warriors
                 State = WarriorState.Died;
         }
 
-        public IdleNumber CalculateDamage(float tickTime)
+        public int CalculateDamage(float tickTime)
         {
             //to do implement critical damage
             
-            return ((BaseDamagePerSecond + Booster.DamagePerSecond) * tickTime);
+            return (int)((BaseDamagePerSecond + Booster.DamagePerSecond) * tickTime);
         }
 
-        public void TakeHeal(IdleNumber value)
+        public void TakeHeal(int value)
         {
-            _health = IdleNumber.Clamp(_health + value, new IdleNumber(0) , MaxHealth);
+            _health = Math.Clamp(_health + value, 0, MaxHealth);
         }
 
-        private IdleNumber CalculateMaxHealth()
+        private int CalculateMaxHealth()
         {
             if (Booster == null)
                 return _baseMaxHealth;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Source.Code.ModelsAndServices;
 using Source.Code.ModelsAndServices.Player;
 using Source.Code.StaticData;
-using UnityEngine;
 
 namespace Source.Code.Warriors
 {

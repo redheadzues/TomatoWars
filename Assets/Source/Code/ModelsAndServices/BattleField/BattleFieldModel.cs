@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Source.Code.BattleField;
-using Source.Code.IdleNumbers;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
 using UnityEngine;
@@ -11,8 +10,8 @@ namespace Source.Code.ModelsAndServices.BattleField
     {
         IReadOnlyList<WarriorTypeId> SelectedWarriors { get; }
         IReadOnlyList<IWarrior> ReadOnlyWarriors { get; }
-        IdleNumber BossMaxHp { get; }
-        IdleNumber BossCurrentHp { get; }
+        int BossMaxHp { get; }
+        int BossCurrentHp { get; }
         Sprite BossSprite { get; }
     }
 
@@ -28,9 +27,9 @@ namespace Source.Code.ModelsAndServices.BattleField
         
         public IReadOnlyList<IWarrior> ReadOnlyWarriors => Warriors;
 
-        public IdleNumber BossMaxHp { get; set; }
+        public int BossMaxHp { get; set; }
 
-        public IdleNumber BossCurrentHp { get; set; }
+        public int BossCurrentHp { get; set; }
 
         public Sprite BossSprite { get; set; }
 
