@@ -26,7 +26,7 @@ namespace Source.Code.Grid.View
         
         public event Action CreateButtonClicked;
         public event Action<int, int> BoostersMergeAttempt;
-        public event Action<WarriorTypeId, int> WarriorBoosterMergeAttempt;
+        public event Action<CharacterTypeId, int> WarriorBoosterMergeAttempt;
         public event Action<int> DragStarted;
 
         private void OnEnable()

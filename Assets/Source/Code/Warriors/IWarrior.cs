@@ -7,7 +7,7 @@ namespace Source.Code.Warriors
     public interface IWarrior
     {
         public Sprite Icon { get;}
-        public WarriorTypeId TypeId {get;}    
+        public CharacterTypeId TypeId {get;}    
         public WarriorState State {get;}
         public IdleNumber Health {get;}
         public IdleNumber MaxHealth { get;}

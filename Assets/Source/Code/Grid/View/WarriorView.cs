@@ -14,7 +14,7 @@ namespace Source.Code.Grid.View
         [SerializeField] private Tooltip _tooltip;
         
         private IWarrior _warrior;
-        public WarriorTypeId TypeId => _warrior.TypeId;
+        public CharacterTypeId TypeId => _warrior.TypeId;
         public Collider2D Collider => _collider;
 
         private void Awake()

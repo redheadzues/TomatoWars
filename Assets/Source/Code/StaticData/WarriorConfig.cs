@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Source.Code.StaticData
 {
-    public enum WarriorTypeId
+    public enum CharacterTypeId
     {
         None,
         Tomato,
@@ -31,7 +31,7 @@ namespace Source.Code.StaticData
         [SerializeField] private float _damageReduce;
         [SerializeField] private float _maxDamageReduce;
         
-        [field: SerializeField] public WarriorTypeId TypeId { get; private set; }
+        [field: SerializeField] public CharacterTypeId TypeId { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
 
         public WarriorStats GetStatsByLevel(int level)

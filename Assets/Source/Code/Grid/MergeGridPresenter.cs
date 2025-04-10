@@ -64,13 +64,13 @@ namespace Source.Code.Grid
             }
         }
         
-        private void HandleMergeAttempt(WarriorTypeId warriorType, int boosterIndex)
+        private void HandleMergeAttempt(CharacterTypeId characterType, int boosterIndex)
         {
-            if (_gridService.TryMerge(warriorType, boosterIndex, out var booster))
+            if (_gridService.TryMerge(characterType, boosterIndex, out var booster))
             {
                 _view.UpdateGrid(booster);
                 _view.SetActiveBuyButton(_gridService.IsEnableAddNewItem);
-                var updatedWarrior = _warriorFactory.CreateWarrior(warriorType);
+                var updatedWarrior = _warriorFactory.CreateWarrior(characterType);
                 _view.UpdateWarrior(updatedWarrior);
             }
             else

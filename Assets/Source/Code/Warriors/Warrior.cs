@@ -12,7 +12,7 @@ namespace Source.Code.Warriors
         private IdleNumber _currentHealth;
         private WarriorStats _stats;
         public Sprite Icon { get; }
-        public WarriorTypeId TypeId {get;}
+        public CharacterTypeId TypeId {get;}
         public WarriorState State { get; set; }
         public IdleNumber Health => _currentHealth;
         public IdleNumber MaxHealth => CalculateMaxHealth();
@@ -26,7 +26,7 @@ namespace Source.Code.Warriors
         public WarriorBooster Booster { get;}
         public List<BattleEffect> ActiveEffects { get;  }
        
-        public Warrior(WarriorTypeId typeId, WarriorStats stats, WarriorBooster booster,  Sprite icon)
+        public Warrior(CharacterTypeId typeId, WarriorStats stats, WarriorBooster booster,  Sprite icon)
         {
             _stats = stats;
             Booster = booster;

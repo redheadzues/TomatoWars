@@ -10,12 +10,12 @@ namespace Source.Code.ModelsAndServices.Player
         public Wallet Wallet = new();
         public int Stage { get; set; } = 1;
 
-        public List<WarriorTypeId> SelectedWarrior = new ()
+        public List<CharacterTypeId> SelectedWarrior = new ()
         {
-            WarriorTypeId.Tomato,
-            WarriorTypeId.Potato
+            CharacterTypeId.Tomato,
+            CharacterTypeId.Potato
         };
 
-        public Dictionary<WarriorTypeId, OwnedWarrior> OwnedWarriors = new();
+        public Dictionary<CharacterTypeId, OwnedWarrior> OwnedWarriors = new();
     }
 }

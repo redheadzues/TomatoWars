@@ -11,14 +11,14 @@ namespace Source.Code.ModelsAndServices
         event Action LoadCompleted;
         bool IsLoaded { get; }
         void LoadData();
-        WarriorConfig GetWarriorConfig(WarriorTypeId typeId);
+        WarriorConfig GetWarriorConfig(CharacterTypeId typeId);
         BossConfig GetBossConfig(int stage);
         BoosterConfig GetBoosterConfig(BoosterTypeId typeId);
     }
     
     public class StaticDataService : IStaticDataService
     {
-        private Dictionary<WarriorTypeId, WarriorConfig> _warriors;
+        private Dictionary<CharacterTypeId, WarriorConfig> _warriors;
         private Dictionary<int, BossConfig> _bosses;
         private Dictionary<BoosterTypeId, BoosterConfig> _boosters;
 
@@ -34,7 +34,7 @@ namespace Source.Code.ModelsAndServices
             LoadCompleted?.Invoke();
         }
 
-        public WarriorConfig GetWarriorConfig(WarriorTypeId typeId) =>
+        public WarriorConfig GetWarriorConfig(CharacterTypeId typeId) =>
             _warriors.GetValueOrDefault(typeId);
 
         public BossConfig GetBossConfig(int stage) =>

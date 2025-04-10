@@ -6,12 +6,12 @@ namespace Source.Code.ModelsAndServices.Player
 {
     public interface IPlayerService : IService
     {
-        public event Action<WarriorTypeId> WarriorLevelUp;
-        public event Action<WarriorTypeId, Booster> BoosterUpdated;
+        public event Action<CharacterTypeId> WarriorLevelUp;
+        public event Action<CharacterTypeId, Booster> BoosterUpdated;
         PlayerModel Model { get; } 
-        bool TryAddBoosterToWarrior(Booster booster, WarriorTypeId warriorTypeId);
+        bool TryAddBoosterToWarrior(Booster booster, CharacterTypeId characterTypeId);
         bool TrySpendCurrency(Currency currency, int value);
-        bool TryLevelUpWarrior(WarriorTypeId typeId);
+        bool TryLevelUpWarrior(CharacterTypeId typeId);
     }
     
     public class PlayerService : IPlayerService
@@ -19,8 +19,8 @@ namespace Source.Code.ModelsAndServices.Player
         private readonly PlayerModel _model;
 
         public PlayerModel Model => _model; 
-        public event Action<WarriorTypeId> WarriorLevelUp;
-        public event Action<WarriorTypeId, Booster> BoosterUpdated;
+        public event Action<CharacterTypeId> WarriorLevelUp;
+        public event Action<CharacterTypeId, Booster> BoosterUpdated;
 
         public PlayerService(PlayerModel model)
         {
@@ -29,16 +29,16 @@ namespace Source.Code.ModelsAndServices.Player
             SyncCurrencyByType();
         }
 
-        public bool TryAddBoosterToWarrior(Booster booster, WarriorTypeId warriorTypeId)
+        public bool TryAddBoosterToWarrior(Booster booster, CharacterTypeId characterTypeId)
         {
-            var warrior = _model.OwnedWarriors[warriorTypeId];
+            var warrior = _model.OwnedWarriors[characterTypeId];
             
             if (warrior == null || !warrior.IsOwned || booster.TypeId == BoosterTypeId.None)
                 return false;
 
             warrior.BoosterInfo = booster;
             
-            BoosterUpdated?.Invoke(warriorTypeId, booster);
+            BoosterUpdated?.Invoke(characterTypeId, booster);
 
             return true;
         }
@@ -54,9 +54,9 @@ namespace Source.Code.ModelsAndServices.Player
             return false;
         }
 
-        public bool TryLevelUpWarrior(WarriorTypeId typeId)
+        public bool TryLevelUpWarrior(CharacterTypeId typeId)
         {
-            if (typeId == WarriorTypeId.None)
+            if (typeId == CharacterTypeId.None)
                 return false;
             
             WarriorLevelUp?.Invoke(typeId);
@@ -65,7 +65,7 @@ namespace Source.Code.ModelsAndServices.Player
 
         private void SyncOwnedWarriorByType()
         {
-            foreach (WarriorTypeId typeId in Enum.GetValues(typeof(WarriorTypeId)))
+            foreach (CharacterTypeId typeId in Enum.GetValues(typeof(CharacterTypeId)))
             {
                 _model.OwnedWarriors.TryAdd(typeId, new OwnedWarrior
                 {

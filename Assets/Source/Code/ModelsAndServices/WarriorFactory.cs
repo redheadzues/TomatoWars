@@ -5,7 +5,7 @@ namespace Source.Code.ModelsAndServices
 {
     public interface IWarriorFactory : IService
     {
-        Warrior CreateWarrior(WarriorTypeId typeId);
+        Warrior CreateWarrior(CharacterTypeId typeId);
     }
     
     public class WarriorFactory : IWarriorFactory
@@ -19,7 +19,7 @@ namespace Source.Code.ModelsAndServices
             _staticData = staticData;
         }
 
-        public Warrior CreateWarrior(WarriorTypeId typeId)
+        public Warrior CreateWarrior(CharacterTypeId typeId)
         {
             var icon = _staticData.GetWarriorConfig(typeId)?.Icon;
 

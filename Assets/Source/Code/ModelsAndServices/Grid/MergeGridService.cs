@@ -12,10 +12,10 @@ namespace Source.Code.ModelsAndServices.Grid
     public interface IMergeGridService : IService
     {
         IReadOnlyGridModel GridModel { get; }
-        IReadOnlyList<WarriorTypeId> SelectedWarriors { get; }
+        IReadOnlyList<CharacterTypeId> SelectedWarriors { get; }
         bool IsEnableAddNewItem { get; }
         bool TryMerge(int hostIndex, int inputIndex, out GridBooster newHostBooster, out int emptyIndex);
-        bool TryMerge(WarriorTypeId warriorType, int boosterIndex, out GridBooster booster);
+        bool TryMerge(CharacterTypeId characterType, int boosterIndex, out GridBooster booster);
         bool TryCreateNewBooster(out GridBooster booster);
 
     }
@@ -28,7 +28,7 @@ namespace Source.Code.ModelsAndServices.Grid
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
 
         public IReadOnlyGridModel GridModel => _gridModel;
-        public IReadOnlyList<WarriorTypeId> SelectedWarriors => _playerService.Model.SelectedWarrior;
+        public IReadOnlyList<CharacterTypeId> SelectedWarriors => _playerService.Model.SelectedWarrior;
         public bool IsEnableAddNewItem => GetFreeCellIndex() > -1;
 
         public MergeGridService(GridModel model, IStaticDataService staticData, IPlayerService playerService)
@@ -72,14 +72,14 @@ namespace Source.Code.ModelsAndServices.Grid
             return false;
         }
         
-        public bool TryMerge(WarriorTypeId warriorType, int boosterIndex, out GridBooster booster)
+        public bool TryMerge(CharacterTypeId characterType, int boosterIndex, out GridBooster booster)
         {
             booster = _gridModel.GridBoosters[boosterIndex];
 
             Booster boosterInfo = new(booster.TypeId, booster.Level, booster.Rarity);
      
             
-            if (_playerService.TryAddBoosterToWarrior(boosterInfo, warriorType))
+            if (_playerService.TryAddBoosterToWarrior(boosterInfo, characterType))
             {
                 booster = CreateEmptyBooster(boosterIndex);
                 return true;

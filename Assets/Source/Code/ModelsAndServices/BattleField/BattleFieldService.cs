@@ -154,15 +154,15 @@ namespace Source.Code.ModelsAndServices.BattleField
 
         private void SpawnWarrior()
         {
-            WarriorTypeId warriorType = WarriorTypeId.None;
+            CharacterTypeId characterType = CharacterTypeId.None;
 
-            while (warriorType == WarriorTypeId.None)
+            while (characterType == CharacterTypeId.None)
             {
                 var selectedWarriorIndex = _random.Next(0, _battleModel.SelectedWarriors.Count);
-                warriorType = _battleModel.SelectedWarriors[selectedWarriorIndex];
+                characterType = _battleModel.SelectedWarriors[selectedWarriorIndex];
             }
 
-            var warrior = GetFreeWarrior(warriorType);
+            var warrior = GetFreeWarrior(characterType);
             
             warrior.ResetWarrior();
             warrior.LineIndex = _random.Next(0, 3);
@@ -171,11 +171,11 @@ namespace Source.Code.ModelsAndServices.BattleField
         }
 
         
-        private Warrior GetFreeWarrior(WarriorTypeId typeId) => 
+        private Warrior GetFreeWarrior(CharacterTypeId typeId) => 
             _battleModel.Warriors.FirstOrDefault(x => x.TypeId == typeId && x.State == WarriorState.Died) 
             ?? CreateNewWarrior(typeId);
 
-        private Warrior CreateNewWarrior(WarriorTypeId typeId)
+        private Warrior CreateNewWarrior(CharacterTypeId typeId)
         {
             var warrior = _warriorFactory.CreateWarrior(typeId);
             _battleModel.Warriors.Add(warrior);
