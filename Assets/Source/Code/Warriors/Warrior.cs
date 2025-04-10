@@ -8,14 +8,14 @@ namespace Source.Code.Warriors
 {
     public class Warrior : IWarrior
     {
-        private int _baseMaxHealth;
-        private int _health;
+        private IdleNumber _baseMaxHealth;
+        private IdleNumber _currentHealth;
         private WarriorStats _stats;
         public Sprite Icon { get; }
         public WarriorTypeId TypeId {get;}
         public WarriorState State { get; set; }
-        public int Health => _health;
-        public int MaxHealth => CalculateMaxHealth();
+        public IdleNumber Health => _currentHealth;
+        public IdleNumber MaxHealth => CalculateMaxHealth();
         public IdleNumber BaseDamagePerSecond => _stats.DamagePerSecond;
         public float BaseNormalizedSpeed => _stats.NormalizedSpeed;
         public float BaseCriticalChance => _stats.CriticalChance;
@@ -32,22 +32,22 @@ namespace Source.Code.Warriors
             Booster = booster;
             Icon = icon;
             TypeId = typeId;
-            _health = stats.MaxHealth;
+            _currentHealth = stats.MaxHealth;
             _baseMaxHealth = stats.MaxHealth;
         }
 
         public void ResetWarrior()
         {
-            _health = CalculateMaxHealth();
+            _currentHealth = CalculateMaxHealth();
             State = WarriorState.Walk;
             NormalizePosition = 0;
         }
 
         public void TakeDamage(int damage)
         {
-            _health -= (int)(damage * (1- BaseDamageReduce));
-
-            if (_health <= 0)
+            _currentHealth -= damage * (1- BaseDamageReduce);
+            
+            if (_currentHealth <= 0)
                 State = WarriorState.Died;
         }
 
@@ -60,12 +60,15 @@ namespace Source.Code.Warriors
 
         public void TakeHeal(int value)
         {
-            _health = Math.Clamp(_health + value, 0, MaxHealth);
+            _currentHealth += value;
+
+            if (_currentHealth > _baseMaxHealth)
+                _currentHealth = _baseMaxHealth;
         }
 
-        private int CalculateMaxHealth()
+        private IdleNumber CalculateMaxHealth()
         {
-            if (Booster == null)
+            if (Booster == null || Booster.MaxHealth == 0)
                 return _baseMaxHealth;
 
             return _baseMaxHealth * Booster.MaxHealth;

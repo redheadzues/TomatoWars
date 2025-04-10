@@ -9,8 +9,8 @@ namespace Source.Code.Warriors
         public Sprite Icon { get;}
         public WarriorTypeId TypeId {get;}    
         public WarriorState State {get;}
-        public int Health {get;}
-        public int MaxHealth { get;}
+        public IdleNumber Health {get;}
+        public IdleNumber MaxHealth { get;}
         public IdleNumber BaseDamagePerSecond {get;}
         public float BaseNormalizedSpeed {get;}
         public int LineIndex {get;}

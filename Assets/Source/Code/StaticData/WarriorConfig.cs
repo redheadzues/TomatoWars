@@ -22,12 +22,12 @@ namespace Source.Code.StaticData
     [Serializable]
     public class WarriorConfig
     { 
-        [SerializeField] public int _health;
-        [SerializeField] public float _criticalChance;
-        [SerializeField] public float _maxCriticalChance;
-        [SerializeField] public float _criticalPower;
-        [SerializeField] public int _damagePerSecond;
-        [SerializeField] public float _normalizedSpeed;
+        [SerializeField] private int _health;
+        [SerializeField] private float _criticalChance;
+        [SerializeField] private float _maxCriticalChance;
+        [SerializeField] private float _criticalPower;
+        [SerializeField] private int _damagePerSecond;
+        [SerializeField] private float _normalizedSpeed;
         [SerializeField] private float _damageReduce;
         [SerializeField] private float _maxDamageReduce;
         
