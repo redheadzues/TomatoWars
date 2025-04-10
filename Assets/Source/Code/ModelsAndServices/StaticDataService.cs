@@ -14,6 +14,7 @@ namespace Source.Code.ModelsAndServices
         WarriorConfig GetWarriorConfig(CharacterTypeId typeId);
         BossConfig GetBossConfig(int stage);
         BoosterConfig GetBoosterConfig(BoosterTypeId typeId);
+        FarmCharacterConfig GetFarmCharacterConfig(CharacterTypeId typeId);
     }
     
     public class StaticDataService : IStaticDataService
@@ -21,6 +22,7 @@ namespace Source.Code.ModelsAndServices
         private Dictionary<CharacterTypeId, WarriorConfig> _warriors;
         private Dictionary<int, BossConfig> _bosses;
         private Dictionary<BoosterTypeId, BoosterConfig> _boosters;
+        private Dictionary<CharacterTypeId, FarmCharacterConfig> _farmCharacters;
 
         public bool IsLoaded { get; private set; }
         public event Action LoadCompleted;
@@ -30,6 +32,7 @@ namespace Source.Code.ModelsAndServices
             _warriors = Resources.Load<WarriorsList>("StaticData/WarriorConfigList").Configs.ToDictionary(x => x.TypeId, x => x);
             _bosses = Resources.Load<BossList>("StaticData/BossConfigList").Configs.ToDictionary(x => x.Stage, x => x);
             _boosters = Resources.Load<BoosterList>("StaticData/BoosterList").Configs.ToDictionary(x => x.TypeId, x => x);
+            //_farmCharacters = Resources.Load<FarmCharacterList>("StaticData/FarmList").Configs.ToDictionary(x => x.TypeId, x => x);
             IsLoaded = true;
             LoadCompleted?.Invoke();
         }
@@ -42,5 +45,8 @@ namespace Source.Code.ModelsAndServices
 
         public BoosterConfig GetBoosterConfig(BoosterTypeId typeId) =>
             _boosters.GetValueOrDefault(typeId);
+
+        public FarmCharacterConfig GetFarmCharacterConfig(CharacterTypeId typeId) =>
+            _farmCharacters.GetValueOrDefault(typeId);
     }
 }

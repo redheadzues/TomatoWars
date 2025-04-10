@@ -1,4 +1,5 @@
 ﻿using System;
+using Source.Code.IdleNumbers;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
 
@@ -10,7 +11,7 @@ namespace Source.Code.ModelsAndServices.Player
         public event Action<CharacterTypeId, Booster> BoosterUpdated;
         PlayerModel Model { get; } 
         bool TryAddBoosterToWarrior(Booster booster, CharacterTypeId characterTypeId);
-        bool TrySpendCurrency(Currency currency, int value);
+        bool TrySpendCurrency(Currency currency, IdleNumber value);
         bool TryLevelUpWarrior(CharacterTypeId typeId);
     }
     
@@ -43,7 +44,7 @@ namespace Source.Code.ModelsAndServices.Player
             return true;
         }
 
-        public bool TrySpendCurrency(Currency currency, int value)
+        public bool TrySpendCurrency(Currency currency, IdleNumber value)
         {
             if (_model.Wallet.Balances.TryGetValue(currency, out var currentValue) && currentValue - value >= 0)
             {
