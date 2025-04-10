@@ -1,4 +1,5 @@
-﻿using Source.Code.StaticData;
+﻿using Source.Code.IdleNumbers;
+using Source.Code.StaticData;
 using UnityEngine;
 
 namespace Source.Code.Warriors
@@ -10,7 +11,7 @@ namespace Source.Code.Warriors
         public WarriorState State {get;}
         public int Health {get;}
         public int MaxHealth { get;}
-        public int BaseDamagePerSecond {get;}
+        public IdleNumber BaseDamagePerSecond {get;}
         public float BaseNormalizedSpeed {get;}
         public int LineIndex {get;}
         public float NormalizePosition {get;}

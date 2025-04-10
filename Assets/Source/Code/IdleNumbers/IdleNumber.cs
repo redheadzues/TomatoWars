@@ -54,7 +54,22 @@ namespace Source.Code.IdleNumbers
                 Degree += 3;
             }
         }
+                
+        public static implicit operator IdleNumber(int value)
+        {
+            return new IdleNumber(value);
+        }
 
+        public static implicit operator IdleNumber(float value)
+        {
+            return new IdleNumber(value);
+        }
+
+        public static implicit operator IdleNumber(double value)
+        {
+            return new IdleNumber(value);
+        }
+        
         public static IdleNumber operator +(IdleNumber leftNumber, IdleNumber rightNumber)
         {
 

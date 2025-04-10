@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Source.Code.ModelsAndServices.Player;
+using Source.Code.IdleNumbers;
 using Source.Code.StaticData;
 using UnityEngine;
 
@@ -16,7 +16,7 @@ namespace Source.Code.Warriors
         public WarriorState State { get; set; }
         public int Health => _health;
         public int MaxHealth => CalculateMaxHealth();
-        public int BaseDamagePerSecond => _stats.DamagePerSecond;
+        public IdleNumber BaseDamagePerSecond => _stats.DamagePerSecond;
         public float BaseNormalizedSpeed => _stats.NormalizedSpeed;
         public float BaseCriticalChance => _stats.CriticalChance;
         public float BaseCriticalPower => _stats.CriticalPower;
@@ -51,11 +51,11 @@ namespace Source.Code.Warriors
                 State = WarriorState.Died;
         }
 
-        public int CalculateDamage(float tickTime)
+        public IdleNumber CalculateDamage(float tickTime)
         {
             //to do implement critical damage
             
-            return (int)((BaseDamagePerSecond + Booster.DamagePerSecond) * tickTime);
+            return (BaseDamagePerSecond + Booster.DamagePerSecond) * tickTime;
         }
 
         public void TakeHeal(int value)

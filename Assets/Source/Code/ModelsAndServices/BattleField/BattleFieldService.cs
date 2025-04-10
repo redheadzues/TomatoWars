@@ -128,8 +128,8 @@ namespace Source.Code.ModelsAndServices.BattleField
             }
         }
 
-        private void AddTickDamage(Warrior warrior) => 
-            _tikDamage += warrior.BaseDamagePerSecond;
+        private void AddTickDamage(Warrior warrior) =>
+            _tikDamage += 0;//warrior.BaseDamagePerSecond;
 
         private void Move(Warrior warrior) => 
             warrior.NormalizePosition = Math.Clamp(warrior.NormalizePosition + warrior.BaseNormalizedSpeed, 0f, 1f);
