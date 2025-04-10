@@ -43,7 +43,7 @@ namespace Source.Code.Warriors
             NormalizePosition = 0;
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(IdleNumber damage)
         {
             _currentHealth -= damage * (1- BaseDamageReduce);
             
@@ -58,7 +58,7 @@ namespace Source.Code.Warriors
             return (BaseDamagePerSecond + Booster.DamagePerSecond) * tickTime;
         }
 
-        public void TakeHeal(int value)
+        public void TakeHeal(IdleNumber value)
         {
             _currentHealth += value;
 

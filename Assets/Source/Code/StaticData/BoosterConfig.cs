@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Source.Code.IdleNumbers;
 using Source.Code.Warriors;
 using UnityEngine;
 
@@ -25,11 +26,11 @@ namespace Source.Code.StaticData
         {
             var rarityMultiplier = 0.5f + ((int)rarity * 0.5f);
             
-            var damage = (int)(_damagePerSecond * level * rarityMultiplier);
+            IdleNumber damage = _damagePerSecond * level * rarityMultiplier;
             var speed = Math.Clamp(_normalizedSpeed * level * rarityMultiplier, 0, _maxSpeed);
             var criticalChance = Math.Clamp(_criticalChance * level * rarityMultiplier, 0, _maxCriticalChance);
             var criticalPower = _criticalChance * level * rarityMultiplier;
-            var maxHealth = (int)(_maxHealth * level * rarityMultiplier);
+            IdleNumber maxHealth = _maxHealth * level * rarityMultiplier;
 
             return new WarriorBooster(TypeId, level, rarity, damage,speed, criticalChance, criticalPower, maxHealth);
         }
