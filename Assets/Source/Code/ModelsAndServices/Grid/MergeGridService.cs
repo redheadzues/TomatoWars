@@ -92,7 +92,7 @@ namespace Source.Code.ModelsAndServices.Grid
         {
             booster = null;
 
-            if (!_playerService.TrySpendCurrency(Currency.Gold, 0))
+            if (!_playerService.TrySpendCurrency(CurrencyTypeId.Gold, 0))
                 return false;
 
             int freeIndex = GetFreeCellIndex();

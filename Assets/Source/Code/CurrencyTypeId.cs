@@ -1,6 +1,6 @@
 ﻿namespace Source.Code
 {
-    public enum Currency
+    public enum CurrencyTypeId
     {
         Gold,
         Gem

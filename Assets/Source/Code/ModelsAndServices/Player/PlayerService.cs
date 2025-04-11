@@ -11,8 +11,9 @@ namespace Source.Code.ModelsAndServices.Player
         public event Action<CharacterTypeId, Booster> BoosterUpdated;
         PlayerModel Model { get; } 
         bool TryAddBoosterToWarrior(Booster booster, CharacterTypeId characterTypeId);
-        bool TrySpendCurrency(Currency currency, IdleNumber value);
+        bool TrySpendCurrency(CurrencyTypeId currency, IdleNumber value);
         bool TryLevelUpWarrior(CharacterTypeId typeId);
+        void AddCurrency(CurrencyTypeId currency, IdleNumber value);
     }
     
     public class PlayerService : IPlayerService
@@ -44,7 +45,7 @@ namespace Source.Code.ModelsAndServices.Player
             return true;
         }
 
-        public bool TrySpendCurrency(Currency currency, IdleNumber value)
+        public bool TrySpendCurrency(CurrencyTypeId currency, IdleNumber value)
         {
             if (_model.Wallet.Balances.TryGetValue(currency, out var currentValue) && currentValue - value >= 0)
             {
@@ -64,6 +65,14 @@ namespace Source.Code.ModelsAndServices.Player
             return true;
         }
 
+        public void AddCurrency(CurrencyTypeId currency, IdleNumber value)
+        {
+            if(value <= 0)
+                return;
+            
+            _model.Wallet.Balances[currency] += value;
+        }
+
         private void SyncOwnedWarriorByType()
         {
             foreach (CharacterTypeId typeId in Enum.GetValues(typeof(CharacterTypeId)))
@@ -78,7 +87,7 @@ namespace Source.Code.ModelsAndServices.Player
         
         private void SyncCurrencyByType()
         {
-            foreach (Currency typeId in Enum.GetValues(typeof(Currency)))
+            foreach (CurrencyTypeId typeId in Enum.GetValues(typeof(CurrencyTypeId)))
             {
                 _model.Wallet.Balances.TryAdd(typeId, 0);
             }
