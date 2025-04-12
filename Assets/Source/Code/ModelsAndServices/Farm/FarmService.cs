@@ -27,12 +27,15 @@ namespace Source.Code.ModelsAndServices.Farm
         
         public IReadOnlyList<IFarmCharacter> FarmCharacters => _farmCharacters;
 
+        public event Action<IdleNumber> BalanceChanged;
+
         public FarmService(IPlayerService playerService, IStaticDataService staticDataService, FarmModel model, ICoroutineRunner runner)
         {
             _playerService = playerService;
             _staticDataService = staticDataService;
             _model = model;
             _coroutineRunner = runner;
+            _playerService.BalanceChanged += OnBalanceChanged;
             InitCharactersAndStartIncome();
         }
 
@@ -95,6 +98,12 @@ namespace Source.Code.ModelsAndServices.Farm
             _incomeCoroutine = _coroutineRunner.StartCoroutine(IncomeCoroutine());
         }
 
+        private void OnBalanceChanged(CurrencyTypeId typeId, IdleNumber value)
+        {
+            if(typeId == CurrencyTypeId.Gold)
+                BalanceChanged?.Invoke(value);
+        }
+
         private IEnumerator IncomeCoroutine()
         {
             while (true)
@@ -117,38 +126,6 @@ namespace Source.Code.ModelsAndServices.Farm
                 if(income > 0)
                     _playerService.AddCurrency(CurrencyTypeId.Gold, income);
             }
-        }
-    }
-
-    public interface IFarmCharacter
-    {
-        public CharacterTypeId TypeId { get; }
-        public Sprite Icon { get; }
-        public int Level { get; }
-        public IdleNumber Cost { get; }
-        public IdleNumber IncomePerSecond { get; }
-        public float IncomeTime { get; }
-    }
-    
-    public class FarmCharacter : IFarmCharacter
-    {
-        public CharacterTypeId TypeId { get; set; }
-        public Sprite Icon { get; set; }
-        public int Level { get; set; }
-        public IdleNumber Cost { get; set; }
-        public IdleNumber IncomePerSecond { get; set; }
-        public float IncomeTime { get; set; }
-        public float RemainingTimeToIncome;
-
-        public FarmCharacter(CharacterTypeId typeId, Sprite icon, int level, IdleNumber cost, IdleNumber incomePerSecond, float incomeTime)
-        {
-            TypeId = typeId;
-            Icon = icon;
-            Level = level;
-            Cost = cost;
-            IncomePerSecond = incomePerSecond;
-            IncomeTime = incomeTime;
-            RemainingTimeToIncome = IncomeTime;
         }
     }
 }

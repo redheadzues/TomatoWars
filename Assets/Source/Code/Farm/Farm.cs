@@ -16,9 +16,4 @@ namespace Source.Code.Farm
             _presenter = new FarmPresenter(_farmService, _view);
         }
     }
-
-    public class FarmView : MonoBehaviour
-    {
-        
-    }
 }

@@ -12,8 +12,10 @@ namespace Source.Code.ModelsAndServices.Player
 
         public List<CharacterTypeId> SelectedWarrior = new ()
         {
-            CharacterTypeId.Tomato,
-            CharacterTypeId.Potato
+            CharacterTypeId.Eggplant,
+            CharacterTypeId.Broccoli,
+            CharacterTypeId.Beet,
+            CharacterTypeId.Carrot
         };
 
         public Dictionary<CharacterTypeId, OwnedWarrior> OwnedWarriors = new();

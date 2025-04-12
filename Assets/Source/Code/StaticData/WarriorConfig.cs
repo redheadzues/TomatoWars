@@ -8,7 +8,11 @@ namespace Source.Code.StaticData
     {
         None,
         Tomato,
-        Potato
+        Potato,
+        Eggplant,
+        Carrot,
+        Broccoli,
+        Beet
     }
 
     public enum WarriorState

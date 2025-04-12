@@ -7,9 +7,10 @@ namespace Source.Code.ModelsAndServices.Player
 {
     public interface IPlayerService : IService
     {
-        public event Action<CharacterTypeId> WarriorLevelUp;
-        public event Action<CharacterTypeId, Booster> BoosterUpdated;
         PlayerModel Model { get; } 
+        event Action<CharacterTypeId> WarriorLevelUp;
+        event Action<CharacterTypeId, Booster> BoosterUpdated;
+        event Action<CurrencyTypeId, IdleNumber> BalanceChanged;
         bool TryAddBoosterToWarrior(Booster booster, CharacterTypeId characterTypeId);
         bool TrySpendCurrency(CurrencyTypeId currency, IdleNumber value);
         bool TryLevelUpWarrior(CharacterTypeId typeId);
@@ -23,6 +24,7 @@ namespace Source.Code.ModelsAndServices.Player
         public PlayerModel Model => _model; 
         public event Action<CharacterTypeId> WarriorLevelUp;
         public event Action<CharacterTypeId, Booster> BoosterUpdated;
+        public event Action<CurrencyTypeId, IdleNumber> BalanceChanged;
 
         public PlayerService(PlayerModel model)
         {
@@ -50,6 +52,9 @@ namespace Source.Code.ModelsAndServices.Player
             if (_model.Wallet.Balances.TryGetValue(currency, out var currentValue) && currentValue - value >= 0)
             {
                 _model.Wallet.Balances[currency] -= value;
+                
+                BalanceChanged?.Invoke(currency, _model.Wallet.Balances[currency]);
+                
                 return true;
             }
 
@@ -71,6 +76,7 @@ namespace Source.Code.ModelsAndServices.Player
                 return;
             
             _model.Wallet.Balances[currency] += value;
+            BalanceChanged?.Invoke(currency, _model.Wallet.Balances[currency]);
         }
 
         private void SyncOwnedWarriorByType()
