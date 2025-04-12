@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Source.Code.IdleNumbers;
 using Source.Code.ModelsAndServices.Farm;
 using Source.Code.StaticData;
 using UnityEngine;
@@ -34,6 +35,9 @@ namespace Source.Code.Farm
                 _views.Add(view);
             }
         }
+
+        public void UpdateAvailabilityButtons(IdleNumber value) => 
+            _views.ForEach(x => x.UpdateAvailabilityButton(value));
 
         public void UpdateCharacterView(CharacterTypeId typeId)
         {

@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 171731084082413fab5d9b2eb2a29b7a, type: 3}
+  m_Name: FarmCharactersList
+  m_EditorClassIdentifier: 
+  _farmCharacters:
+  - <Icon>k__BackingField: {fileID: 21300000, guid: 3ea5dcfdd30382b4aaec8371651dacd0, type: 3}
+    <TypeId>k__BackingField: 1
+    <IncomePerSecond>k__BackingField: 1
+    <IncomeTime>k__BackingField: 2
+    <StartCost>k__BackingField: 0
+  - <Icon>k__BackingField: {fileID: 21300000, guid: 13f45d91dacd760458545f276b2d3cfd, type: 3}
+    <TypeId>k__BackingField: 2
+    <IncomePerSecond>k__BackingField: 2
+    <IncomeTime>k__BackingField: 3
+    <StartCost>k__BackingField: 0
+  - <Icon>k__BackingField: {fileID: 21300000, guid: d4b531b5e5b82d2409d3fcc7a18b541e, type: 3}
+    <TypeId>k__BackingField: 3
+    <IncomePerSecond>k__BackingField: 3
+    <IncomeTime>k__BackingField: 4
+    <StartCost>k__BackingField: 0
+  - <Icon>k__BackingField: {fileID: 21300000, guid: 12096423bf03cf641818a09d168f41c4, type: 3}
+    <TypeId>k__BackingField: 4
+    <IncomePerSecond>k__BackingField: 4
+    <IncomeTime>k__BackingField: 5
+    <StartCost>k__BackingField: 0
+  - <Icon>k__BackingField: {fileID: 21300000, guid: abd5f50b0d3864049ab6082a2749cc76, type: 3}
+    <TypeId>k__BackingField: 5
+    <IncomePerSecond>k__BackingField: 5
+    <IncomeTime>k__BackingField: 6
+    <StartCost>k__BackingField: 0
+  - <Icon>k__BackingField: {fileID: 21300000, guid: b490da844f3d884449b8e59847a01e6d, type: 3}
+    <TypeId>k__BackingField: 6
+    <IncomePerSecond>k__BackingField: 6
+    <IncomeTime>k__BackingField: 7
+    <StartCost>k__BackingField: 100

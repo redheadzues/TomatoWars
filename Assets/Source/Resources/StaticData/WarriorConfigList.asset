@@ -33,3 +33,43 @@ MonoBehaviour:
     _maxDamageReduce: 0
     <TypeId>k__BackingField: 2
     <Icon>k__BackingField: {fileID: 21300000, guid: 13f45d91dacd760458545f276b2d3cfd, type: 3}
+  - _health: 50
+    _criticalChance: 0
+    _maxCriticalChance: 0
+    _criticalPower: 0
+    _damagePerSecond: 20
+    _normalizedSpeed: 0.08
+    _damageReduce: 0
+    _maxDamageReduce: 0
+    <TypeId>k__BackingField: 3
+    <Icon>k__BackingField: {fileID: 21300000, guid: d4b531b5e5b82d2409d3fcc7a18b541e, type: 3}
+  - _health: 10
+    _criticalChance: 0
+    _maxCriticalChance: 0
+    _criticalPower: 0
+    _damagePerSecond: 100
+    _normalizedSpeed: 0.2
+    _damageReduce: 0
+    _maxDamageReduce: 0
+    <TypeId>k__BackingField: 4
+    <Icon>k__BackingField: {fileID: 21300000, guid: 12096423bf03cf641818a09d168f41c4, type: 3}
+  - _health: 45
+    _criticalChance: 0
+    _maxCriticalChance: 0
+    _criticalPower: 0
+    _damagePerSecond: 20
+    _normalizedSpeed: 0.15
+    _damageReduce: 0
+    _maxDamageReduce: 0
+    <TypeId>k__BackingField: 5
+    <Icon>k__BackingField: {fileID: 21300000, guid: abd5f50b0d3864049ab6082a2749cc76, type: 3}
+  - _health: 200
+    _criticalChance: 0
+    _maxCriticalChance: 0
+    _criticalPower: 0
+    _damagePerSecond: 20
+    _normalizedSpeed: 0.05
+    _damageReduce: 0.2
+    _maxDamageReduce: 0
+    <TypeId>k__BackingField: 6
+    <Icon>k__BackingField: {fileID: 21300000, guid: b490da844f3d884449b8e59847a01e6d, type: 3}

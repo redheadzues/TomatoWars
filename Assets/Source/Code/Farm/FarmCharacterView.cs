@@ -1,4 +1,5 @@
 ﻿using System;
+using Source.Code.IdleNumbers;
 using Source.Code.ModelsAndServices.Farm;
 using Source.Code.StaticData;
 using UnityEngine;
@@ -42,7 +43,10 @@ namespace Source.Code.Farm
             _costText.text = _character.Cost.ToString();
             _incomeText.text = _character.IncomePerSecond.ToString();
         }
-        
+
+        public void UpdateAvailabilityButton(IdleNumber value) => 
+            _upgradeButton.interactable = value >= _character.Cost;
+
         private void OnUpgradeButtonClicked() => 
             UpgradeRequested?.Invoke(_character.TypeId);
     }

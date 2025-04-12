@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Source.Code.ModelsAndServices;
 using Source.Code.ModelsAndServices.BattleField;
+using Source.Code.ModelsAndServices.Farm;
 using Source.Code.ModelsAndServices.Grid;
 using Source.Code.ModelsAndServices.Player;
 using Source.Code.Warriors;
@@ -77,19 +78,14 @@ namespace Source.Code
             var playerService = _serviceProvider.RegisterInstance<IPlayerService>(new PlayerService(_model.Player));
             var warriorStats = _serviceProvider.RegisterInstance<IWarriorStatsService>(new WarriorStatsService(staticData, playerService));
             var warriorFactory = _serviceProvider.RegisterInstance<IWarriorFactory>(new WarriorFactory(warriorStats, staticData));
+            _serviceProvider.RegisterInstance<IFarmService>(new FarmService(playerService, staticData, _model.FarmModel, _coroutineRunner));
             
             _serviceProvider.RegisterLazy<IMergeGridService>(() => new MergeGridService(_model.Grid, staticData, playerService));
             _serviceProvider.RegisterLazy<IBattleFieldService>(() => new BattleFieldService(_model, staticData, _coroutineRunner, warriorFactory));
             
             ApplyState(GameState.GameLoop);
         }
-
-        private void RegisterStaticData()
-        {
-            
-        }
-
-
+        
         private void InitializeSceneObject()
         {
             _windows.ForEach(x => x.SetProvider(_serviceProvider));

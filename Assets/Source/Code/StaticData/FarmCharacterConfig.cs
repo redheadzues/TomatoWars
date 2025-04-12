@@ -14,7 +14,7 @@ namespace Source.Code.StaticData
         [field: SerializeField] public int StartCost { get; private set; }
 
         public IdleNumber GetIncomeByLevel(int level) => 
-            IncomePerSecond * level;
+            IncomePerSecond * (1 + level);
 
         public IdleNumber GetCostByLevel(int level) => 
             StartCost * (1 + level);

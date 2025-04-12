@@ -1,5 +1,7 @@
-﻿using Source.Code.ModelsAndServices.Farm;
+﻿using Source.Code.IdleNumbers;
+using Source.Code.ModelsAndServices.Farm;
 using Source.Code.StaticData;
+using UnityEngine;
 
 namespace Source.Code.Farm
 {
@@ -14,10 +16,20 @@ namespace Source.Code.Farm
             _view = view;
             _view.Init(_farmService.FarmCharacters);
             _view.UpgradeRequested += OnUpgradeRequested;
+            _farmService.BalanceChanged += OnBalanceChanged;
+
+
+            foreach (var character in _farmService.FarmCharacters)
+            {
+                MonoBehaviour.print(character.Cost);
+            }
         }
 
         public void CleanUp() => 
             _view.UpgradeRequested -= OnUpgradeRequested;
+        
+        private void OnBalanceChanged(IdleNumber value) => 
+            _view.UpdateAvailabilityButtons(value);
 
         private void OnUpgradeRequested(CharacterTypeId typeId)
         {

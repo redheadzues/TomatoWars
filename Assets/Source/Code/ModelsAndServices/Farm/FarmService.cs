@@ -13,6 +13,7 @@ namespace Source.Code.ModelsAndServices.Farm
     {
         IReadOnlyList<IFarmCharacter> FarmCharacters { get; }
         bool TryUpgradeCharacter(CharacterTypeId typeId);
+        event Action<IdleNumber> BalanceChanged;
     }
     
     public class FarmService : IFarmService, ICleanable
