@@ -10,8 +10,10 @@ namespace Source.Code.BattleField.View
     public class BattleFieldView : MonoBehaviour
     {
         [SerializeField] private WarriorView _prefab;
-        [SerializeField] private List<SpriteRenderer> _lines;
+        [SerializeField] private SpriteRenderer _field;
+        [SerializeField] private SpriteRenderer _lineBossAttack;
         [SerializeField] private BossView _bossView;
+        
         
         private readonly List<WarriorView> _warriors = new();
 
@@ -29,19 +31,16 @@ namespace Source.Code.BattleField.View
         {
             _warriors.ForEach(x => Destroy(x.gameObject));
             _warriors.Clear();
-            
-            foreach (var line in _lines)
+
+            /*foreach (Transform child in _field.transform)
             {
-                foreach (Transform child in line.transform)
-                {
-                    DestroyImmediate(child.gameObject);
-                }
-            }
+                DestroyImmediate(child.gameObject);
+            }*/
         }
         
         public void CreateNewWarrior(IWarrior warrior)
         {
-            var newWarrior = Instantiate(_prefab);
+            var newWarrior = Instantiate(_prefab, _field.transform);
             
             newWarrior.Init(warrior);
             _warriors.Add(newWarrior);
@@ -52,9 +51,15 @@ namespace Source.Code.BattleField.View
             _warriors.ForEach(warrior => warrior.UpdateWarrior());
         }
 
-        public void HitLine(int index)
+        public void ShowBossAttack(float centerAttack, float widthAttack)
         {
-            _lines[index].DOColor(Color.red, 0.2f).SetLoops(2, LoopType.Yoyo);
+            _lineBossAttack.transform.localScale = 
+                new Vector2(widthAttack ,_lineBossAttack.transform.localScale.y);
+            
+            _lineBossAttack.transform.localPosition =
+                new Vector2(centerAttack - 0.5f, _lineBossAttack.transform.localPosition.y);
+
+            _lineBossAttack.DOColor(Color.red, 0.1f).SetLoops(2, LoopType.Yoyo);
         }
         
         public void SpawnWarrior(IWarrior warrior)
@@ -67,20 +72,12 @@ namespace Source.Code.BattleField.View
                 return;
             }
             
-            SetWarriorOnLine(view, warrior.LineIndex);
             view.gameObject.SetActive(true);
         }
 
         public void UpdateBossHp(int currentHp, int maxHp)
         {
             _bossView.UpdateBossHp(currentHp, maxHp);
-        }
-
-        private void SetWarriorOnLine(WarriorView warrior, int lineIndex)
-        {
-            warrior.transform.SetParent(_lines[lineIndex].transform);
-            var randomPositionY = Random.Range(-0.5f, 0.5f);
-            warrior.transform.localPosition = new Vector2(randomPositionY, -0.5f);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Source.Code.BattleField.Buff;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using Random = System.Random;
 
@@ -14,7 +15,7 @@ namespace Source.Code.ModelsAndServices.BattleField
         event Action ReadyToStart;
         event Action StageCompleted;
         event Action TickCalculated;
-        event Action<int> BossHitLine;
+        event Action<float, float> BossAttacked;
         event Action<IWarrior> WarriorSpawned;
         event Action<IWarrior> WarriorAdded;
         IReadOnlyBattleFieldModel Model { get; }
@@ -41,7 +42,7 @@ namespace Source.Code.ModelsAndServices.BattleField
         public event Action ReadyToStart;
         public event Action StageCompleted;
         public event Action TickCalculated;
-        public event Action<int> BossHitLine;
+        public event Action<float, float> BossAttacked;
         public event Action<IWarrior> WarriorSpawned;
         public event Action<IWarrior> WarriorAdded;
         
@@ -80,6 +81,7 @@ namespace Source.Code.ModelsAndServices.BattleField
             _battleModel.BossMaxHp = bossConfig.Hp;
             _battleModel.BossCurrentHp = bossConfig.Hp;
             _battleModel.BossDamagePerSecond = bossConfig.DamagePerSecond;
+            _battleModel.BossAttackWidth = bossConfig.AttackWidth;
 
             ReadyToStart?.Invoke();
         }
@@ -93,22 +95,34 @@ namespace Source.Code.ModelsAndServices.BattleField
             }
         }
 
+        
+        // debug
+        private float _timeToSpawn = 5;
+        private float _spawnTimer;
+        
+        
         private void Update()
         {
             _tikDamage = 0;
+
+            _spawnTimer -= StaticConfig.TICK_INTERVAL;
+
+            if (_spawnTimer <= 0)
+            {
+                SpawnWarrior();
+                _spawnTimer = _timeToSpawn;
+            }
             
-            SpawnWarrior();
+            
+            
             BossAttack();
             
             foreach (var warrior in _battleModel.Warriors)
             {
-                if (warrior.NormalizePosition == 1f)
-                    warrior.State = WarriorState.Fight;
-                
                 switch (warrior.State)
                 {
                     case WarriorState.Walk:
-                        Move(warrior);
+                        warrior.Move();
                         break;
                     case WarriorState.Fight:
                         AddTickDamage(warrior);
@@ -131,25 +145,24 @@ namespace Source.Code.ModelsAndServices.BattleField
         private void AddTickDamage(Warrior warrior) =>
             _tikDamage += 0;//warrior.BaseDamagePerSecond;
 
-        private void Move(Warrior warrior) => 
-            warrior.NormalizePosition = Math.Clamp(warrior.NormalizePosition + warrior.BaseNormalizedSpeed, 0f, 1f);
-
         private void BossAttack()
         {
-            var lineIndexToAttack = _random.Next(0, 3);
-            
-            var warriorForAttack = _battleModel.Warriors
-                .Where(x => x.LineIndex == lineIndexToAttack).ToList();
+            var centerAttackPosition = (float)_random.NextDouble();
+            var attackWidth = _battleModel.BossAttackWidth;
 
+            var warriorForAttack = _battleModel.Warriors
+                .Where(x => 
+                    x.NormalizePosition.X > centerAttackPosition - attackWidth/2
+                    &&
+                    x.NormalizePosition.X < centerAttackPosition + attackWidth/2)
+                .ToList();
+            
             foreach (var warrior in warriorForAttack)
             {
-                warrior.TakeDamage((int)(_battleModel.BossDamagePerSecond * StaticConfig.TICK_INTERVAL));
-
-                if (warrior.Health <= 0)
-                    warrior.State = WarriorState.Died;
+                warrior.TakeDamage(_battleModel.BossDamagePerSecond * StaticConfig.TICK_INTERVAL);
             }
             
-            BossHitLine?.Invoke(lineIndexToAttack);
+            BossAttacked?.Invoke(centerAttackPosition, attackWidth);
         }
 
         private void SpawnWarrior()
@@ -163,9 +176,10 @@ namespace Source.Code.ModelsAndServices.BattleField
             }
 
             var warrior = GetFreeWarrior(characterType);
-            
-            warrior.ResetWarrior();
-            warrior.LineIndex = _random.Next(0, 3);
+
+            var newNormalizedPositionX = (float)_random.NextDouble();
+            warrior.ResetWarrior(newNormalizedPositionX);
+
             
             WarriorSpawned?.Invoke(warrior);
         }

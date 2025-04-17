@@ -69,16 +69,12 @@ namespace Source.Code.Farm
 
         private void StartFillTween()
         {
-            print("in start tween");
-            
             if(_character.Level == 0)
                 return;
             
             _fillTween = _incomeFilledImage
                 .DOFillAmount(1, _character.IncomeTime)
                 .SetLoops(-1, LoopType.Restart);
-            
-            print("tween started");
         }
 
         private void OnUpgradeButtonClicked() => 

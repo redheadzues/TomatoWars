@@ -10,6 +10,6 @@ namespace Source.Code.StaticData
         [field: SerializeField] public Sprite Sprite { get; private set; }
         [field: SerializeField] public int Hp { get; private set; }
         [field: SerializeField] public int DamagePerSecond { get; private set; }
-        
+        [field: SerializeField] public float AttackWidth { get; private set; }
     }
 }

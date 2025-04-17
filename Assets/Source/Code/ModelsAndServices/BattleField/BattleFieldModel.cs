@@ -34,6 +34,7 @@ namespace Source.Code.ModelsAndServices.BattleField
         public Sprite BossSprite { get; set; }
 
         public int BossDamagePerSecond { get; set; }
+        public float BossAttackWidth { get; set; }
 
     }
 }

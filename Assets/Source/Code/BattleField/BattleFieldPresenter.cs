@@ -16,8 +16,8 @@ namespace Source.Code.BattleField
             _view = view;
             
             _battleFieldService.WarriorAdded += AddWarriorView;
-            _battleFieldService.BossHitLine += HitLine;
-            _battleFieldService.WarriorSpawned += SpawnWarrior;
+            _battleFieldService.BossAttacked += OnBossAttacked;
+            _battleFieldService.WarriorSpawned += OnWarriorSpawned;
             _battleFieldService.ReadyToStart += OnReadyToStart;
             _battleFieldService.StageCompleted += OnStageCompleted;
             _battleFieldService.TickCalculated += OnTickCalculated;
@@ -28,8 +28,8 @@ namespace Source.Code.BattleField
         public void CleanUp()
         {
             _battleFieldService.WarriorAdded -= AddWarriorView;
-            _battleFieldService.BossHitLine -= HitLine;
-            _battleFieldService.WarriorSpawned -= SpawnWarrior;
+            _battleFieldService.BossAttacked -= OnBossAttacked;
+            _battleFieldService.WarriorSpawned -= OnWarriorSpawned;
             _battleFieldService.ReadyToStart -= OnReadyToStart;
             _battleFieldService.StageCompleted -= OnStageCompleted;
             _battleFieldService.TickCalculated -= OnTickCalculated;
@@ -54,11 +54,11 @@ namespace Source.Code.BattleField
             _view.UpdateWarriors(_battleFieldService.Model.ReadOnlyWarriors);
         }
 
-        private void SpawnWarrior(IWarrior warrior) => 
+        private void OnWarriorSpawned(IWarrior warrior) => 
             _view.SpawnWarrior(warrior);
 
-        private void HitLine(int index) => 
-            _view.HitLine(index);
+        private void OnBossAttacked(float centerAttack, float widthAttack) => 
+            _view.ShowBossAttack(centerAttack, widthAttack);
 
         private void AddWarriorView(IWarrior warrior) => 
             _view.CreateNewWarrior(warrior);

@@ -158,6 +158,13 @@ namespace Source.Code.IdleNumbers
 
         public static bool operator >(IdleNumber leftNumber, IdleNumber rightNumber)
         {
+            if (leftNumber.Value >= 0 && rightNumber.Value < 0)
+                return true;
+
+            if (leftNumber.Value < 0 && rightNumber.Value >= 0)
+                return false;
+            
+            
             if(leftNumber.Degree >= rightNumber.Degree)
             {
                 if(leftNumber.Degree == rightNumber.Degree)
@@ -180,6 +187,12 @@ namespace Source.Code.IdleNumbers
 
         public static bool operator <(IdleNumber leftNumber, IdleNumber rightNumber)
         {
+            if (leftNumber.Value < 0 && rightNumber.Value >= 0)
+                return true;
+
+            if (leftNumber.Value >= 0 && rightNumber.Value < 0)
+                return false;
+            
             if (leftNumber.Degree <= rightNumber.Degree)
             {
                 if (leftNumber.Degree == rightNumber.Degree)

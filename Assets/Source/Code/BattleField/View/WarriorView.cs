@@ -103,6 +103,9 @@ namespace Source.Code.BattleField.View
                 Debug.LogError("Transform has no parent, cannot move by normalized position.");
                 yield break;
             }
+
+            transform.localPosition =
+                new Vector2(_warrior.NormalizePosition.X - 0.5f, _warrior.NormalizePosition.Y - 0.5f);
             
             _moveTween = DOTween.Sequence()
                 .Append(transform.DORotate(new Vector3(0, 0, 3), 0.3f))
@@ -113,7 +116,7 @@ namespace Source.Code.BattleField.View
             {
                 transform.localPosition = Vector2.MoveTowards(
                     transform.localPosition, 
-                    new Vector2(transform.localPosition.x, _warrior.NormalizePosition - 0.5f), 
+                    new Vector2(_warrior.NormalizePosition.X - 0.5f, _warrior.NormalizePosition.Y - 0.5f), 
                     _warrior.BaseNormalizedSpeed / (StaticConfig.TICK_INTERVAL/Time.deltaTime) );
 
                 yield return null;

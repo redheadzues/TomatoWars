@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Source.Code.IdleNumbers;
 using Source.Code.StaticData;
 using UnityEngine;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Source.Code.Warriors
 {
@@ -11,6 +11,7 @@ namespace Source.Code.Warriors
         private IdleNumber _baseMaxHealth;
         private IdleNumber _currentHealth;
         private WarriorStats _stats;
+        private Vector2 _normalizedPosition;
         public Sprite Icon { get; }
         public CharacterTypeId TypeId {get;}
         public WarriorState State { get; set; }
@@ -21,8 +22,7 @@ namespace Source.Code.Warriors
         public float BaseCriticalChance => _stats.CriticalChance;
         public float BaseCriticalPower => _stats.CriticalPower;
         public float BaseDamageReduce => _stats.DamageReduce;
-        public int LineIndex {get; set; }
-        public float NormalizePosition {get; set; }
+        public Vector2 NormalizePosition => _normalizedPosition;
         public WarriorBooster Booster { get;}
         public List<BattleEffect> ActiveEffects { get;  }
        
@@ -36,11 +36,11 @@ namespace Source.Code.Warriors
             _baseMaxHealth = stats.MaxHealth;
         }
 
-        public void ResetWarrior()
+        public void ResetWarrior(float normPositionX)
         {
+            _normalizedPosition.X = normPositionX;
             _currentHealth = CalculateMaxHealth();
             State = WarriorState.Walk;
-            NormalizePosition = 0;
         }
 
         public void TakeDamage(IdleNumber damage)
@@ -49,6 +49,14 @@ namespace Source.Code.Warriors
             
             if (_currentHealth <= 0)
                 State = WarriorState.Died;
+        }
+
+        public void Move()
+        {
+            _normalizedPosition.Y = Mathf.Clamp(_normalizedPosition.Y + _stats.NormalizedSpeed, 0, 1);
+
+            if (_normalizedPosition.Y >= 1)
+                State = WarriorState.Fight;
         }
 
         public IdleNumber CalculateDamage(float tickTime)

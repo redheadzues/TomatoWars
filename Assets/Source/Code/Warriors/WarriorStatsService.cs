@@ -21,10 +21,11 @@ namespace Source.Code.Warriors
         private readonly IPlayerService _playerService;
         private readonly IFarmService _farmService;
 
-        public WarriorStatsService(IStaticDataService staticData, IPlayerService playerService)
+        public WarriorStatsService(IStaticDataService staticData, IPlayerService playerService, IFarmService farmService)
         {
             _staticData = staticData;
             _playerService = playerService;
+            _farmService = farmService;
             
             InitializeStats();
             InitializeBoosters();
