@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Source.Code.ModelsAndServices;
+using Source.Code.ModelsAndServices.Farm;
 using Source.Code.ModelsAndServices.Player;
 using Source.Code.StaticData;
 
@@ -18,6 +19,7 @@ namespace Source.Code.Warriors
         private readonly Dictionary<CharacterTypeId, WarriorBooster> _statsBoostersByType = new();
         private readonly IStaticDataService _staticData;
         private readonly IPlayerService _playerService;
+        private readonly IFarmService _farmService;
 
         public WarriorStatsService(IStaticDataService staticData, IPlayerService playerService)
         {
@@ -54,15 +56,6 @@ namespace Source.Code.Warriors
             }
         }
         
-        private void AddStatsByType(CharacterTypeId typeId)
-        {
-            var config = _staticData.GetWarriorConfig(typeId);
-            var level = _playerService.Model.OwnedWarriors[typeId].Level;
-            var stats = config.GetStatsByLevel(level);
-
-            _warriorStatsByType[typeId] = stats;
-        }
-
         private void InitializeBoosters()
         {
             foreach (var warrior in _playerService.Model.OwnedWarriors)
@@ -72,6 +65,17 @@ namespace Source.Code.Warriors
                 
                 AddBoosterByType(warrior.Key, warrior.Value.BoosterInfo);
             }
+        }
+        
+        private void AddStatsByType(CharacterTypeId typeId)
+        {
+            var farmLevel = _farmService.CharactersLevel[typeId];
+            
+            var config = _staticData.GetWarriorConfig(typeId);
+            var level = _playerService.Model.OwnedWarriors[typeId].Level;
+            var stats = config.GetStatsByLevel(level, farmLevel);
+
+            _warriorStatsByType[typeId] = stats;
         }
 
         private void AddBoosterByType(CharacterTypeId typeId, Booster boosterInfo)

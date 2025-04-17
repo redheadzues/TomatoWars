@@ -38,7 +38,7 @@ namespace Source.Code.StaticData
         [field: SerializeField] public CharacterTypeId TypeId { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
 
-        public WarriorStats GetStatsByLevel(int level)
+        public WarriorStats GetStatsByLevel(int level, int farmLevel)
         {
             if (level == 0)
                 level = 1;

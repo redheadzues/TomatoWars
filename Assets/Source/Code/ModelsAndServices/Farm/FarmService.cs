@@ -12,6 +12,7 @@ namespace Source.Code.ModelsAndServices.Farm
     public interface IFarmService : IService
     {
         IReadOnlyList<IFarmCharacter> FarmCharacters { get; }
+        IReadOnlyDictionary<CharacterTypeId, int> CharactersLevel { get; }
         bool TryUpgradeCharacter(CharacterTypeId typeId);
         event Action<IdleNumber> BalanceChanged;
     }
@@ -27,6 +28,7 @@ namespace Source.Code.ModelsAndServices.Farm
         private Coroutine _incomeCoroutine;
         
         public IReadOnlyList<IFarmCharacter> FarmCharacters => _farmCharacters;
+        public IReadOnlyDictionary<CharacterTypeId, int> CharactersLevel => _model.CharactersLevel;
 
         public event Action<IdleNumber> BalanceChanged;
 
