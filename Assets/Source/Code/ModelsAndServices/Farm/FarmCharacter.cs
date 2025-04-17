@@ -12,7 +12,7 @@ namespace Source.Code.ModelsAndServices.Farm
         public IdleNumber Cost { get; set; }
         public IdleNumber IncomePerSecond { get; set; }
         public float IncomeTime { get; set; }
-        public float RemainingTimeToIncome;
+        public float RemainingTimeToIncome { get; set; }
 
         public FarmCharacter(CharacterTypeId typeId, Sprite icon, int level, IdleNumber cost, IdleNumber incomePerSecond, float incomeTime)
         {

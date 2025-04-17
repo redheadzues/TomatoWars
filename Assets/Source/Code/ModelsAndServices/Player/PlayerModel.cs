@@ -19,5 +19,17 @@ namespace Source.Code.ModelsAndServices.Player
         };
 
         public Dictionary<CharacterTypeId, OwnedWarrior> OwnedWarriors = new();
+
+        public PlayerModel()
+        {
+            foreach (CharacterTypeId typeId in Enum.GetValues(typeof(CharacterTypeId)))
+            {
+                OwnedWarriors.TryAdd(typeId, new OwnedWarrior
+                {
+                    TypeId = typeId,
+                    IsOwned = true,
+                });
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Source.Code.IdleNumbers;
@@ -48,5 +49,6 @@ namespace Source.Code.Farm
 
         private void OnUpgradeRequested(CharacterTypeId typeId) => 
             UpgradeRequested?.Invoke(typeId);
+
     }
 }

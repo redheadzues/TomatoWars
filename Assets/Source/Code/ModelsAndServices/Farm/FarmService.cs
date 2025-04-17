@@ -115,6 +115,9 @@ namespace Source.Code.ModelsAndServices.Farm
 
                 foreach (var character in _farmCharacters)
                 {
+                    if(_model.CharactersLevel[character.TypeId] == 0)
+                        continue;
+                    
                     character.RemainingTimeToIncome -= StaticConfig.TICK_INTERVAL;
 
                     if (character.RemainingTimeToIncome <= 0)

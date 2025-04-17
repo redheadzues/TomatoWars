@@ -29,8 +29,6 @@ namespace Source.Code.ModelsAndServices.Player
         public PlayerService(PlayerModel model)
         {
             _model = model;
-            SyncOwnedWarriorByType();
-            SyncCurrencyByType();
         }
 
         public bool TryAddBoosterToWarrior(Booster booster, CharacterTypeId characterTypeId)
@@ -77,26 +75,6 @@ namespace Source.Code.ModelsAndServices.Player
             
             _model.Wallet.Balances[currency] += value;
             BalanceChanged?.Invoke(currency, _model.Wallet.Balances[currency]);
-        }
-
-        private void SyncOwnedWarriorByType()
-        {
-            foreach (CharacterTypeId typeId in Enum.GetValues(typeof(CharacterTypeId)))
-            {
-                _model.OwnedWarriors.TryAdd(typeId, new OwnedWarrior
-                {
-                    TypeId = typeId,
-                    IsOwned = true,
-                });
-            }
-        }
-        
-        private void SyncCurrencyByType()
-        {
-            foreach (CurrencyTypeId typeId in Enum.GetValues(typeof(CurrencyTypeId)))
-            {
-                _model.Wallet.Balances.TryAdd(typeId, 0);
-            }
         }
     }
 }

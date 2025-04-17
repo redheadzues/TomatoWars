@@ -17,12 +17,6 @@ namespace Source.Code.Farm
             _view.Init(_farmService.FarmCharacters);
             _view.UpgradeRequested += OnUpgradeRequested;
             _farmService.BalanceChanged += OnBalanceChanged;
-
-
-            foreach (var character in _farmService.FarmCharacters)
-            {
-                MonoBehaviour.print(character.Cost);
-            }
         }
 
         public void CleanUp() => 
@@ -34,7 +28,7 @@ namespace Source.Code.Farm
         private void OnUpgradeRequested(CharacterTypeId typeId)
         {
             var isUpgraded = _farmService.TryUpgradeCharacter(typeId);
-
+            
             if (isUpgraded)
             {
                 _view.UpdateCharacterView(typeId);
