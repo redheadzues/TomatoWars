@@ -16,10 +16,18 @@ MonoBehaviour:
   - <Stage>k__BackingField: 1
     <Sprite>k__BackingField: {fileID: 21300000, guid: 13f45d91dacd760458545f276b2d3cfd, type: 3}
     <Hp>k__BackingField: 50000
-    <DamagePerSecond>k__BackingField: 10000
-    <AttackWidth>k__BackingField: 0.15
+    <AttackConfig>k__BackingField:
+      <TypeId>k__BackingField: 0
+      <DamagePerSecond>k__BackingField: 10
+      <Cooldown>k__BackingField: 1
+      <NormalizedWidth>k__BackingField: 0.1
+      <Count>k__BackingField: 1
   - <Stage>k__BackingField: 2
     <Sprite>k__BackingField: {fileID: 21300000, guid: 75b0d93cdbe3b304d8e3bd7760298d58, type: 3}
     <Hp>k__BackingField: 100000
-    <DamagePerSecond>k__BackingField: 1
-    <AttackWidth>k__BackingField: 0.2
+    <AttackConfig>k__BackingField:
+      <TypeId>k__BackingField: 0
+      <DamagePerSecond>k__BackingField: 20
+      <Cooldown>k__BackingField: 0
+      <NormalizedWidth>k__BackingField: 0
+      <Count>k__BackingField: 1
