@@ -4,15 +4,6 @@ using Source.Code.Warriors;
 
 namespace Source.Code.ModelsAndServices.Player
 {
-    public interface IOwnedWarrior
-    {
-        public CharacterTypeId TypeId { get; }
-        public bool IsOwned { get; }
-        public Booster BoosterInfo { get; }
-        public int Level { get; }
-
-    }
-    
     [Serializable]
     public class OwnedWarrior : IOwnedWarrior
     {

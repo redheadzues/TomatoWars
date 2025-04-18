@@ -20,8 +20,8 @@ namespace Source.Code
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly List<GameWindow> _windows;
         
-        private CoreModel _model;
-        private ServiceProvider _serviceProvider;
+        private readonly CoreModel _model;
+        private readonly ServiceProvider _serviceProvider;
 
         public Game(ICoroutineRunner coroutineRunner, List<GameWindow> windows)
         {
