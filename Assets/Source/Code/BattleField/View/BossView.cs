@@ -33,12 +33,6 @@ namespace Source.Code.BattleField.View
                 _displayingHp = val;
                 _bossHpText.text = $"{_displayingHp:F2}/{maxHp:F2}";
             });
-            
-            /*DOTween.To(() => _displayingHp, x =>
-            {
-                _displayingHp = x;
-                _bossHpText.text = $"{_displayingHp}/{maxHp}";
-            }, currentHp, 0.5f);*/
         }
     }
 }

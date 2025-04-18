@@ -31,11 +31,13 @@ namespace Source.Code.IdleNumbers
 
         private static IdleNumber Lerp(IdleNumber a, IdleNumber b, float t)
         {
-            double aValue = a.Value * Math.Pow(10, a.Degree);
-            double bValue = b.Value * Math.Pow(10, b.Degree);
-            double lerped = Mathf.Lerp((float)aValue, (float)bValue, t);
+            int targetDegree = Math.Max(a.Degree, b.Degree);
+            double aVal = a.Value * Math.Pow(10, a.Degree - targetDegree);
+            double bVal = b.Value * Math.Pow(10, b.Degree - targetDegree);
+    
+            double lerpedValue = Mathf.Lerp((float)aVal, (float)bVal, t);
 
-            return new IdleNumber(lerped);
+            return new IdleNumber((float)lerpedValue, targetDegree);
         }
     }
 }
