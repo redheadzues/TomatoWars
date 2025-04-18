@@ -32,12 +32,17 @@ namespace Source.Code.IdleNumbers
         private static IdleNumber Lerp(IdleNumber a, IdleNumber b, float t)
         {
             int targetDegree = Math.Max(a.Degree, b.Degree);
-            double aVal = a.Value * Math.Pow(10, a.Degree - targetDegree);
-            double bVal = b.Value * Math.Pow(10, b.Degree - targetDegree);
-    
-            double lerpedValue = Mathf.Lerp((float)aVal, (float)bVal, t);
 
-            return new IdleNumber((float)lerpedValue, targetDegree);
+            double aNormalizedValue = a.Value * Math.Pow(10, a.Degree - targetDegree);
+            double bNormalizedValue = b.Value * Math.Pow(10, b.Degree - targetDegree);
+
+            double lerpedValue = Mathf.Lerp((float)aNormalizedValue, (float)bNormalizedValue, t);
+
+            IdleNumber result = new IdleNumber((float)lerpedValue);
+
+            result = new IdleNumber(result.Value * Math.Pow(10, targetDegree));
+
+            return result;
         }
     }
 }
