@@ -79,8 +79,8 @@ namespace Source.Code.ModelsAndServices.BattleField
             _battleModel.BossSprite = bossConfig.Sprite;
             _battleModel.BossMaxHp = bossConfig.Hp;
             _battleModel.BossCurrentHp = bossConfig.Hp;
-            _battleModel.BossDamagePerSecond = bossConfig.DamagePerSecond;
-            _battleModel.BossAttackWidth = bossConfig.AttackWidth;
+            _battleModel.BossDamagePerSecond = bossConfig.AttackConfig.DamagePerSecond;
+            _battleModel.BossAttackWidth = bossConfig.AttackConfig.NormalizedWidth;
 
             ReadyToStart?.Invoke();
         }

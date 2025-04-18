@@ -12,7 +12,7 @@ namespace Source.Code.StaticData
         [SerializeField] private float _maxCriticalChance;
         [SerializeField] private float _criticalPower;
         [SerializeField] private int _damagePerSecond;
-        [SerializeField] private float _normalizedSpeed;
+        [SerializeField, Range(0,1)] private float _normalizedSpeed;
         [SerializeField] private float _damageReduce;
         [SerializeField] private float _maxDamageReduce;
         
