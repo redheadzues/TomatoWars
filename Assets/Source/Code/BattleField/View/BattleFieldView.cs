@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DG.Tweening;
-using Source.Code.StaticData;
 using Source.Code.Warriors;
 using UnityEngine;
 
@@ -46,7 +44,7 @@ namespace Source.Code.BattleField.View
             _warriors.Add(newWarrior);
         }
 
-        public void UpdateWarriors(IReadOnlyList<IWarrior> warriors)
+        public void UpdateWarriors()
         {
             _warriors.ForEach(warrior => warrior.UpdateWarrior());
         }
@@ -62,19 +60,6 @@ namespace Source.Code.BattleField.View
             _lineBossAttack.DOColor(Color.red, 0.1f).SetLoops(2, LoopType.Yoyo);
         }
         
-        public void SpawnWarrior(IWarrior warrior)
-        {
-            var view = _warriors.FirstOrDefault(x => x.Warrior == warrior);
-
-            if (view == null)
-            {
-                Debug.LogWarning("view for spawn not found");
-                return;
-            }
-            
-            view.gameObject.SetActive(true);
-        }
-
         public void UpdateBossHp(int currentHp, int maxHp)
         {
             _bossView.UpdateBossHp(currentHp, maxHp);

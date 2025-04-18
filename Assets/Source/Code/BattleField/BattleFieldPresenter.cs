@@ -2,6 +2,7 @@
 using Source.Code.ModelsAndServices.BattleField;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
+using UnityEngine;
 
 namespace Source.Code.BattleField
 {
@@ -17,7 +18,6 @@ namespace Source.Code.BattleField
             
             _battleFieldService.WarriorAdded += AddWarriorView;
             _battleFieldService.BossAttacked += OnBossAttacked;
-            _battleFieldService.WarriorSpawned += OnWarriorSpawned;
             _battleFieldService.ReadyToStart += OnReadyToStart;
             _battleFieldService.StageCompleted += OnStageCompleted;
             _battleFieldService.TickCalculated += OnTickCalculated;
@@ -29,7 +29,6 @@ namespace Source.Code.BattleField
         {
             _battleFieldService.WarriorAdded -= AddWarriorView;
             _battleFieldService.BossAttacked -= OnBossAttacked;
-            _battleFieldService.WarriorSpawned -= OnWarriorSpawned;
             _battleFieldService.ReadyToStart -= OnReadyToStart;
             _battleFieldService.StageCompleted -= OnStageCompleted;
             _battleFieldService.TickCalculated -= OnTickCalculated;
@@ -51,11 +50,8 @@ namespace Source.Code.BattleField
         private void OnTickCalculated()
         {
             _view.UpdateBossHp(_battleFieldService.Model.BossCurrentHp, _battleFieldService.Model.BossMaxHp);
-            _view.UpdateWarriors(_battleFieldService.Model.ReadOnlyWarriors);
+            _view.UpdateWarriors();
         }
-
-        private void OnWarriorSpawned(IWarrior warrior) => 
-            _view.SpawnWarrior(warrior);
 
         private void OnBossAttacked(float centerAttack, float widthAttack) => 
             _view.ShowBossAttack(centerAttack, widthAttack);

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using DG.Tweening;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
@@ -40,6 +41,9 @@ namespace Source.Code.BattleField.View
 
         private void SwitchState()
         {
+            if(_lastState == WarriorState.Died)
+                gameObject.SetActive(true);
+            
             switch (_warrior.State)
             {
                 case WarriorState.Walk:
@@ -62,6 +66,9 @@ namespace Source.Code.BattleField.View
 
         private void Move()
         {
+            transform.localPosition =
+                new Vector2(_warrior.NormalizePosition.X - 0.5f, _warrior.NormalizePosition.Y - 0.5f);
+            
             if (_moveCoroutine == null)
                 _moveCoroutine = StartCoroutine(MoveCoroutine());
         }
@@ -103,9 +110,6 @@ namespace Source.Code.BattleField.View
                 Debug.LogError("Transform has no parent, cannot move by normalized position.");
                 yield break;
             }
-
-            transform.localPosition =
-                new Vector2(_warrior.NormalizePosition.X - 0.5f, _warrior.NormalizePosition.Y - 0.5f);
             
             _moveTween = DOTween.Sequence()
                 .Append(transform.DORotate(new Vector3(0, 0, 3), 0.3f))
@@ -117,7 +121,7 @@ namespace Source.Code.BattleField.View
                 transform.localPosition = Vector2.MoveTowards(
                     transform.localPosition, 
                     new Vector2(_warrior.NormalizePosition.X - 0.5f, _warrior.NormalizePosition.Y - 0.5f), 
-                    _warrior.BaseNormalizedSpeed / (StaticConfig.TICK_INTERVAL/Time.deltaTime) );
+                    _warrior.BaseNormalizedSpeed * Time.deltaTime);
 
                 yield return null;
             }

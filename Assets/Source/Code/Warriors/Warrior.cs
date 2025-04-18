@@ -38,7 +38,7 @@ namespace Source.Code.Warriors
 
         public void ResetWarrior(float normPositionX)
         {
-            _normalizedPosition.X = normPositionX;
+            _normalizedPosition = new Vector2(normPositionX, 0);
             _currentHealth = CalculateMaxHealth();
             State = WarriorState.Walk;
         }
@@ -51,9 +51,9 @@ namespace Source.Code.Warriors
                 State = WarriorState.Died;
         }
 
-        public void Move()
+        public void Move(float tickInterval)
         {
-            _normalizedPosition.Y = Mathf.Clamp(_normalizedPosition.Y + _stats.NormalizedSpeed, 0, 1);
+            _normalizedPosition.Y = Mathf.Clamp(_normalizedPosition.Y + (_stats.NormalizedSpeed * tickInterval), 0, 1);
 
             if (_normalizedPosition.Y >= 1)
                 State = WarriorState.Fight;

@@ -4,7 +4,6 @@ using System.Linq;
 using Source.Code.BattleField.Buff;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 using Random = System.Random;
 
@@ -16,7 +15,6 @@ namespace Source.Code.ModelsAndServices.BattleField
         event Action StageCompleted;
         event Action TickCalculated;
         event Action<float, float> BossAttacked;
-        event Action<IWarrior> WarriorSpawned;
         event Action<IWarrior> WarriorAdded;
         IReadOnlyBattleFieldModel Model { get; }
         void Start();
@@ -43,7 +41,6 @@ namespace Source.Code.ModelsAndServices.BattleField
         public event Action StageCompleted;
         public event Action TickCalculated;
         public event Action<float, float> BossAttacked;
-        public event Action<IWarrior> WarriorSpawned;
         public event Action<IWarrior> WarriorAdded;
         
         public BattleFieldService(CoreModel model, IStaticDataService staticData, ICoroutineRunner runner, IWarriorFactory warriorFactory)
@@ -94,35 +91,17 @@ namespace Source.Code.ModelsAndServices.BattleField
                 yield return new WaitForSeconds(StaticConfig.TICK_INTERVAL);
             }
         }
-
-        
-        // debug
-        private float _timeToSpawn = 5;
-        private float _spawnTimer;
-        
         
         private void Update()
         {
             _tikDamage = 0;
-
-            _spawnTimer -= StaticConfig.TICK_INTERVAL;
-
-            if (_spawnTimer <= 0)
-            {
-                SpawnWarrior();
-                _spawnTimer = _timeToSpawn;
-            }
-            
-            
-            
-            BossAttack();
-            
+           
             foreach (var warrior in _battleModel.Warriors)
             {
                 switch (warrior.State)
                 {
                     case WarriorState.Walk:
-                        warrior.Move();
+                        warrior.Move(StaticConfig.TICK_INTERVAL);
                         break;
                     case WarriorState.Fight:
                         AddTickDamage(warrior);
@@ -130,6 +109,10 @@ namespace Source.Code.ModelsAndServices.BattleField
                 }
             }
 
+            SpawnWarrior();
+
+            BossAttack();
+          
             _battleModel.BossCurrentHp -= _tikDamage;
 
             TickCalculated?.Invoke();
@@ -179,9 +162,6 @@ namespace Source.Code.ModelsAndServices.BattleField
 
             var newNormalizedPositionX = (float)_random.NextDouble();
             warrior.ResetWarrior(newNormalizedPositionX);
-
-            
-            WarriorSpawned?.Invoke(warrior);
         }
 
         
