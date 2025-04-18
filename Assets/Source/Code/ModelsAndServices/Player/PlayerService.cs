@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Source.Code.IdleNumbers;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
@@ -7,7 +8,8 @@ namespace Source.Code.ModelsAndServices.Player
 {
     public interface IPlayerService : IService
     {
-        PlayerModel Model { get; } 
+        IReadOnlyList<CharacterTypeId> SelectedCharacters { get; }
+        int Stage { get; }
         event Action<CharacterTypeId> WarriorLevelUp;
         event Action<CharacterTypeId, Booster> BoosterUpdated;
         event Action<CurrencyTypeId, IdleNumber> BalanceChanged;
@@ -15,13 +17,18 @@ namespace Source.Code.ModelsAndServices.Player
         bool TrySpendCurrency(CurrencyTypeId currency, IdleNumber value);
         bool TryLevelUpWarrior(CharacterTypeId typeId);
         void AddCurrency(CurrencyTypeId currency, IdleNumber value);
+        void IncreaseStage();
+        IOwnedWarrior GetOwnedWarriorByType(CharacterTypeId typeId);
+        List<IOwnedWarrior> GetAllOwnedWarriors();
     }
     
     public class PlayerService : IPlayerService
     {
         private readonly PlayerModel _model;
 
-        public PlayerModel Model => _model; 
+        public IReadOnlyList<CharacterTypeId> SelectedCharacters => _model.SelectedCharacters;
+        public int Stage => _model.Stage;
+        
         public event Action<CharacterTypeId> WarriorLevelUp;
         public event Action<CharacterTypeId, Booster> BoosterUpdated;
         public event Action<CurrencyTypeId, IdleNumber> BalanceChanged;
@@ -76,5 +83,23 @@ namespace Source.Code.ModelsAndServices.Player
             _model.Wallet.Balances[currency] += value;
             BalanceChanged?.Invoke(currency, _model.Wallet.Balances[currency]);
         }
+
+        public IOwnedWarrior GetOwnedWarriorByType(CharacterTypeId typeId) => 
+            _model.OwnedWarriors.GetValueOrDefault(typeId);
+
+        public List<IOwnedWarrior> GetAllOwnedWarriors()
+        {
+            List<IOwnedWarrior> output = new();
+            
+            foreach (var warrior in _model.OwnedWarriors.Values)
+            {
+                output.Add(warrior);
+            }
+
+            return output;
+        }
+
+        public void IncreaseStage() => 
+            _model.Stage++;
     }
 }

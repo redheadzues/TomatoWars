@@ -59,12 +59,14 @@ namespace Source.Code.Warriors
         
         private void InitializeBoosters()
         {
-            foreach (var warrior in _playerService.Model.OwnedWarriors)
+            var ownedWarriors = _playerService.GetAllOwnedWarriors();
+            
+            foreach (var warrior in ownedWarriors)
             {
-                if (warrior.Value.IsOwned == false)
+                if (warrior.IsOwned == false)
                     return;
                 
-                AddBoosterByType(warrior.Key, warrior.Value.BoosterInfo);
+                AddBoosterByType(warrior.TypeId, warrior.BoosterInfo);
             }
         }
         
@@ -73,7 +75,7 @@ namespace Source.Code.Warriors
             var farmLevel = _farmService.CharactersLevel[typeId];
             
             var config = _staticData.GetWarriorConfig(typeId);
-            var level = _playerService.Model.OwnedWarriors[typeId].Level;
+            var level = _playerService.GetOwnedWarriorByType(typeId).Level;
             var stats = config.GetStatsByLevel(level, farmLevel);
 
             _warriorStatsByType[typeId] = stats;

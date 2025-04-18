@@ -81,7 +81,7 @@ namespace Source.Code
             var warriorFactory = _serviceProvider.RegisterInstance<IWarriorFactory>(new WarriorFactory(warriorStats, staticData));
             
             _serviceProvider.RegisterLazy<IMergeGridService>(() => new MergeGridService(_model.Grid, staticData, playerService));
-            _serviceProvider.RegisterLazy<IBattleFieldService>(() => new BattleFieldService(_model, staticData, _coroutineRunner, warriorFactory));
+            _serviceProvider.RegisterLazy<IBattleFieldService>(() => new BattleFieldService(staticData, _coroutineRunner, warriorFactory, playerService));
             
             ApplyState(GameState.GameLoop);
         }

@@ -27,7 +27,7 @@ namespace Source.Code.ModelsAndServices.Grid
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
 
         public IReadOnlyGridModel GridModel => _gridModel;
-        public IReadOnlyList<CharacterTypeId> SelectedWarriors => _playerService.Model.SelectedWarrior;
+        public IReadOnlyList<CharacterTypeId> SelectedWarriors => _playerService.SelectedCharacters;
         public bool IsEnableAddNewItem => GetFreeCellIndex() > -1;
 
         public MergeGridService(GridModel model, IStaticDataService staticData, IPlayerService playerService)

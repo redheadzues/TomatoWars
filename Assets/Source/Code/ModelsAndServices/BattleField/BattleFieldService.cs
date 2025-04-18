@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using Source.Code.BattleField.Buff;
 using Source.Code.IdleNumbers;
+using Source.Code.ModelsAndServices.Player;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace Source.Code.ModelsAndServices.BattleField
     
     public class BattleFieldService : IBattleFieldService
     {
-        private readonly CoreModel _coreModel;
+        private readonly IPlayerService _playerService;
         private readonly IStaticDataService _staticData;
         private readonly IWarriorFactory _warriorFactory;
         private readonly ICoroutineRunner _coroutineRunner;
@@ -44,11 +45,11 @@ namespace Source.Code.ModelsAndServices.BattleField
         public event Action<float, float> BossAttacked;
         public event Action<IWarrior> WarriorAdded;
         
-        public BattleFieldService(CoreModel model, IStaticDataService staticData, ICoroutineRunner runner, IWarriorFactory warriorFactory)
+        public BattleFieldService(IStaticDataService staticData, ICoroutineRunner runner, IWarriorFactory warriorFactory, IPlayerService playerService)
         {
-            _coreModel = model;
             _coroutineRunner = runner;
             _warriorFactory = warriorFactory;
+            _playerService = playerService;
             _staticData = staticData;
         }
 
@@ -66,9 +67,9 @@ namespace Source.Code.ModelsAndServices.BattleField
 
         private void InitializeBattleModel()
         {
-            _battleModel.SelectedWarriors = _coreModel.Player.SelectedWarrior;
+            _battleModel.SelectedWarriors =  _playerService.SelectedCharacters.ToList();
 
-            var bossConfig = _staticData.GetBossConfig(_coreModel.Player.Stage);
+            var bossConfig = _staticData.GetBossConfig(_playerService.Stage);
 
             if (bossConfig == null)
             {
@@ -121,7 +122,7 @@ namespace Source.Code.ModelsAndServices.BattleField
             if (_battleModel.BossCurrentHp <= 0)
             {
                 Stop();
-                _coreModel.Player.Stage++;
+                _playerService.IncreaseStage();
                 StageCompleted?.Invoke();
             }
         }
