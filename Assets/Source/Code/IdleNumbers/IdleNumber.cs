@@ -2,7 +2,7 @@
 
 namespace Source.Code.IdleNumbers
 {
-        public struct IdleNumber
+        public struct IdleNumber : IFormattable
     {
         public float Value { get; private set; }
         public int Degree { get; private set; }
@@ -278,14 +278,21 @@ namespace Source.Code.IdleNumbers
 
         public override string ToString()
         {
-            string value;
+            return ToString("#.##");
+        }
 
-            if (this > _tenCubed)
-                value = Value.ToString("#.##");
-            else
-                value = Math.Round(Value).ToString();
+        public string ToString(string format)
+        {
+            return ToString(format, null);
+        }
 
-            return value + " " + PowTenToName.Get(Degree);
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            string formattedValue = (this > _tenCubed)
+                ? Value.ToString(format, formatProvider)
+                : Math.Round(Value).ToString(formatProvider);
+
+            return $"{formattedValue} {PowTenToName.Get(Degree)}";
         }
     }
 }

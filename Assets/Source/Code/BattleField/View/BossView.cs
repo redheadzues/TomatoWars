@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Source.Code.IdleNumbers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,26 +12,33 @@ namespace Source.Code.BattleField.View
         [SerializeField] private Image _bossHpBar;
         [SerializeField] private TMP_Text _bossHpText;
 
-        private int _displayingHp;
+        private IdleNumber _displayingHp;
 
-        public void Init(Sprite sprite, int bossStartHp)
+        public void Init(Sprite sprite, IdleNumber bossStartHp)
         {
             _bossSprite.sprite = sprite;
             _bossHpText.text = $"{bossStartHp}/{bossStartHp}";
             _bossHpBar.fillAmount = 1f;
         }
         
-        public void UpdateBossHp(int currentHp, int maxHp)
+        public void UpdateBossHp(IdleNumber currentHp, IdleNumber maxHp)
         {
-            float barFill = (float)currentHp / maxHp;
-        
-            _bossHpBar.DOFillAmount(barFill, 0.5f);
-        
-            DOTween.To(() => _displayingHp, x =>
+            var idleRatio = currentHp / maxHp;
+            var ratio = idleRatio.Value;
+
+            _bossHpBar.DOFillAmount(ratio, 0.5f);
+
+            this.IdleTweenTo(_displayingHp, currentHp, 0.5f, val =>
+            {
+                _displayingHp = val;
+                _bossHpText.text = $"{_displayingHp:F2}/{maxHp:F2}";
+            });
+            
+            /*DOTween.To(() => _displayingHp, x =>
             {
                 _displayingHp = x;
                 _bossHpText.text = $"{_displayingHp}/{maxHp}";
-            }, currentHp, 0.5f);
+            }, currentHp, 0.5f);*/
         }
     }
 }
