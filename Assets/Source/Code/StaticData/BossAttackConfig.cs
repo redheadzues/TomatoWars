@@ -1,4 +1,5 @@
 ﻿using System;
+using Source.Code.IdleNumbers;
 using UnityEngine;
 
 namespace Source.Code.StaticData

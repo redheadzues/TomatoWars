@@ -34,6 +34,7 @@ namespace Source.Code.ModelsAndServices.BattleField
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
         
         private BattleFieldModel _battleModel;
+        private BossAttackHandler _bossAttackHandler;
         private IdleNumber _tikDamage;
         private Coroutine _updateCoroutine;
         private float _timeBeforeSpawn;
@@ -63,6 +64,8 @@ namespace Source.Code.ModelsAndServices.BattleField
         {
             _battleModel = new();
             InitializeBattleModel();
+            _bossAttackHandler = new BossAttackHandler(_battleModel);
+            ReadyToStart?.Invoke();
         }
 
         private void InitializeBattleModel()
@@ -79,10 +82,7 @@ namespace Source.Code.ModelsAndServices.BattleField
             _battleModel.BossSprite = bossConfig.Sprite;
             _battleModel.BossMaxHp = bossConfig.Hp;
             _battleModel.BossCurrentHp = bossConfig.Hp;
-            _battleModel.BossDamagePerSecond = bossConfig.AttackConfig.DamagePerSecond;
-            _battleModel.BossAttackWidth = bossConfig.AttackConfig.NormalizedWidth;
-
-            ReadyToStart?.Invoke();
+            _battleModel.AttackConfig = bossConfig.AttackConfig;
         }
 
         private IEnumerator UpdatePerTick()
@@ -113,7 +113,7 @@ namespace Source.Code.ModelsAndServices.BattleField
 
             SpawnWarrior();
 
-            BossAttack();
+            _bossAttackHandler.Update(BossAttacked);
           
             _battleModel.BossCurrentHp -= _tikDamage;
 
@@ -130,25 +130,6 @@ namespace Source.Code.ModelsAndServices.BattleField
         private void AddTickDamage(Warrior warrior) =>
             _tikDamage += warrior.BaseDamagePerSecond;
 
-        private void BossAttack()
-        {
-            var centerAttackPosition = (float)_random.NextDouble();
-            var attackWidth = _battleModel.BossAttackWidth;
-
-            var warriorForAttack = _battleModel.Warriors
-                .Where(x => 
-                    x.NormalizePosition.X > centerAttackPosition - attackWidth/2
-                    &&
-                    x.NormalizePosition.X < centerAttackPosition + attackWidth/2)
-                .ToList();
-            
-            foreach (var warrior in warriorForAttack)
-            {
-                warrior.TakeDamage(_battleModel.BossDamagePerSecond * StaticConfig.TICK_INTERVAL);
-            }
-            
-            BossAttacked?.Invoke(centerAttackPosition, attackWidth);
-        }
 
         private void SpawnWarrior()
         {
