@@ -20,6 +20,7 @@ namespace Source.Code.ModelsAndServices.Player
         void IncreaseStage();
         IOwnedWarrior GetOwnedWarriorByType(CharacterTypeId typeId);
         List<IOwnedWarrior> GetAllOwnedWarriors();
+        IdleNumber GetCurrencyBalance(CurrencyTypeId typeId);
     }
     
     public class PlayerService : IPlayerService
@@ -98,6 +99,9 @@ namespace Source.Code.ModelsAndServices.Player
 
             return output;
         }
+
+        public IdleNumber GetCurrencyBalance(CurrencyTypeId typeId) =>
+            _model.Wallet.Balances.GetValueOrDefault(typeId, new IdleNumber(int.MinValue));
 
         public void IncreaseStage() => 
             _model.Stage++;
