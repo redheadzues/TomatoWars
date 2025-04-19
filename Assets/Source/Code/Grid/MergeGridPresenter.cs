@@ -56,7 +56,7 @@ namespace Source.Code.Grid
             if (_gridService.TryMerge(hostIndex, inputIndex, out var booster, out var emptyIndex))
             {
                 _view.UpdateGrid(booster, emptyIndex);
-                _view.SetActiveBuyButton(_gridService.IsEnableAddNewItem);
+                _view.SetBuyButton(_gridService.IsEnableAddNewItem, _gridService.CurrentCost);
             }
             else
             {
@@ -69,7 +69,7 @@ namespace Source.Code.Grid
             if (_gridService.TryMerge(characterType, boosterIndex, out var booster))
             {
                 _view.UpdateGrid(booster);
-                _view.SetActiveBuyButton(_gridService.IsEnableAddNewItem);
+                _view.SetBuyButton(_gridService.IsEnableAddNewItem, _gridService.CurrentCost);
                 var updatedWarrior = _warriorFactory.CreateWarrior(characterType);
                 _view.UpdateWarrior(updatedWarrior);
             }
@@ -84,7 +84,7 @@ namespace Source.Code.Grid
             if (_gridService.TryCreateNewBooster(out var booster))
             {
                 _view.UpdateGrid(booster);
-                _view.SetActiveBuyButton(_gridService.IsEnableAddNewItem);
+                _view.SetBuyButton(_gridService.IsEnableAddNewItem, _gridService.CurrentCost);
             }
         }
         

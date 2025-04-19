@@ -13,7 +13,7 @@ namespace Source.Code.ModelsAndServices.Grid
     public class GridModel : IReadOnlyGridModel
     {
         public List<GridBooster> GridBoosters { get; set; }
-        public int MergeCount;
+        public int BoostersCreated;
         IReadOnlyList<GridBooster> IReadOnlyGridModel.GridBoosters => GridBoosters;
         
     }

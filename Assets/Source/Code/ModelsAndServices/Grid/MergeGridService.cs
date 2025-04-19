@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Source.Code.Grid;
+using Source.Code.IdleNumbers;
 using Source.Code.ModelsAndServices.Player;
 using Source.Code.StaticData;
 using Random = System.Random;
@@ -13,6 +14,7 @@ namespace Source.Code.ModelsAndServices.Grid
         IReadOnlyGridModel GridModel { get; }
         IReadOnlyList<CharacterTypeId> SelectedWarriors { get; }
         bool IsEnableAddNewItem { get; }
+        IdleNumber CurrentCost { get; }
         bool TryMerge(int hostIndex, int inputIndex, out GridBooster newHostBooster, out int emptyIndex);
         bool TryMerge(CharacterTypeId characterType, int boosterIndex, out GridBooster booster);
         bool TryCreateNewBooster(out GridBooster booster);
@@ -25,10 +27,11 @@ namespace Source.Code.ModelsAndServices.Grid
         private readonly IStaticDataService _staticData;
         private readonly IPlayerService _playerService;
         private readonly Random _random = new(Guid.NewGuid().GetHashCode());
-
+        
         public IReadOnlyGridModel GridModel => _gridModel;
         public IReadOnlyList<CharacterTypeId> SelectedWarriors => _playerService.SelectedCharacters;
         public bool IsEnableAddNewItem => GetFreeCellIndex() > -1;
+        public IdleNumber CurrentCost => (_gridModel.BoostersCreated + 1) * 10;
 
         public MergeGridService(GridModel model, IStaticDataService staticData, IPlayerService playerService)
         {
@@ -91,7 +94,7 @@ namespace Source.Code.ModelsAndServices.Grid
         {
             booster = null;
 
-            if (!_playerService.TrySpendCurrency(CurrencyTypeId.Gold, 0))
+            if (!_playerService.TrySpendCurrency(CurrencyTypeId.Gold, CurrentCost))
                 return false;
 
             int freeIndex = GetFreeCellIndex();
@@ -113,6 +116,7 @@ namespace Source.Code.ModelsAndServices.Grid
 
             var averageLvl  = (count > 0) ? lvlSum / count : 1;
             booster = CreateNewBooster(freeIndex, averageLvl );
+            _gridModel.BoostersCreated++;
 
             return true;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Source.Code.BattleField;
+using Source.Code.IdleNumbers;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
 using UnityEngine;
@@ -16,6 +17,8 @@ namespace Source.Code.Grid.View
         [SerializeField] private GridLayoutGroup _grid;
         [SerializeField] private Transform _warriorContainer;
         [SerializeField] private WarriorView _warriorPrefab;
+        [SerializeField] private Text _costText;
+        
         
         private readonly List<CellView> _cellViews = new(StaticConfig.BOOSTER_LIMIT);
         private readonly List<WarriorView> _selectedWarriors = new();
@@ -91,9 +94,10 @@ namespace Source.Code.Grid.View
             view.SetWarrior(warrior);
         }
 
-        public void SetActiveBuyButton(bool isActive)
+        public void SetBuyButton(bool isActive, IdleNumber cost)
         {
             _createNewBoosterButton.interactable = isActive;
+            _costText.text = cost.ToString();
         }
 
         public void UpdateGrid(GridBooster booster, int emptyIndex)
