@@ -618,6 +618,7 @@ MonoBehaviour:
   _bossSprite: {fileID: 576284319}
   _bossHpBar: {fileID: 491344508}
   _bossHpText: {fileID: 1987075876}
+  _rewardPrefab: {fileID: 6686949361894721172, guid: 16eaf3ae0172c7d46a146a24cf5e81c7, type: 3}
 --- !u!224 &642970039 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4934155986528201437, guid: 0309d82826318b34ca293a869ca0cc60, type: 3}
