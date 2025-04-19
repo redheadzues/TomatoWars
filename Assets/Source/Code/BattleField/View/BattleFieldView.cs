@@ -30,11 +30,6 @@ namespace Source.Code.BattleField.View
         {
             _warriors.ForEach(x => Destroy(x.gameObject));
             _warriors.Clear();
-
-            /*foreach (Transform child in _field.transform)
-            {
-                DestroyImmediate(child.gameObject);
-            }*/
         }
         
         public void CreateNewWarrior(IWarrior warrior)

@@ -82,6 +82,8 @@ namespace Source.Code.ModelsAndServices.BattleField
             _battleModel.BossMaxHp = bossConfig.Hp;
             _battleModel.BossCurrentHp = bossConfig.Hp;
             _battleModel.AttackConfig = bossConfig.AttackConfig;
+            
+            bossConfig.Rewards.ForEach(x => _battleModel.Rewards[x] = false);
         }
 
         private IEnumerator UpdatePerTick()
@@ -112,6 +114,8 @@ namespace Source.Code.ModelsAndServices.BattleField
             
             _battleModel.BossCurrentHp -= _tikDamage;
 
+            GiveRewards();
+
 
             if (_timeBeforeSpawn <= 0)
             {
@@ -132,6 +136,20 @@ namespace Source.Code.ModelsAndServices.BattleField
                 Stop();
                 _playerService.IncreaseStage();
                 StageCompleted?.Invoke();
+            }
+        }
+
+        private void GiveRewards()
+        {
+            var reward = _battleModel.Rewards
+                .FirstOrDefault(x
+                    => x.Value == false
+                       && x.Key.Treshold > _battleModel.BossCurrentHp / _battleModel.BossMaxHp).Key;
+
+            if (reward != null)
+            {
+                _playerService.AddCurrency(reward.TypeId, reward.Value);
+                _battleModel.Rewards[reward] = true;
             }
         }
 

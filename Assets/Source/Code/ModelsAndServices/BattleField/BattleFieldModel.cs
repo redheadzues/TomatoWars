@@ -19,6 +19,7 @@ namespace Source.Code.ModelsAndServices.BattleField
         public List<CharacterTypeId> SelectedWarriors = new();
         public List<Warrior> Warriors = new();
         public BossAttackConfig AttackConfig;
+        public Dictionary<BossReward, bool> Rewards = new();
         public IdleNumber BossMaxHp { get; set; }
         public IdleNumber BossCurrentHp { get; set; }
         public Sprite BossSprite { get; set; }

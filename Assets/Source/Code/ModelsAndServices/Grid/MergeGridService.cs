@@ -80,7 +80,6 @@ namespace Source.Code.ModelsAndServices.Grid
 
             Booster boosterInfo = new(booster.TypeId, booster.Level, booster.Rarity);
      
-            
             if (_playerService.TryAddBoosterToWarrior(boosterInfo, characterType))
             {
                 booster = CreateEmptyBooster(boosterIndex);

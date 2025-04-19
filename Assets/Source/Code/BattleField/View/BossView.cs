@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using Source.Code.IdleNumbers;
 using TMPro;
@@ -11,8 +12,10 @@ namespace Source.Code.BattleField.View
         [SerializeField] private SpriteRenderer _bossSprite;
         [SerializeField] private Image _bossHpBar;
         [SerializeField] private TMP_Text _bossHpText;
+        [SerializeField] private Image _prefab;
 
         private IdleNumber _displayingHp;
+        private List<Image> _rewardIcons;
 
         public void Init(Sprite sprite, IdleNumber bossStartHp)
         {
