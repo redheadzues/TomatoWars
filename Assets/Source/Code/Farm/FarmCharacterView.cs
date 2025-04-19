@@ -18,6 +18,7 @@ namespace Source.Code.Farm
         [SerializeField] private Image _incomeFilledImage;
 
         private IFarmCharacter _character;
+        private Sequence _fillSequence;
         private Tween _fillTween;
 
         public CharacterTypeId TypeId => _character.TypeId;
@@ -28,13 +29,14 @@ namespace Source.Code.Farm
             _upgradeButton.onClick.AddListener(OnUpgradeButtonClicked);
             
             if(_character != null)
-                StartFillTween();
+                StartFillIncome();
         }
 
         private void OnDisable()
         {
             _upgradeButton.onClick.RemoveListener(OnUpgradeButtonClicked);
             _fillTween?.Kill();
+            _fillSequence?.Kill();
         }
 
         public void Init(IFarmCharacter character)
@@ -43,7 +45,7 @@ namespace Source.Code.Farm
             _icon.sprite = _character.Icon;
             _incomeFilledImage.fillAmount = 0;
             UpdateTextData();
-            StartFillTween();
+            StartFillIncome();
         }
 
         public void UpdateTextData()
@@ -56,7 +58,7 @@ namespace Source.Code.Farm
             _incomeText.text = _character.IncomePerSecond.ToString();
             
             if(_fillTween == null)
-                StartFillTween();
+                StartFillIncome();
         }
 
         public void UpdateAvailabilityButton(IdleNumber value)
@@ -67,14 +69,24 @@ namespace Source.Code.Farm
             _upgradeButton.interactable = value >= _character.Cost;
         }
 
-        private void StartFillTween()
+        private void StartFillIncome()
         {
             if(_character.Level == 0)
                 return;
-            
-            _fillTween = _incomeFilledImage
-                .DOFillAmount(1, _character.IncomeTime)
-                .SetLoops(-1, LoopType.Restart);
+
+            _incomeFilledImage.fillAmount = 
+                (_character.IncomeTime - _character.RemainingTimeToIncome) / _character.IncomeTime;
+
+            _fillSequence = DOTween.Sequence()
+                .Append(_incomeFilledImage.DOFillAmount(1, _character.IncomeTime))
+                .AppendCallback(() =>
+                {
+                    _incomeFilledImage.fillAmount = 0;
+                    
+                    _fillTween = _incomeFilledImage
+                        .DOFillAmount(1, _character.IncomeTime)
+                        .SetLoops(-1, LoopType.Restart);
+                });
         }
 
         private void OnUpgradeButtonClicked() => 
