@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Source.Code.BattleField.Buff;
 using Source.Code.IdleNumbers;
@@ -13,12 +14,14 @@ namespace Source.Code.ModelsAndServices.BattleField
 {
     public interface IBattleFieldService : IService
     {
+        IReadOnlyBattleFieldModel Model { get; }
+        IReadOnlyDictionary<BossReward, bool> Rewards { get; }
         event Action ReadyToStart;
         event Action StageCompleted;
         event Action TickCalculated;
         event Action<float, float> BossAttacked;
         event Action<IWarrior> WarriorAdded;
-        IReadOnlyBattleFieldModel Model { get; }
+        event Action<BossReward> RewardsUpdated; 
         void Start();
         void Stop();
         void PrepareNewStage();
@@ -40,11 +43,13 @@ namespace Source.Code.ModelsAndServices.BattleField
         private float _timeBeforeSpawn;
 
         public IReadOnlyBattleFieldModel Model => _battleModel;
+        public IReadOnlyDictionary<BossReward, bool> Rewards => _battleModel.Rewards;
         public event Action ReadyToStart;
         public event Action StageCompleted;
         public event Action TickCalculated;
         public event Action<float, float> BossAttacked;
         public event Action<IWarrior> WarriorAdded;
+        public event Action<BossReward> RewardsUpdated; 
         
         public BattleFieldService(IStaticDataService staticData, ICoroutineRunner runner, IWarriorFactory warriorFactory, IPlayerService playerService)
         {
@@ -150,6 +155,7 @@ namespace Source.Code.ModelsAndServices.BattleField
             {
                 _playerService.AddCurrency(reward.TypeId, reward.Value);
                 _battleModel.Rewards[reward] = true;
+                RewardsUpdated?.Invoke(reward);
             }
         }
 

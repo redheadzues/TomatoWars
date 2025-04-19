@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
 using Source.Code.IdleNumbers;
+using Source.Code.StaticData;
 using Source.Code.Warriors;
 using UnityEngine;
 
@@ -21,9 +22,9 @@ namespace Source.Code.BattleField.View
             Clear();
         }
         
-        public void Init(Sprite bossSprite, IdleNumber bossMaxHp)
+        public void Init(Sprite bossSprite, IdleNumber bossMaxHp, List<BossReward> rewards)
         {
-            _bossView.Init(bossSprite, bossMaxHp);
+            _bossView.Init(bossSprite, bossMaxHp, rewards);
         }
         
         public void Clear()
@@ -60,5 +61,8 @@ namespace Source.Code.BattleField.View
         {
             _bossView.UpdateBossHp(currentHp, maxHp);
         }
+
+        public void UpdateBossReward(BossReward reward) => 
+            _bossView.UpdateRewards(reward);
     }
 }

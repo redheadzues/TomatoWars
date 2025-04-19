@@ -1,8 +1,9 @@
-﻿using Source.Code.BattleField.View;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Source.Code.BattleField.View;
 using Source.Code.ModelsAndServices.BattleField;
 using Source.Code.StaticData;
 using Source.Code.Warriors;
-using UnityEngine;
 
 namespace Source.Code.BattleField
 {
@@ -21,6 +22,7 @@ namespace Source.Code.BattleField
             _battleFieldService.ReadyToStart += OnReadyToStart;
             _battleFieldService.StageCompleted += OnStageCompleted;
             _battleFieldService.TickCalculated += OnTickCalculated;
+            _battleFieldService.RewardsUpdated += OnRewardsUpdated;
             
             _battleFieldService.PrepareNewStage();
         }
@@ -32,12 +34,23 @@ namespace Source.Code.BattleField
             _battleFieldService.ReadyToStart -= OnReadyToStart;
             _battleFieldService.StageCompleted -= OnStageCompleted;
             _battleFieldService.TickCalculated -= OnTickCalculated;
+            _battleFieldService.RewardsUpdated -= OnRewardsUpdated;
         }
         
+        private void OnBossAttacked(float centerAttack, float widthAttack) => 
+            _view.ShowBossAttack(centerAttack, widthAttack);
+
+        private void AddWarriorView(IWarrior warrior) => 
+            _view.CreateNewWarrior(warrior);
+        
+        private void OnRewardsUpdated(BossReward reward) => 
+            _view.UpdateBossReward(reward);
+
         private void OnReadyToStart()
         {
-           
-            _view.Init(_battleFieldService.Model.BossSprite, _battleFieldService.Model.BossMaxHp);
+            List<BossReward> rewards = _battleFieldService.Rewards.Keys.ToList();
+            
+            _view.Init(_battleFieldService.Model.BossSprite, _battleFieldService.Model.BossMaxHp, rewards);
             _battleFieldService.Start();
         }
         
@@ -52,11 +65,5 @@ namespace Source.Code.BattleField
             _view.UpdateBossHp(_battleFieldService.Model.BossCurrentHp, _battleFieldService.Model.BossMaxHp);
             _view.UpdateWarriors();
         }
-
-        private void OnBossAttacked(float centerAttack, float widthAttack) => 
-            _view.ShowBossAttack(centerAttack, widthAttack);
-
-        private void AddWarriorView(IWarrior warrior) => 
-            _view.CreateNewWarrior(warrior);
     }
 }
