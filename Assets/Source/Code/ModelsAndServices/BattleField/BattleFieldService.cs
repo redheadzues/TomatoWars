@@ -65,6 +65,7 @@ namespace Source.Code.ModelsAndServices.BattleField
             _battleModel = new();
             InitializeBattleModel();
             _bossAttackHandler = new BossAttackHandler(_battleModel);
+            _timeBeforeSpawn = StaticConfig.VEGETABLES_SPAWN_TIME;
             ReadyToStart?.Invoke();
         }
 
@@ -75,9 +76,7 @@ namespace Source.Code.ModelsAndServices.BattleField
             var bossConfig = _staticData.GetBossConfig(_playerService.Stage);
 
             if (bossConfig == null)
-            {
                 throw new NullReferenceException("Missing boss config");
-            }
 
             _battleModel.BossSprite = bossConfig.Sprite;
             _battleModel.BossMaxHp = bossConfig.Hp;
@@ -110,13 +109,22 @@ namespace Source.Code.ModelsAndServices.BattleField
                         break;
                 }
             }
+            
+            _battleModel.BossCurrentHp -= _tikDamage;
 
-            SpawnWarrior();
+
+            if (_timeBeforeSpawn <= 0)
+            {
+                SpawnWarrior();
+                _timeBeforeSpawn = StaticConfig.VEGETABLES_SPAWN_TIME;
+            }
+            else
+            {
+                _timeBeforeSpawn -= StaticConfig.TICK_INTERVAL;
+            }
 
             _bossAttackHandler.Update(BossAttacked);
           
-            _battleModel.BossCurrentHp -= _tikDamage;
-
             TickCalculated?.Invoke();
             
             if (_battleModel.BossCurrentHp <= 0)
