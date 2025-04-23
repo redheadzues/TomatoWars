@@ -12,11 +12,23 @@ namespace Source.Code.AllCharacters.View
     {
         [SerializeField] private CharacterView _prefab;
         [SerializeField] private Transform _container;
-
+        [SerializeField] private Button _buyCharacterPackButton;
+        
         private List<CharacterView> _views;
         
         public event Action<CharacterTypeId> UpgradeRequired;
-        
+        public event Action RequiredBuyShardsPack;
+
+        private void OnEnable()
+        {
+            _buyCharacterPackButton.onClick.AddListener(OnBuyButtonClicked);
+        }
+
+        private void OnDisable()
+        {
+            _buyCharacterPackButton.onClick.RemoveListener(OnBuyButtonClicked);
+        }
+
         public void Init(List<IOwnedWarrior> allCharacters)
         {
             foreach (var character in allCharacters)
@@ -43,6 +55,9 @@ namespace Source.Code.AllCharacters.View
             
             view.UpdateView();
         }
+        
+        private void OnBuyButtonClicked() => 
+            RequiredBuyShardsPack?.Invoke();
     }
 
     public class CharacterView : MonoBehaviour

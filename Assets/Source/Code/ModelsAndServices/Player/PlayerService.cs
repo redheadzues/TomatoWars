@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Source.Code.IdleNumbers;
 using Source.Code.StaticData;
-using Source.Code.Warriors;
 
 namespace Source.Code.ModelsAndServices.Player
 {
@@ -21,6 +20,7 @@ namespace Source.Code.ModelsAndServices.Player
         IOwnedWarrior GetOwnedWarriorByType(CharacterTypeId typeId);
         List<IOwnedWarrior> GetAllOwnedWarriors();
         IdleNumber GetCurrencyBalance(CurrencyTypeId typeId);
+        bool TryBuyShards(out Dictionary<CharacterTypeId, int> shards);
     }
     
     public class PlayerService : IPlayerService
@@ -118,6 +118,43 @@ namespace Source.Code.ModelsAndServices.Player
 
         public IdleNumber GetCurrencyBalance(CurrencyTypeId typeId) =>
             _model.Wallet.Balances.GetValueOrDefault(typeId, new IdleNumber(int.MinValue));
+
+        public bool TryBuyShards(out Dictionary<CharacterTypeId, int> shards)
+        {
+            shards = new();
+
+            if (_model.Wallet.Balances[CurrencyTypeId.Gem] < StaticConfig.SHARDS_PACK_PRICE)
+                return false;
+
+            Dictionary<Rarity, List<OwnedWarrior>> charactersByRarity = new();
+            
+            foreach (var character in _model.OwnedWarriors.Values)
+            {
+                charactersByRarity[character.Rarity].Add(character);
+            }
+            
+            var random = new Random();
+
+            for (int i = 0; i < StaticConfig.SHARDS_PER_PACK; i++)
+            {
+                var chance = (float)random.NextDouble();
+                var rarity = StaticConfig.GetRarityByChance(chance);
+
+                var characterIndex = random.Next(0, charactersByRarity[rarity].Count);
+
+                var character = charactersByRarity[rarity][characterIndex];
+
+                var shardsCountRange = StaticConfig.GetShardsCountRangeByRarity(rarity);
+
+                var shardsCount = random.Next((int)shardsCountRange.X, (int)shardsCountRange.Y+1);
+
+                _model.OwnedWarriors[character.TypeId].ShardsCount += shardsCount;
+
+                shards[character.TypeId] += shardsCount;
+            }
+
+            return true;
+        }
 
         public void IncreaseStage() => 
             _model.Stage++;

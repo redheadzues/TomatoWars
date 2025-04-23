@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Source.Code.StaticData;
-using UnityEngine.Serialization;
 
 namespace Source.Code.ModelsAndServices.Player
 {

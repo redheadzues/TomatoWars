@@ -4,7 +4,7 @@ using Source.Code.StaticData;
 
 namespace Source.Code.AllCharacters
 {
-    public class AllCharactersPresenter
+    public class AllCharactersPresenter : ICleanable
     {
         private readonly IPlayerService _playerService;
         private readonly AllCharactersView _view;
@@ -15,10 +15,16 @@ namespace Source.Code.AllCharacters
             _view = view;
             InitView();
         }
+        public void CleanUp()
+        {
+            _view.UpgradeRequired -= OnUpgradeRequired;
+            _view.RequiredBuyShardsPack -= OnRequiredBuyShardsPack;
+        }
 
         private void InitView()
         {
             _view.UpgradeRequired += OnUpgradeRequired;
+            _view.RequiredBuyShardsPack += OnRequiredBuyShardsPack;
             var allCharacters = _playerService.GetAllOwnedWarriors();
             _view.Init(allCharacters);
         }
@@ -30,5 +36,12 @@ namespace Source.Code.AllCharacters
                 _view.UpdateCharacterView(typeId);
             }
         }
+        
+        
+        private void OnRequiredBuyShardsPack()
+        {
+            
+        }
+
     }
 }
