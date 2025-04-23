@@ -75,7 +75,7 @@ namespace Source.Code
         private void RegisterServices()
         {
             var staticData = _serviceProvider.Get<IStaticDataService>();
-            var playerService = _serviceProvider.RegisterInstance<IPlayerService>(new PlayerService(_model.Player));
+            var playerService = _serviceProvider.RegisterInstance<IPlayerService>(new PlayerService(_model.Player, staticData));
             var farmService = _serviceProvider.RegisterInstance<IFarmService>(new FarmService(playerService, staticData, _model.FarmModel, _coroutineRunner));
             var warriorStats = _serviceProvider.RegisterInstance<IWarriorStatsService>(new WarriorStatsService(staticData, playerService, farmService));
             var warriorFactory = _serviceProvider.RegisterInstance<IWarriorFactory>(new WarriorFactory(warriorStats, staticData));

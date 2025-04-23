@@ -15,6 +15,8 @@ namespace Source.Code.StaticData
         [SerializeField, Range(0,1)] private float _normalizedSpeed;
         [SerializeField] private float _damageReduce;
         [SerializeField] private float _maxDamageReduce;
+        [SerializeField] private Rarity _rarity;
+        
         
         [field: SerializeField] public CharacterTypeId TypeId { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
@@ -37,5 +39,8 @@ namespace Source.Code.StaticData
             
             return stats;
         }
+
+        public int GetShardsCountByLevel(int level) => 
+            1+ level * 2;
     }
 }

@@ -26,6 +26,7 @@ namespace Source.Code.ModelsAndServices.Player
     public class PlayerService : IPlayerService
     {
         private readonly PlayerModel _model;
+        private readonly IStaticDataService _staticData;
 
         public IReadOnlyList<CharacterTypeId> SelectedCharacters => _model.SelectedCharacters;
         public int Stage => _model.Stage;
@@ -34,9 +35,10 @@ namespace Source.Code.ModelsAndServices.Player
         public event Action<CharacterTypeId, Booster> BoosterUpdated;
         public event Action<CurrencyTypeId, IdleNumber> BalanceChanged;
 
-        public PlayerService(PlayerModel model)
+        public PlayerService(PlayerModel model, IStaticDataService staticData)
         {
             _model = model;
+            _staticData = staticData;
         }
 
         public bool TryAddBoosterToWarrior(Booster booster, CharacterTypeId characterTypeId)
@@ -71,6 +73,20 @@ namespace Source.Code.ModelsAndServices.Player
         {
             if (typeId == CharacterTypeId.None)
                 return false;
+
+            var warrior = _model.OwnedWarriors[typeId];
+            
+            var requiredShardsCount = 
+                _staticData.GetWarriorConfig(typeId).GetShardsCountByLevel(warrior.Level);
+
+            if (warrior.ShardsCount < requiredShardsCount)
+                return false;
+
+            warrior.ShardsCount -= requiredShardsCount;
+            warrior.Level++;
+
+            warrior.RequiredShardsToNextLevel =
+                _staticData.GetWarriorConfig(typeId).GetShardsCountByLevel(warrior.Level);
             
             WarriorLevelUp?.Invoke(typeId);
             return true;

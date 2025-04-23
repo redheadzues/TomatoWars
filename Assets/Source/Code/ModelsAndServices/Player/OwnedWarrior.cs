@@ -8,9 +8,12 @@ namespace Source.Code.ModelsAndServices.Player
     public class OwnedWarrior : IOwnedWarrior
     {
         public CharacterTypeId TypeId { get; set; }
+        public Rarity Rarity { get; set; }
         public bool IsOwned { get; set; }
         public Booster BoosterInfo { get; set; } = new(BoosterTypeId.None);
         public int Level { get; set; }
+        public int ShardsCount { get; set; }
+        public int RequiredShardsToNextLevel { get; set; }
         
     }
 }

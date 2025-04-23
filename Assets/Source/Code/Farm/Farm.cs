@@ -1,4 +1,5 @@
-﻿using Source.Code.ModelsAndServices.Farm;
+﻿using Source.Code.Farm.View;
+using Source.Code.ModelsAndServices.Farm;
 using UnityEngine;
 
 namespace Source.Code.Farm

@@ -6,7 +6,7 @@ using Source.Code.StaticData;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Source.Code.Farm
+namespace Source.Code.Farm.View
 {
     public class FarmCharacterView : MonoBehaviour
     {

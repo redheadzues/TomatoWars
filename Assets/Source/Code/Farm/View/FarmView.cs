@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Source.Code.IdleNumbers;
@@ -7,7 +6,7 @@ using Source.Code.ModelsAndServices.Farm;
 using Source.Code.StaticData;
 using UnityEngine;
 
-namespace Source.Code.Farm
+namespace Source.Code.Farm.View
 {
     public class FarmView : MonoBehaviour
     {
