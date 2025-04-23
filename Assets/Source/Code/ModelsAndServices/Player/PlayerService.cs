@@ -45,7 +45,7 @@ namespace Source.Code.ModelsAndServices.Player
         {
             var warrior = _model.OwnedWarriors[characterTypeId];
             
-            if (warrior == null || !warrior.IsOwned || booster.TypeId == BoosterTypeId.None)
+            if (warrior == null || warrior.Level == 0 || booster.TypeId == BoosterTypeId.None)
                 return false;
 
             warrior.BoosterInfo = booster;

@@ -63,7 +63,7 @@ namespace Source.Code.Warriors
             
             foreach (var warrior in ownedWarriors)
             {
-                if (warrior.IsOwned == false)
+                if (warrior.Level == 0)
                     return;
                 
                 AddBoosterByType(warrior.TypeId, warrior.BoosterInfo);

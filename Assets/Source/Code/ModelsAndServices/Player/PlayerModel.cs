@@ -28,7 +28,7 @@ namespace Source.Code.ModelsAndServices.Player
                 OwnedWarriors.TryAdd(typeId, new OwnedWarrior
                 {
                     TypeId = typeId,
-                    IsOwned = true,
+                    Level = 1,
                 });
             }
         }

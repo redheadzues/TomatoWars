@@ -6,7 +6,6 @@ namespace Source.Code.ModelsAndServices.Player
     {
         public CharacterTypeId TypeId { get; }
         public Rarity Rarity { get; }
-        public bool IsOwned { get; }
         public Booster BoosterInfo { get; }
         public int Level { get; }
         public int ShardsCount { get; }
