@@ -23,9 +23,9 @@ namespace Source.Code.Grid
             _view = view;
 
             _view.BoostersMergeAttempt += HandleMergeAttempt;
+            _view.WarriorBoosterMergeAttempt += HandleMergeAttempt;
             _view.CreateButtonClicked += OnCreateButtonClicked;
             _view.DragStarted += OnDragStarted;
-            _view.WarriorBoosterMergeAttempt += HandleMergeAttempt;
 
             InitView();
         }
